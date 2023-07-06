@@ -27,6 +27,9 @@ const theme = createTheme({
     warning: {
       main: "#f9b959",
     },
+    default: {
+      main: '#FFF'
+    }
   },
   typography: {
     fontFamily: roboto.style.fontFamily,
