@@ -4,7 +4,6 @@ import Document, { Html, Head, Main, NextScript } from 'next/document';
 import createEmotionServer from '@emotion/server/create-instance';
 import theme, { roboto } from '../src/theme';
 import createEmotionCache from '../src/createEmotionCache';
-
 export default function MyDocument(props) {
   const { emotionStyleTags } = props;
 
