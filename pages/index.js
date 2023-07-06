@@ -2,9 +2,7 @@ import * as React from "react";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import ProTip from "../src/ProTip";
-import Link from "../src/Link";
-import Copyright from "../src/Copyright";
+import Link from '../src/Link';
 import Public from "../layout/public";
 import { Alert, Button, Grid, Snackbar, Stack, TextField } from "@mui/material";
 import { useRouter } from "next/router";
@@ -39,7 +37,7 @@ export default function Index() {
         open: true,
         message: json.message,
       });
-      if(json.status){
+      if (json.status) {
         setCompany();
         setMessage();
         setEmail();
@@ -52,6 +50,13 @@ export default function Index() {
       message: "",
     });
   };
+
+  const scrollToContent = ()=> {
+    // get #learn-more position
+    const elem = document.getElementById('learn-more');
+    window.scrollTo(0, elem?.offsetTop)
+  }
+
   return (
     <Public>
       <Snackbar
@@ -77,7 +82,7 @@ export default function Index() {
           sx={{
             textAlign: "center",
             height: {
-              md: "100vh",
+              md: "calc(100vh - 64px)",
               xs: "auto",
             },
             mt: {
@@ -132,9 +137,7 @@ export default function Index() {
               <Button
                 size="large"
                 variant="contained"
-                onClick={() => {
-                  router.push("/", { hash: "more-info" });
-                }}
+                onClick={scrollToContent}
               >
                 Learn more
               </Button>
@@ -142,6 +145,7 @@ export default function Index() {
           </Box>
         </Container>
       </Box>
+      <div id="learn-more"></div>
       <Box
         mb={4}
         position="relative"
