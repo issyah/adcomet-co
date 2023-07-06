@@ -1,0 +1,35 @@
+[
+    {
+        "_id": "715e0b0f-79d8-41eb-b9d6-a6faf4cf541b",
+        "colId": "history",
+        "containerId": "",
+        "name": "localhost:3000/api/post-contact",
+        "url": "localhost:3000/api/post-contact",
+        "method": "GET",
+        "sortNum": 0,
+        "created": "2023-07-06T08:48:21.965Z",
+        "modified": "2023-07-06T08:48:21.965Z",
+        "headers": [],
+        "params": [],
+        "tests": []
+    },
+    {
+        "_id": "fd2935c6-3d5e-43e6-9a63-d3f966a4e2a4",
+        "colId": "history",
+        "containerId": "",
+        "name": "localhost:3000/api/post-contact",
+        "url": "localhost:3000/api/post-contact",
+        "method": "POST",
+        "sortNum": 0,
+        "created": "2023-07-06T08:48:52.403Z",
+        "modified": "2023-07-06T08:58:28.513Z",
+        "headers": [],
+        "params": [],
+        "body": {
+            "type": "json",
+            "raw": "{\n  \"email\" : \"issyah89@gmail.com\",\n  \"company\" : \"Adcommet API testing \",\n  \"message\" : \"Hello brother. incoming POST APi from /post-contact\"\n}",
+            "form": []
+        },
+        "tests": []
+    }
+]

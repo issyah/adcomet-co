@@ -6,7 +6,7 @@ import ProTip from "../src/ProTip";
 import Link from "../src/Link";
 import Copyright from "../src/Copyright";
 import Public from "../layout/public";
-import { Button, Grid, Stack, TextField } from "@mui/material";
+import { Alert, Button, Grid, Snackbar, Stack, TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import Banner1 from "../public/index-1.jpeg";
 import illus1 from "../svg/content.svg";
@@ -17,8 +17,60 @@ import illusAgreement from "../svg/agreement.svg";
 import Image from "next/image";
 export default function Index() {
   const router = useRouter();
+  const [email, setEmail] = React.useState();
+  const [company, setCompany] = React.useState();
+  const [message, setMessage] = React.useState();
+  const [alert, setAlert] = React.useState({
+    open: false,
+    message: "",
+  });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if ((email, company, message)) {
+      // send the email
+      const res = await fetch("/api/post-contact", {
+        method: "POST",
+        body: JSON.stringify({ email, company, message }),
+      });
+
+      const json = await res.json();
+      setAlert({
+        open: true,
+        message: json.message,
+      });
+      if(json.status){
+        setCompany();
+        setMessage();
+        setEmail();
+      }
+    }
+  };
+  const handleAlertClose = () => {
+    setAlert({
+      open: false,
+      message: "",
+    });
+  };
   return (
     <Public>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+        autoHideDuration={5000}
+        onClose={handleAlertClose}
+        open={alert?.open}
+      >
+        <Alert
+          onClose={handleAlertClose}
+          severity={"success"}
+          sx={{ width: "100%" }}
+        >
+          {alert.message}
+        </Alert>
+      </Snackbar>
       <Box mb={4}>
         <Container
           maxWidth="lg"
@@ -263,7 +315,7 @@ export default function Index() {
           maxWidgh="lg"
           sx={{
             color: "#FFF",
-            textAlign:'center'
+            textAlign: "center",
           }}
         >
           <Typography variant="h3" fontWeight="900">
@@ -275,14 +327,17 @@ export default function Index() {
               ".MuiFormLabel-root": {
                 color: "grey.100",
               },
+              ".MuiInputBase-input": {
+                color: "#FFF",
+              },
               width: {
                 md: "50%",
                 xs: "100%",
               },
-              mx:'auto'
+              mx: "auto",
             }}
           >
-            <form>
+            <form onSubmit={handleSubmit}>
               <Stack spacing={4}>
                 <TextField
                   color="default"
@@ -291,24 +346,36 @@ export default function Index() {
                   name="company"
                   fullWidth
                   required
+                  type={"text"}
+                  onChange={(e) => setCompany(e.target.value)}
                 />
-                <TextField 
-                  color='default'
-                  label='Email'
+                <TextField
+                  color="default"
+                  label="Email"
                   fullWidth
                   required
-                  variant='filled'
+                  variant="filled"
+                  type="email"
+                  onChange={(e) => setEmail(e.target.value)}
                 />
-                <TextField 
-                  color='default'
+                <TextField
+                  color="default"
                   label="Description"
                   fullWidth
                   multiline
                   rows={4}
-                  variant='filled'
+                  variant="filled"
                   required
+                  onChange={(e) => setMessage(e.target.value)}
                 />
-                <Button type='submit' fullWidth size='large' variant='contained'>Submit</Button>
+                <Button
+                  type="submit"
+                  fullWidth
+                  size="large"
+                  variant="contained"
+                >
+                  Submit
+                </Button>
               </Stack>
             </form>
           </Box>
