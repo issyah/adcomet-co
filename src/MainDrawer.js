@@ -12,8 +12,11 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import Logo from "../public/logo.png";
+import Link from "next/link";
 export default function MainDrawer(props) {
+  const router = useRouter();
   const { list, drawerWidth } = props;
   const [mobileOpen, setMobileOpen] = useState(true);
   const [variant, setVariant] = useState("permanent");
@@ -59,7 +62,7 @@ export default function MainDrawer(props) {
           </ListItem>
           {list.map((item, index) => (
             <ListItem key={index} disablePadding>
-              <ListItemButton>
+              <ListItemButton component={Link} href={item?.href}>
                 <ListItemIcon
                   sx={{
                     minWidth: "32px",

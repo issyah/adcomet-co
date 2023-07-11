@@ -10,7 +10,11 @@ import {
   signOut,
 } from "firebase/auth";
 
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+
 const auth = getAuth(firebase_app);
+const db = getFirestore(firebase_app);
+
 const signIn = async (email, password) => {
   let result = null,
     error = null;
@@ -20,6 +24,21 @@ const signIn = async (email, password) => {
     error = e;
   }
   return { result, error };
+};
+
+const getData = async (collection, id) => {
+  let docRef = doc(db, collection, id);
+  let result = null,
+    error = null;
+  try {
+    const result = await getDoc(docRef);
+  } catch (error) {
+    error = error;
+  }
+  return {
+    result,
+    error,
+  };
 };
 
 const handleSignOut = async () => {
@@ -36,4 +55,4 @@ const handleSignOut = async () => {
     error,
   };
 };
-export { signIn, handleSignOut };
+export { signIn, handleSignOut, getData };
