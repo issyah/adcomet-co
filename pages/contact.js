@@ -1,6 +1,6 @@
 // contact us page 
 
-import Public from "../layout/Public";
+import Public from "../src/layout/Public";
 
 export default function Contact(){
   return (

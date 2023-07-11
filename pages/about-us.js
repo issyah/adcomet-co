@@ -8,8 +8,7 @@
 // import Copyright from '../src/Copyright';
 
 import { Container, Typography, Box } from "@mui/material";
-import Public from "../layout/Public";
-
+import Public from "../src/layout/Public";
 // export default function About() {
 //   return (
 //     <Container maxWidth="sm">

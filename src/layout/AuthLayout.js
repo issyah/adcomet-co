@@ -2,11 +2,11 @@
  * Main auth layout*/
 import { DonutLargeOutlined, Home, HomeOutlined } from "@mui/icons-material";
 import { AppBar, Box, Button, Toolbar, Typography, Tooltip, IconButton } from "@mui/material";
-import MainDrawer from "../src/MainDrawer";
+import MainDrawer from "../MainDrawer";
 import Private from "./Private";
-import { useContextProvider } from "../context/ContextProvider";
+import { useContextProvider } from "../../context/ContextProvider";
 import { useRouter } from "next/router";
-import AvatarDropdown from "../src/AvatarDropdown";
+import AvatarDropdown from "../AvatarDropdown";
 import moment from "moment";
 export default function AuthLayout(props) {
   const width = 280;

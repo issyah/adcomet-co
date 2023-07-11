@@ -1,7 +1,7 @@
 /**
  * Only allow auth users to enter
  **/
-import { useContextProvider } from "../context/ContextProvider";
+import { useContextProvider } from "../../context/ContextProvider";
 import { useRouter } from "next/router";
 import { useEffect, Fragment, useState } from "react";
 import { Backdrop, CircularProgress } from "@mui/material";

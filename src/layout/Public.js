@@ -3,7 +3,7 @@
 
 import { Box, Toolbar } from "@mui/material";
 import Head from "next/head";
-import Navbar from "../src/Navbar";
+import Navbar from "../Navbar";
 
 export default function Public(props) {
   const { children } = props;

@@ -3,7 +3,7 @@
  **/
 import { KeyboardArrowRightOutlined } from "@mui/icons-material";
 import { Box, Button, Card, CardActions, CardContent, Divider, Grid, Typography } from "@mui/material";
-import AuthLayout from "../layout/AuthLayout";
+import AuthLayout from "../src/layout/AuthLayout";
 
 export default function Dashboard() {
   return (
