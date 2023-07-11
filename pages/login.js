@@ -12,6 +12,9 @@ import Container from "@mui/material/Container";
 import Logo from "../public/logo.png";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { signIn } from "../src/firebase-func";
+import { Alert, Snackbar } from "@mui/material";
+import { useContextProvider } from "../context/ContextProvider";
 function Copyright(props) {
   return (
     <Typography
@@ -31,20 +34,64 @@ function Copyright(props) {
 }
 
 // TODO remove, this demo shouldn't need to reset the theme.
-
 export default function SignIn() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const { alert, setAlert } = useContextProvider();
+  const handleClose = () => {
+    setAlert({
+      open: false,
+      status: "",
+      message: "",
     });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const { result, error } = await signIn(email, password);
+    if (error) {
+      const code = error.code;
+      let message;
+      if(code === 'auth/wrong-password'){
+        message = 'Incorrect email or password. Please try again.'
+      }else if(code === 'auth/user-not-found'){
+        message = 'User is not registered.'
+      }
+
+      setAlert({
+        status: 'error',
+        message,
+        open: true
+      })
+      return;
+    }
+
+    // success 
+    router.push('/dashboard');
+
+    // const data = new FormData(event.currentTarget);
+    // console.log({
+    //   email: data.get("email"),
+    //   password: data.get("password"),
+    // });
   };
   const router = useRouter();
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      <Snackbar
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+        autoHideDuration={5000}
+        onClose={handleClose}
+        open={alert?.open}
+      >
+        <Alert severity={alert?.status} onClose={handleClose}>
+          {alert?.message}
+        </Alert>
+      </Snackbar>
       <Box
         sx={{
           marginTop: 8,
@@ -53,16 +100,17 @@ export default function SignIn() {
           alignItems: "center",
         }}
       >
-        <Box sx={{
-          position: 'relative',
-          height: '56px',
-          width: '100%',
-          mb:4,
-          cursor:'pointer'
-        }}
-          onClick={() => router.push('/')}
+        <Box
+          sx={{
+            position: "relative",
+            height: "56px",
+            width: "100%",
+            mb: 4,
+            cursor: "pointer",
+          }}
+          onClick={() => router.push("/")}
         >
-          <Image src={Logo} fill className="img-responsive"/>
+          <Image src={Logo} fill className="img-responsive" />
         </Box>
         {/* <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <LockOutlinedIcon />
@@ -70,7 +118,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h5" fontWeight={900}>
           Sign in
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
@@ -80,6 +128,8 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            type={"email"}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             margin="normal"
@@ -90,16 +140,17 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={(e) => setPassword(e.target.value)}
           />
-          <FormControlLabel
+          {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
-          />
+          /> */}
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            size='large'
+            size="large"
             sx={{ mt: 3, mb: 2 }}
           >
             Sign In

@@ -11,10 +11,13 @@ export default function Public(props) {
   return (
     <Box>
       <Head>
-        <title>Adcommet</title>
+        <title>
+          Adcommet | The marketplace for digital advertising on demand | Send
+          your ads directly to digital signs anywhere, anytime and BE SEEN!
+        </title>
         <meta
           name="description"
-          content="Join the Ranks of Future Billionaires, Championing Sustainability and Embracing Digital Transformation with Ease. Experience a Contractless Journey into the Future of Business, Empowering You to Make a Lasting Impact."
+          content="Meta Description: Revolutionise the way you connect with your audience, amplify your brand, and achieve unmatched advertising success. Sign up now with Adcommet."
         />
       </Head>
       <Navbar />

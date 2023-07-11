@@ -16,6 +16,8 @@
     "@emotion/styled": "latest",
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
+    "firebase": "^10.0.0",
+    "moment": "^2.29.4",
     "next": "latest",
     "nodemailer": "^6.9.3",
     "prop-types": "latest",

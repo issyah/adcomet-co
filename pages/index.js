@@ -3,7 +3,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Link from '../src/Link';
-import Public from "../layout/public";
+import Public from "../layout/Public";
 import { Alert, Button, Grid, Snackbar, Stack, TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import Banner1 from "../public/index-1.jpeg";
@@ -22,6 +22,7 @@ export default function Index() {
     open: false,
     message: "",
   });
+  const [loading, setLoading] = React.useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -38,6 +39,7 @@ export default function Index() {
         message: json.message,
       });
       if (json.status) {
+        setLoading(false);
         setCompany();
         setMessage();
         setEmail();
