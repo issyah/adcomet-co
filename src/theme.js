@@ -28,14 +28,29 @@ const theme = createTheme({
       main: "#f9b959",
     },
     default: {
-      main: '#FFF'
-    }
+      main: "#FFF",
+    },
+  },
+  shape: {
+    borderRadius: 8,
   },
   typography: {
     fontFamily: roboto.style.fontFamily,
-    button:{
-      textTransform: 'none'
-    }
+    button: {
+      textTransform: "none",
+    },
+  },
+  components: {
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          "&.MuiPaper-elevation": {
+            boxShadow:
+              "rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px",
+          },
+        },
+      },
+    },
   },
 });
 

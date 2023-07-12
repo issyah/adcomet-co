@@ -1,9 +1,15 @@
 import AuthLayout from "../src/layout/AuthLayout";
-import { Typography } from "@mui/material";
-export default function Campaigns(props){
+import { Card, Typography } from "@mui/material";
+import CampaignTable from "../src/CampaignTable";
+export default function Campaigns(props) {
   return (
     <AuthLayout>
-      <Typography variant='h3' fontWeight='900'>Campaigns</Typography>
+      <Typography variant="h3" fontWeight="900">
+        Campaigns
+      </Typography>
+      <Card sx={{ mt: 4 }}>
+        <CampaignTable />
+      </Card>
     </AuthLayout>
-  )
+  );
 }

@@ -58,7 +58,8 @@ export default function AvatarDropdown(props) {
               sx={{
                 width: 32,
                 height: 32,
-                bgcolor: "primary.main",
+                bgcolor: "grey.200",
+                color: 'primary.main',
                 textTransform: "uppercase",
               }}
             >

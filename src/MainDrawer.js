@@ -52,17 +52,17 @@ export default function MainDrawer(props) {
       {list && (
         <List
           sx={{
-            px: 3,
+            px: 2,
           }}
         >
-          <ListItem>
+          <ListItem sx={{mb:4}}>
             <Box position="relative" width={"100%"} height={56} px={3}>
               <Image src={Logo} fill className="img-responsive" />
             </Box>
           </ListItem>
           {list.map((item, index) => (
             <ListItem key={index} disablePadding>
-              <ListItemButton component={Link} href={item?.href}>
+              <ListItemButton selected={router.pathname == item?.href} component={Link} href={item?.href}>
                 <ListItemIcon
                   sx={{
                     minWidth: "32px",

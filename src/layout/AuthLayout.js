@@ -27,6 +27,7 @@ import { useContextProvider } from "../../context/ContextProvider";
 import { useRouter } from "next/router";
 import AvatarDropdown from "../AvatarDropdown";
 import moment from "moment";
+import Head from "next/head";
 export default function AuthLayout(props) {
   const width = 280;
   const { children } = props;
@@ -34,12 +35,21 @@ export default function AuthLayout(props) {
   const router = useRouter();
   return (
     <Private>
+      <Head>
+        <title>Dashboard | Adcommet</title>
+      </Head>
       <Box display="flex">
         <AppBar
           position="fixed"
           sx={{
-            width: `calc(100% - ${width}px)`,
-            ml: `${width}px`,
+            width: {
+              md: `calc(100% - ${width}px)`,
+              sm: 'auto',
+            },
+            ml: {
+              md: `${width}px`,
+              ml: 'none',
+            },
             bgcolor: "#FFF",
           }}
           elevation={0}
@@ -49,8 +59,12 @@ export default function AuthLayout(props) {
             <Typography variant="body2">
               {moment().format("dddd, Do MMM YY")}
             </Typography>
-            <Box ml="auto">
-              <Stack spacing={1} direction={"row"}>
+            <Box sx={{
+              ml: {
+                md: 'auto'
+              }
+            }}>
+              <Stack direction={"row"}>
                 <TextField size='small' placeholder="Search"
                   sx={{
                     '.MuiInputBase-root' : {
@@ -65,6 +79,7 @@ export default function AuthLayout(props) {
                     )
                   }}
                 />
+                <Button variant='contained' color='primary' size='small' sx={{ml:2}}>Create campaign</Button>
                 <AvatarDropdown />
               </Stack>
             </Box>
@@ -99,7 +114,7 @@ export default function AuthLayout(props) {
             }
           ]}
         />
-        <Box component={"main"} flexGrow={1} p={3} bgcolor='grey.100' sx={{
+        <Box component={"main"} flexGrow={1} p={3} sx={{
           minHeight:'100vh'
         }}>
           <Toolbar />
