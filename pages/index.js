@@ -2,9 +2,20 @@ import * as React from "react";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Link from '../src/Link';
+import Link from "../src/Link";
 import Public from "../src/layout/Public";
-import { Alert, Button, Grid, Snackbar, Stack, TextField } from "@mui/material";
+import {
+  Alert,
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Snackbar,
+  Stack,
+  TextField,
+} from "@mui/material";
 import { useRouter } from "next/router";
 import Banner1 from "../public/index-1.jpeg";
 import illus1 from "../svg/content.svg";
@@ -18,6 +29,7 @@ export default function Index() {
   const [email, setEmail] = React.useState();
   const [company, setCompany] = React.useState();
   const [message, setMessage] = React.useState();
+  const [business, setBusiness] = React.useState("business-owner");
   const [alert, setAlert] = React.useState({
     open: false,
     message: "",
@@ -30,7 +42,7 @@ export default function Index() {
       // send the email
       const res = await fetch("/api/post-contact", {
         method: "POST",
-        body: JSON.stringify({ email, company, message }),
+        body: JSON.stringify({ email, company, message, business }),
       });
 
       const json = await res.json();
@@ -38,11 +50,13 @@ export default function Index() {
         open: true,
         message: json.message,
       });
+
       if (json.status) {
         setLoading(false);
-        setCompany();
-        setMessage();
-        setEmail();
+        setCompany("");
+        setMessage("");
+        setEmail("");
+        setBusiness("business-owner");
       }
     }
   };
@@ -53,11 +67,11 @@ export default function Index() {
     });
   };
 
-  const scrollToContent = ()=> {
+  const scrollToContent = () => {
     // get #learn-more position
-    const elem = document.getElementById('learn-more');
-    window.scrollTo(0, elem?.offsetTop)
-  }
+    const elem = document.getElementById("learn-more");
+    window.scrollTo(0, elem?.offsetTop);
+  };
 
   return (
     <Public>
@@ -354,6 +368,7 @@ export default function Index() {
                   required
                   type={"text"}
                   onChange={(e) => setCompany(e.target.value)}
+                  value={company}
                 />
                 <TextField
                   color="default"
@@ -362,8 +377,30 @@ export default function Index() {
                   required
                   variant="filled"
                   type="email"
+                  value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
+                <FormControl variant="filled">
+                  <InputLabel id='select-id'>Which sentence best describes your company?</InputLabel>
+                  <Select
+                    labelId="select-id"
+                    variant="filled"
+                    value={business}
+                    onChange={(e) => setBusiness(e.target.value)}
+                    sx={{
+                      textAlign: "left",
+                    }}
+                  >
+                    <MenuItem value="business-owner">
+                      I am a business owner looking to maximize my earnings
+                      through ads
+                    </MenuItem>
+                    <MenuItem value="advertiser">
+                      I want to advertise my product / my client's product
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+
                 <TextField
                   color="default"
                   label="Description"

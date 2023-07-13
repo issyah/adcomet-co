@@ -15,6 +15,8 @@ import { useState } from "react";
 import { useContextProvider } from "../context/ContextProvider";
 import { handleSignOut } from "./firebase-func";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import Link from "next/link";
+import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 export default function AvatarDropdown(props) {
   const { list } = props;
   const [anchorEl, setAnchorEl] = useState(null);
@@ -28,7 +30,6 @@ export default function AvatarDropdown(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   const clickSignOut = async () => {
     try {
       const result = await handleSignOut();
@@ -41,6 +42,24 @@ export default function AvatarDropdown(props) {
       return;
     }
   };
+
+  const menuList = [
+    {
+      label: "Profile",
+      icon: <PermIdentityIcon />,
+      attributes: {
+        href: "/profile",
+        component: Link,
+      },
+    },
+    {
+      label: "Sign out",
+      icon: <ExitToAppIcon />,
+      attributes: {
+        onClick: clickSignOut,
+      },
+    },
+  ];
 
   return (
     <>
@@ -59,7 +78,7 @@ export default function AvatarDropdown(props) {
                 width: 32,
                 height: 32,
                 bgcolor: "grey.200",
-                color: 'primary.main',
+                color: "primary.main",
                 textTransform: "uppercase",
               }}
             >
@@ -92,11 +111,15 @@ export default function AvatarDropdown(props) {
         <Box px={2}>
           <Typography variant="body1">{email}</Typography>
         </Box>
-        <Divider sx={{my:1}}/>
-        <MenuItem onClick={clickSignOut}>
-          <ExitToAppIcon />
-          Sign out
-        </MenuItem>
+        <Divider sx={{ my: 1 }} />
+        {menuList.map((item, index) => (
+          <MenuItem key={index} {...item?.attributes}>
+            <Box display={"flex"} gap={1}>
+              {item?.icon}
+              <Typography>{item?.label}</Typography>
+            </Box>
+          </MenuItem>
+        ))}
       </Menu>
     </>
   );

@@ -15,11 +15,15 @@ const ContextProvider = ({ children }) => {
     status: "",
     message: "",
   });
+  const [loading, setLoading] = React.useState(false);
+
   let value = {
     user,
     setUser,
     alert,
     setAlert,
+    loading,
+    setLoading,
   };
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
