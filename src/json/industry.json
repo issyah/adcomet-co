@@ -1,0 +1,76 @@
+{
+  "1": {
+    "name": "Daily Deals",
+    "id": "deal",
+    "description": "The Daily Deal industry operates as an online marketplace or platform that brings together businesses and consumers to offer highly discounted deals for a limited period of time. This industry has evolved from traditional coupon clipping into a digital space where consumers can browse and purchase attractive deals conveniently from their computers or mobile devices."
+  },
+  "2": {
+    "name": "Educational",
+    "id": "educ",
+    "description": "The educational industry is a broad sector that encompasses institutions, organizations, and processes involved in the delivery of education and training. It includes various levels of education, from early childhood education to primary, secondary, and higher education, as well as vocational and technical training."
+  },
+  "3": {
+    "name": "Energy",
+    "id": "engy",
+    "description" : "The energy industry is a sector that encompasses the production, distribution, and consumption of various forms of energy. It involves the extraction, transformation, and utilization of energy resources to power different sectors of society, including residential, commercial, industrial, and transportation."
+  },
+  "4" : {
+    "name" : "Entertainment",
+    "id" : "entm",
+    "description" : "The entertainment industry refers to a broad range of businesses involved in the creation, production, distribution, and marketing of various forms of entertainment. This includes industries such as film and television, music, theater, gaming, publishing, sports, and more. "
+  },
+  "5" : {
+    "name" : "IT services",
+    "id" : "itsv",
+    "description": "The IT service industry, also known as the information technology service industry, refers to businesses that provide various types of IT-related services to other organizations. These services can include software development, system implementation and integration, IT consulting, network administration, cybersecurity, cloud computing services, technical support, and more."
+  },
+  "6" : {
+    "name" : "Jobs and Careers",
+    "id" : "jobs",
+    "description" : "The job industry refers to the specific field or sector in which various organizations and individuals are engaged in employment activities. It encompasses all the different types of jobs and careers available in the market. The job industry can be classified into various sectors such as healthcare, technology, finance, education, manufacturing, hospitality, and many more. Each industry has its own unique characteristics, job roles, and employment opportunities. "
+  },
+  "7" : {
+    "name" : "Health Care, Medical",
+    "id" : "medi",
+    "description" : "The healthcare industry refers to the sector that provides medical services, products, and healthcare-related support. It encompasses a wide range of organizations, including hospitals, clinics, nursing homes, pharmaceutical companies, biotechnology firms, medical device manufacturers, health insurance providers, and more."
+  },
+  "8" : {
+    "name" : "E-commerce and online shopping",
+    "id" : "oret",
+    "description" : "The online shopping industry refers to the sector of the economy that involves the buying and selling of goods and services through the internet. It has grown tremendously in recent years due to the increasing access to smartphones, internet connectivity, and the convenience it offers to consumers."
+  },
+  "9" : {
+    "name" : "Property and Real Estate",
+    "id" : "prop",
+    "description" : "The property industry refers to the sector involved in the development, management, buying, selling, and renting of real estate properties. This includes residential properties (such as houses and apartments), commercial properties (such as offices and retail spaces), industrial properties (such as warehouses and factories), and land."
+  },
+  "10" : {
+    "name" : "Media, News and Publishing",
+    "id" : "news",
+    "description" : "The media industry encompasses various sectors involved in the creation, production, distribution, and consumption of media content. This includes traditional forms of media such as television, radio, newspapers, magazines, and books, as well as digital media platforms such as websites, social media, streaming services, podcasts, and mobile applications."
+  },
+  "11" : {
+    "name" : "Social Media and Networking",
+    "id": "social",
+    "description" : "The social networking industry refers to the sector that includes various platforms and services that enable individuals to connect, communicate, and interact with each other online. Social networking platforms allow users to create personal profiles, share content such as text, photos, and videos, and engage in interactions and discussions with others within their network."
+  },
+  "12" : {
+    "name" : "Telecommunication",
+    "id" : "tele",
+    "description": "The telecommunication industry refers to the sector that encompasses various technologies, services, and equipment used for communication over long distances. It involves transmitting data, voice, or video signals through wired or wireless means."
+  },
+  "13" : {
+    "name" : "Event ticketing",
+    "id" : "tikt",
+    "description" : "The ticketing industry refers to the business of selling tickets for various events, such as concerts, sporting events, theater performances, and other live entertainment. It involves the process of managing and distributing tickets to customers through various channels, including online platforms, box offices, and third-party vendors."
+  },
+  "14": {
+    "name" : "Travel, Flights and Hotel",
+    "id" : "trav",
+    "description" : "The travel industry refers to the sector that encompasses all activities related to travel, tourism, and hospitality. It involves various businesses and organizations that provide services and facilities to facilitate travel experiences for individuals or groups."
+  },
+  "15" : {
+    "name" : "Others, not sure",
+    "id" : "Oth"
+  }
+}

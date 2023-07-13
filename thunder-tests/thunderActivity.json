@@ -31,5 +31,19 @@
             "form": []
         },
         "tests": []
+    },
+    {
+        "_id": "062d16e8-f17b-4c71-928e-e155934cabd0",
+        "colId": "history",
+        "containerId": "",
+        "name": "localhost:3000/api/get-profile",
+        "url": "localhost:3000/api/get-profile",
+        "method": "GET",
+        "sortNum": 0,
+        "created": "2023-07-13T03:05:40.035Z",
+        "modified": "2023-07-13T03:05:40.035Z",
+        "headers": [],
+        "params": [],
+        "tests": []
     }
 ]
