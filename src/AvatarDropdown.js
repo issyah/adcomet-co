@@ -68,7 +68,6 @@ export default function AvatarDropdown(props) {
           <IconButton
             onClick={handleClick}
             size="small"
-            sx={{ ml: 2 }}
             aria-controls={open ? "account-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
@@ -77,8 +76,8 @@ export default function AvatarDropdown(props) {
               sx={{
                 width: 32,
                 height: 32,
-                bgcolor: "grey.200",
-                color: "primary.main",
+                bgcolor: "primary.main",
+                color: "grey.200",
                 textTransform: "uppercase",
               }}
             >

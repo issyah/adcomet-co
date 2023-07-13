@@ -1,6 +1,7 @@
 /**
  * Main auth layout*/
 import {
+  AddOutlined,
   DonutLargeOutlined,
   Home,
   HomeOutlined,
@@ -8,6 +9,7 @@ import {
   PinDropOutlined,
   SearchOutlined,
   UploadFileOutlined,
+  AddCircle,
 } from "@mui/icons-material";
 import {
   AppBar,
@@ -32,10 +34,13 @@ import { useRouter } from "next/router";
 import AvatarDropdown from "../AvatarDropdown";
 import moment from "moment";
 import Head from "next/head";
+import { useState } from "react";
+import { Menu } from "@mui/icons-material";
 export default function AuthLayout(props) {
   const width = 280;
   const { children } = props;
   const { alert, setAlert, loading, setLoading } = useContextProvider();
+  const [showDrawer, setShowDrawer] = useState(true);
   const router = useRouter();
   const handleAlertClose = () => {
     setAlert({
@@ -44,13 +49,14 @@ export default function AuthLayout(props) {
       status: "",
     });
   };
+
   return (
     <Private>
       <Head>
         <title>Dashboard | Adcommet</title>
       </Head>
       {loading && (
-        <Backdrop open={loading} sx={{zIndex: 9999}}>
+        <Backdrop open={loading} sx={{ zIndex: 9999 }}>
           <CircularProgress />
         </Backdrop>
       )}
@@ -59,12 +65,12 @@ export default function AuthLayout(props) {
           position="fixed"
           sx={{
             width: {
-              md: `calc(100% - ${width}px)`,
-              sm: "auto",
+              lg: `calc(100% - ${width}px)`,
+              md: "100%",
             },
             ml: {
-              md: `${width}px`,
-              ml: "none",
+              lg: `${width}px`,
+              md: "a",
             },
             bgcolor: "#FFF",
           }}
@@ -72,18 +78,37 @@ export default function AuthLayout(props) {
           color="default"
         >
           <Toolbar>
-            <Typography variant="body2">
-              {moment().format("dddd, Do MMM YY")}
-            </Typography>
-            <Box
+            <Typography
+              variant="body2"
               sx={{
-                ml: {
-                  md: "auto",
+                display: {
+                  xs: "none",
+                  sm: "none",
+                  md: "block",
                 },
               }}
             >
-              <Stack direction={"row"}>
-                <TextField
+              {moment().format("dddd, Do MMM YY")}
+            </Typography>
+            <IconButton
+              sx={{
+                display: {
+                  xs: "block",
+                  sm: "block",
+                  md: "none",
+                },
+              }}
+              onClick={() => setShowDrawer(!showDrawer)}
+            >
+              <Menu />
+            </IconButton>
+            <Box
+              sx={{
+                ml: "auto",
+              }}
+            >
+              <Stack direction={"row"} gap={1}>
+                {/* <TextField
                   size="small"
                   placeholder="Search"
                   InputProps={{
@@ -93,15 +118,37 @@ export default function AuthLayout(props) {
                       </InputAdornment>
                     ),
                   }}
-                />
-                <Button
+                /> */}
+                <Tooltip title="Search">
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    sx={{
+                      minWidth: "46px",
+                    }}
+                  >
+                    <SearchOutlined />
+                  </Button>
+                </Tooltip>
+                <Tooltip title="Create new campaign">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    sx={{
+                      minWidth: "46px",
+                    }}
+                  >
+                    <AddCircle />
+                  </Button>
+                </Tooltip>
+                {/* <Button
                   variant="contained"
                   color="primary"
                   size="small"
                   sx={{ ml: 2 }}
                 >
                   Create campaign
-                </Button>
+                </Button> */}
                 <AvatarDropdown />
               </Stack>
             </Box>
@@ -135,6 +182,8 @@ export default function AuthLayout(props) {
               href: "/creatives",
             },
           ]}
+          mobileOpen={showDrawer}
+          setMobileOpen={setShowDrawer}
         />
         <Box
           component={"main"}
@@ -142,7 +191,7 @@ export default function AuthLayout(props) {
           p={3}
           sx={{
             minHeight: "100vh",
-            bgcolor: 'grey.100'
+            bgcolor: "grey.100",
           }}
         >
           <Toolbar />

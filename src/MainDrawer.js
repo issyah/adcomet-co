@@ -17,25 +17,33 @@ import Logo from "../public/logo-white.png";
 import Link from "next/link";
 export default function MainDrawer(props) {
   const router = useRouter();
-  const { list, drawerWidth } = props;
-  const [mobileOpen, setMobileOpen] = useState(true);
+  const { list, drawerWidth, mobileOpen, setMobileOpen } = props;
   const [variant, setVariant] = useState("permanent");
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  const handleVariantState = (size) => {
+    if (size >= 900) {
+      setVariant("permanent");
+    } else {
+      setVariant("temporary");
+    }
+  };
+
   useEffect(() => {
     if (typeof window !== undefined) {
+      let windowWidth = window.innerWidth;
+      handleVariantState(windowWidth);
+      window.onresize = function (event) {
+        windowWidth = window.innerWidth;
+        handleVariantState(windowWidth);
+      };
     }
   }, []);
   return (
     <Drawer
       sx={{
         width: drawerWidth ? drawerWidth : 280,
-        display: {
-          xs: "none",
-          sm: "none",
-          md: "block",
-        },
         ".MuiListItem-root": {
           borderRadius: 16,
         },

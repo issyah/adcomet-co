@@ -5,10 +5,9 @@ import firebase_app from "./firebase";
 import {
   signInWithEmailAndPassword,
   getAuth,
-  browserLocalPersistence,
-  setPersistence,
   signOut,
   sendPasswordResetEmail,
+  confirmPasswordReset,
 } from "firebase/auth";
 
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
@@ -55,6 +54,20 @@ const handleResetPassword = async (email) => {
     error,
   };
 };
+// This is after the user has clicked on the link and wants to create a new passsword
+const handleConfirmResetPassword = async (code, newPassword) => {
+  let result = null,
+    error = null;
+  try {
+    result = await confirmPasswordReset(auth, code, newPassword);
+  } catch (e) {
+    error = e;
+  }
+  return {
+    result,
+    error,
+  };
+};
 
 const handleSignOut = async () => {
   let result = null,
@@ -70,4 +83,10 @@ const handleSignOut = async () => {
     error,
   };
 };
-export { signIn, handleSignOut, getData, handleResetPassword };
+export {
+  signIn,
+  handleSignOut,
+  getData,
+  handleResetPassword,
+  handleConfirmResetPassword,
+};
