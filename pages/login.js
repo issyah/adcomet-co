@@ -13,8 +13,9 @@ import Logo from "../public/logo.png";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { signIn } from "../src/firebase-func";
-import { Alert, Snackbar } from "@mui/material";
+import { Alert, CircularProgress, Snackbar } from "@mui/material";
 import { useContextProvider } from "../context/ContextProvider";
+import { KeyboardArrowRightOutlined } from "@mui/icons-material";
 function Copyright(props) {
   return (
     <Typography
@@ -37,7 +38,8 @@ function Copyright(props) {
 export default function SignIn() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const { alert, setAlert } = useContextProvider();
+  const { alert, setAlert, user } = useContextProvider();
+  const [loading , setLoading] = React.useState(false);
   const handleClose = () => {
     setAlert({
       open: false,
@@ -47,34 +49,36 @@ export default function SignIn() {
   };
 
   const handleSubmit = async (event) => {
+    setLoading(true);
     event.preventDefault();
     const { result, error } = await signIn(email, password);
     if (error) {
       const code = error.code;
       let message;
-      if(code === 'auth/wrong-password'){
-        message = 'Incorrect email or password. Please try again.'
-      }else if(code === 'auth/user-not-found'){
-        message = 'User is not registered.'
+      if (code === "auth/wrong-password") {
+        message = "Incorrect email or password. Please try again.";
+      } else if (code === "auth/user-not-found") {
+        message = "User is not registered.";
       }
-
+      setLoading(false);
       setAlert({
-        status: 'error',
+        status: "error",
         message,
-        open: true
-      })
+        open: true,
+      });
       return;
     }
+    // success
+    router.push("/dashboard");
 
-    // success 
-    router.push('/dashboard');
-
-    // const data = new FormData(event.currentTarget);
-    // console.log({
-    //   email: data.get("email"),
-    //   password: data.get("password"),
-    // });
   };
+
+  React.useEffect(() => {
+    // if user already logged in, just redirect to dashboard
+    if (user !== null || user) {
+      router.push("/dashboard");
+    }
+  }, []);
   const router = useRouter();
   return (
     <Container component="main" maxWidth="xs">
@@ -152,21 +156,21 @@ export default function SignIn() {
             variant="contained"
             size="large"
             sx={{ mt: 3, mb: 2 }}
+            startIcon={loading && <CircularProgress size={16} color='inherit'/>}
           >
             Sign In
           </Button>
-          {/* <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
+          <Grid container justifyContent={"flex-end"} >
+            <Grid item xs={'auto'}>
+              <Button
+                component={Link}
+                href="/forgot-password"
+                endIcon={<KeyboardArrowRightOutlined />}
+              >
+                Forgot password
+              </Button>
             </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid> */}
+          </Grid>
         </Box>
       </Box>
       <Copyright sx={{ mt: 8, mb: 4 }} />

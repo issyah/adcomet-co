@@ -86,11 +86,6 @@ export default function AuthLayout(props) {
                 <TextField
                   size="small"
                   placeholder="Search"
-                  sx={{
-                    ".MuiInputBase-root": {
-                      borderRadius: 10,
-                    },
-                  }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">

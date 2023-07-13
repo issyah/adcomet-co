@@ -20,17 +20,22 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import Logo from "../public/logo.png";
+import { useContextProvider } from "../context/ContextProvider";
 export default function Navbar() {
   const [open, setOpen] = React.useState(false);
+  const {user} = useContextProvider();
   const navArr = [
     {
       label: "About us",
       href: "/about-us",
     },
-    {
+    {...(user !== null || user ) ? {
+      label: "Back to account",
+      href: '/dashboard'
+    } : {
       label: "Log in",
-      href: "/login"
-    }
+      href: '/login'
+    }}
   ];
   return (
     <AppBar

@@ -8,6 +8,7 @@ import {
   browserLocalPersistence,
   setPersistence,
   signOut,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
@@ -32,8 +33,22 @@ const getData = async (collection, id) => {
     error = null;
   try {
     const result = await getDoc(docRef);
-  } catch (error) {
-    error = error;
+  } catch (e) {
+    error = e;
+  }
+  return {
+    result,
+    error,
+  };
+};
+
+const handleResetPassword = async (email) => {
+  let result = null,
+    error = null;
+  try {
+    result = await sendPasswordResetEmail(auth, email);
+  } catch (e) {
+    error = e;
   }
   return {
     result,
@@ -55,4 +70,4 @@ const handleSignOut = async () => {
     error,
   };
 };
-export { signIn, handleSignOut, getData };
+export { signIn, handleSignOut, getData, handleResetPassword };
