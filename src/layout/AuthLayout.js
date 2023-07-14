@@ -29,18 +29,21 @@ import {
 } from "@mui/material";
 import MainDrawer from "../MainDrawer";
 import Private from "./Private";
+import Link from "next/link";
 import { useContextProvider } from "../../context/ContextProvider";
 import { useRouter } from "next/router";
 import AvatarDropdown from "../AvatarDropdown";
 import moment from "moment";
 import Head from "next/head";
 import { useState } from "react";
+import SearchDialog from "../SearchDialog";
 import { Menu } from "@mui/icons-material";
 export default function AuthLayout(props) {
   const width = 280;
   const { children } = props;
   const { alert, setAlert, loading, setLoading } = useContextProvider();
   const [showDrawer, setShowDrawer] = useState(true);
+  const [openSearchDialog, setOpenSearchDialog] = useState(false);
   const router = useRouter();
   const handleAlertClose = () => {
     setAlert({
@@ -60,6 +63,7 @@ export default function AuthLayout(props) {
           <CircularProgress />
         </Backdrop>
       )}
+      <SearchDialog open={openSearchDialog} setOpen={setOpenSearchDialog} />
       <Box display="flex">
         <AppBar
           position="fixed"
@@ -125,17 +129,22 @@ export default function AuthLayout(props) {
                     size="small"
                     sx={{
                       minWidth: "46px",
+                      p: 0,
                     }}
+                    onClick={() => setOpenSearchDialog(true)}
                   >
                     <SearchOutlined />
                   </Button>
                 </Tooltip>
                 <Tooltip title="Create new campaign">
                   <Button
+                    component={Link}
+                    href='/campaigns/create-campaign'
                     variant="outlined"
                     color="primary"
                     sx={{
                       minWidth: "46px",
+                      p: 0,
                     }}
                   >
                     <AddCircle />

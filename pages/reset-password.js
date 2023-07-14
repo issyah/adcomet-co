@@ -50,6 +50,7 @@ export default function ResetPassword(props) {
       })
       return;
     }
+    // if both checks, try to reset password 
   };
 
   return (
