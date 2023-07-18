@@ -17,8 +17,14 @@ import {
 import AuthLayout from "../src/layout/AuthLayout";
 import { useEffect, useState } from "react";
 import { useContextProvider } from "../context/ContextProvider";
-import { getProfile, updateData, handleConfirmChangeEmail, handleSignOut } from "../src/firebase-func";
+import {
+  getProfile,
+  updateData,
+  handleConfirmChangeEmail,
+  handleSignOut,
+} from "../src/firebase-func";
 import VerifyCredentials from "../src/VerifyCredentials";
+import ChangePasswordDialog from "../src/ChangePasswordDialog";
 export default function Profile(props) {
   const { setLoading, user, setAlert } = useContextProvider();
   const [form, setForm] = useState({
@@ -37,6 +43,7 @@ export default function Profile(props) {
   const [loginEmail, setLoginEmail] = useState("");
   const [tab, setTab] = useState("profile");
   const [openCredentialPrompt, setOpenCredentialPrompt] = useState(false);
+  const [openChangePassword, setOpenChangePassword] = useState(false);
   const fetchData = async () => {
     setLoading(true);
     const { error, result } = await getProfile(user?.uid);
@@ -136,15 +143,16 @@ export default function Profile(props) {
       setAlert({
         open: true,
         status: "error",
-        message: error.message
+        message: error.message,
       });
       return;
     }
-    // success 
+    // success
     setAlert({
       open: true,
-      status: 'success',
-      message: 'Your login email has been successfully updated. Please login again. We will log you out now.'
+      status: "success",
+      message:
+        "Your login email has been successfully updated. Please login again. We will log you out now.",
     });
     setTimeout(() => {
       handleSignOut();
@@ -196,6 +204,10 @@ export default function Profile(props) {
         setOpen={setOpenCredentialPrompt}
         setSuccessCredentials={setSuccessCredentials}
         successCredential={successCredential}
+      />
+      <ChangePasswordDialog 
+        open={openChangePassword}
+        setOpen={setOpenChangePassword}
       />
       <Typography variant="h3" fontWeight={900} component={"h1"} gutterBottom>
         Profile
@@ -280,6 +292,20 @@ export default function Profile(props) {
                 <Button variant="outlined" type="submit">
                   Change email
                 </Button>
+              </Box>
+              <Box display="flex" alignItems="center" gap={1}>
+                <TextField
+                  size="small"
+                  label="Password"
+                  value={"pppppppp"}
+                  type="password"
+                  disabled={true}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  sx={{ flexGrow: 1 }}
+                />
+                <Button variant="outlined" onClick={() => setOpenChangePassword(true)} >Change password</Button>
               </Box>
             </Stack>
           </CardContent>

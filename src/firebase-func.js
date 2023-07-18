@@ -11,6 +11,7 @@ import {
   reauthenticateWithCredential,
   EmailAuthProvider,
   updateEmail,
+  updatePassword,
 } from "firebase/auth";
 
 import {
@@ -104,6 +105,21 @@ export const handleVerifyCredentials = async (email, password) => {
   try {
     const credentials = EmailAuthProvider.credential(email, password);
     result = await reauthenticateWithCredential(auth.currentUser, credentials);
+  } catch (e) {
+    error = e;
+  }
+  return {
+    result,
+    error,
+  };
+};
+
+// update new password. This happens after we verify his current password via handleVerifyCredentials
+export const handleUpdateNewPassword = async (newPass) => {
+  let result = null,
+    error = null;
+  try {
+    result = await updatePassword(auth.currentUser, newPass);
   } catch (e) {
     error = e;
   }
