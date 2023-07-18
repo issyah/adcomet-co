@@ -26,7 +26,7 @@ import {
 import VerifyCredentials from "../src/VerifyCredentials";
 import ChangePasswordDialog from "../src/ChangePasswordDialog";
 export default function Profile(props) {
-  const { setLoading, user, setAlert } = useContextProvider();
+  const { setLoading, user, setAlert, setUser } = useContextProvider();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -111,6 +111,14 @@ export default function Profile(props) {
       status: "success",
       message: "User profile has been updated!",
     });
+    // update current User profile 
+    setUser({
+      ...user,
+      profile: {
+        ...user?.profile,
+        ...form
+      }
+    })
     setLoading(false);
   };
 
@@ -185,8 +193,27 @@ export default function Profile(props) {
     },
   ];
 
+  const updateFormData = () => {
+    if (user?.profile) {
+      const profile = user?.profile;
+      setForm({
+        ...form,
+        firstName: profile?.firstName,
+        lastName: profile?.lastName,
+        address: profile?.address,
+        postal: profile?.postal,
+      });
+    }
+  };
+
   useEffect(() => {
-    fetchData();
+    updateFormData()
+  }, []);
+
+  useEffect(() => {
+    // if the user?.profile is not available,
+    updateFormData();
+    // fetchData();
     setLoginEmail(user?.email);
   }, [user]);
 
@@ -205,7 +232,7 @@ export default function Profile(props) {
         setSuccessCredentials={setSuccessCredentials}
         successCredential={successCredential}
       />
-      <ChangePasswordDialog 
+      <ChangePasswordDialog
         open={openChangePassword}
         setOpen={setOpenChangePassword}
       />
@@ -229,7 +256,11 @@ export default function Profile(props) {
             },
           }}
         >
-          <CardContent sx={{ p: 4 }}>
+          <CardContent sx={{
+            p: {
+              md: 4
+            }
+          }}>
             <Typography variant="h4" gutterBottom>
               Profile
             </Typography>
@@ -269,7 +300,11 @@ export default function Profile(props) {
             },
           }}
         >
-          <CardContent sx={{ p: 4 }}>
+          <CardContent sx={{
+            p: {
+              md: 4
+            }
+          }}>
             <Typography variant="h4" gutterBottom>
               Login settings
             </Typography>
@@ -305,7 +340,12 @@ export default function Profile(props) {
                   }}
                   sx={{ flexGrow: 1 }}
                 />
-                <Button variant="outlined" onClick={() => setOpenChangePassword(true)} >Change password</Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => setOpenChangePassword(true)}
+                >
+                  Change password
+                </Button>
               </Box>
             </Stack>
           </CardContent>

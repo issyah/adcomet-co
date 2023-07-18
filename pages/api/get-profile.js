@@ -3,7 +3,6 @@
 import { getFirestore, getDoc, doc } from "firebase/firestore";
 import firebase_app from "../../src/firebase";
 const db = getFirestore(firebase_app);
-
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     return res.status(400);

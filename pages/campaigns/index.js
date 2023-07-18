@@ -6,7 +6,14 @@ import Link from "next/link";
 export default function Campaigns(props) {
   return (
     <AuthLayout>
-      <Box display="flex" alignItems="center" justifyContent="space-between">
+      <Box sx={{
+        //  display="flex" alignItems="center" justifyContent="space-between"
+        display: 'flex',
+        gap:1,
+        alignItems:'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap'
+      }}>
         <Typography variant="h3" fontWeight="900">
           Campaigns
         </Typography>

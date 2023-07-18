@@ -48,9 +48,9 @@ export default function SignIn() {
     });
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (e) => {
     setLoading(true);
-    event.preventDefault();
+    e.preventDefault();
     const { result, error } = await signIn(email, password);
     if (error) {
       const code = error.code;
@@ -68,8 +68,9 @@ export default function SignIn() {
       });
       return;
     }
-    // success
-    router.push("/dashboard");
+    if(result){
+      router.push("/dashboard");
+    }
 
   };
 
