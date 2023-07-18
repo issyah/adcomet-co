@@ -62,7 +62,7 @@ export default function AboutUs() {
                 We are dedicated to assisting business owners and marketing
                 professionals in reaching new audiences and maximising sales
                 through the incredible potential of self-serve digital
-                billboards. Adcommet provides an empowering platform that grants
+                billboards. Adcomet provides an empowering platform that grants
                 businesses of any scale the opportunity to effortlessly
                 establish and affordably utilise thousands of digital
                 billboards.
@@ -71,7 +71,7 @@ export default function AboutUs() {
                 If you aspire to distinguish yourself from competitors and drive
                 the growth of your business through a versatile marketing
                 strategy, then you are prepared to embark on impactful campaigns
-                with Adcommet.
+                with Adcomet.
               </Typography>
             </div>
           </Box>

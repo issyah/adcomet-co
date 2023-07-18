@@ -1,5 +1,5 @@
 /**
- * The main navbar for the adcommet*/
+ * The main navbar for the Adcomet*/
 import { Menu } from "@mui/icons-material";
 import {
   AppBar,

@@ -27,7 +27,7 @@
         "params": [],
         "body": {
             "type": "json",
-            "raw": "{\n  \"email\" : \"issyah89@gmail.com\",\n  \"company\" : \"Adcommet API testing \",\n  \"message\" : \"Hello brother. incoming POST APi from /post-contact\"\n}",
+            "raw": "{\n  \"email\" : \"issyah89@gmail.com\",\n  \"company\" : \"Adcomet API testing \",\n  \"message\" : \"Hello brother. incoming POST APi from /post-contact\"\n}",
             "form": []
         },
         "tests": []
@@ -37,13 +37,19 @@
         "colId": "history",
         "containerId": "",
         "name": "localhost:3000/api/get-profile",
-        "url": "localhost:3000/api/get-profile",
+        "url": "localhost:3000/api/get-profile/?id=mZ5tPJM92wT3B0U2RDSRl8Edcjh2",
         "method": "GET",
         "sortNum": 0,
         "created": "2023-07-13T03:05:40.035Z",
-        "modified": "2023-07-13T03:05:40.035Z",
+        "modified": "2023-07-17T05:36:05.769Z",
         "headers": [],
-        "params": [],
+        "params": [
+            {
+                "name": "id",
+                "value": "mZ5tPJM92wT3B0U2RDSRl8Edcjh2",
+                "isPath": false
+            }
+        ],
         "tests": []
     }
 ]

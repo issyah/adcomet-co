@@ -42,7 +42,7 @@ export default function AuthLayout(props) {
   const width = 280;
   const { children } = props;
   const { alert, setAlert, loading, setLoading } = useContextProvider();
-  const [showDrawer, setShowDrawer] = useState(true);
+  const [showDrawer, setShowDrawer] = useState(false);
   const [openSearchDialog, setOpenSearchDialog] = useState(false);
   const router = useRouter();
   const handleAlertClose = () => {
@@ -56,7 +56,7 @@ export default function AuthLayout(props) {
   return (
     <Private>
       <Head>
-        <title>Dashboard | Adcommet</title>
+        <title>Dashboard | Adcomet</title>
       </Head>
       {loading && (
         <Backdrop open={loading} sx={{ zIndex: 9999 }}>

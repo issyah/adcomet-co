@@ -19,7 +19,14 @@ import {
 import Industry from "./json/industry.json";
 import CreateCampaignProgress from "./CreateCampaignProgress";
 import { KeyboardArrowRightOutlined } from "@mui/icons-material";
+import { useEffect } from "react";
 export default function CampaignInformation(props) {
+
+  useEffect(() => {
+    return () => {
+      console.log('Are you sure?');
+    }
+  },[])
   return (
     <Box>
       <Typography variant="h3" component={"h1"} fontWeight={900}>

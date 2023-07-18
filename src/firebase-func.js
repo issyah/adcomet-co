@@ -8,14 +8,23 @@ import {
   signOut,
   sendPasswordResetEmail,
   confirmPasswordReset,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
+  updateEmail,
 } from "firebase/auth";
 
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 const auth = getAuth(firebase_app);
 const db = getFirestore(firebase_app);
 
-const signIn = async (email, password) => {
+export const signIn = async (email, password) => {
   let result = null,
     error = null;
   try {
@@ -26,12 +35,12 @@ const signIn = async (email, password) => {
   return { result, error };
 };
 
-const getData = async (collection, id) => {
+export const getData = async (collection, id) => {
   let docRef = doc(db, collection, id);
   let result = null,
     error = null;
   try {
-    const result = await getDoc(docRef);
+    result = await getDoc(docRef);
   } catch (e) {
     error = e;
   }
@@ -41,7 +50,70 @@ const getData = async (collection, id) => {
   };
 };
 
-const handleResetPassword = async (email) => {
+export const updateData = async (collection, id, data) => {
+  let docRef = doc(db, collection, id);
+  let result = null,
+    error = null;
+  try {
+    result = await updateDoc(docRef, data);
+  } catch (e) {
+    error = e;
+  }
+  return {
+    result,
+    error,
+  };
+};
+
+export const getProfile = async (id) => {
+  let docRef = doc(db, "users", id);
+  let result = null,
+    error = null;
+  try {
+    result = await getDoc(docRef);
+  } catch (e) {
+    error = e;
+  }
+  return {
+    result,
+    error,
+  };
+};
+
+// Change primary email
+export const handleConfirmChangeEmail = async (email) => {
+  let result = null,
+    error = null;
+  try {
+    result = await updateEmail(auth.currentUser, email);
+  } catch (e) {
+    error = e;
+  }
+
+  return {
+    result,
+    error,
+  };
+};
+
+/**
+ * This is used to re-authenticate the user for critical updates such as email updates and password change*/
+export const handleVerifyCredentials = async (email, password) => {
+  let result = null,
+    error = null;
+  try {
+    const credentials = EmailAuthProvider.credential(email, password);
+    result = await reauthenticateWithCredential(auth.currentUser, credentials);
+  } catch (e) {
+    error = e;
+  }
+  return {
+    result,
+    error,
+  };
+};
+
+export const handleResetPassword = async (email) => {
   let result = null,
     error = null;
   try {
@@ -55,7 +127,7 @@ const handleResetPassword = async (email) => {
   };
 };
 // This is after the user has clicked on the link and wants to create a new passsword
-const handleConfirmResetPassword = async (code, newPassword) => {
+export const handleConfirmResetPassword = async (code, newPassword) => {
   let result = null,
     error = null;
   try {
@@ -69,7 +141,7 @@ const handleConfirmResetPassword = async (code, newPassword) => {
   };
 };
 
-const handleSignOut = async () => {
+export const handleSignOut = async () => {
   let result = null,
     error = null;
 
@@ -82,11 +154,4 @@ const handleSignOut = async () => {
     result,
     error,
   };
-};
-export {
-  signIn,
-  handleSignOut,
-  getData,
-  handleResetPassword,
-  handleConfirmResetPassword,
 };
