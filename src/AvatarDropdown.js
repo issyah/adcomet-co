@@ -17,6 +17,7 @@ import { handleSignOut } from "./firebase-func";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import Link from "next/link";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
+import { BusinessCenterOutlined } from "@mui/icons-material";
 export default function AvatarDropdown(props) {
   const { list } = props;
   const [anchorEl, setAnchorEl] = useState(null);
@@ -49,6 +50,14 @@ export default function AvatarDropdown(props) {
       icon: <PermIdentityIcon />,
       attributes: {
         href: "/profile",
+        component: Link,
+      },
+    },
+    {
+      label: "Company",
+      icon: <BusinessCenterOutlined />,
+      attributes: {
+        href: "/company",
         component: Link,
       },
     },

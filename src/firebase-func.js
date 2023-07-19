@@ -81,6 +81,21 @@ export const getProfile = async (id) => {
   };
 };
 
+export const getCompanyById = async (id) => {
+  let docRef = (doc, "companies", id);
+  let result = null,
+    error = null;
+  try {
+    result = await getDoc(docRef);
+  } catch (e) {
+    error = e ;
+  }
+  return {
+    result,
+    error
+  }
+};
+
 // Change primary email
 export const handleConfirmChangeEmail = async (email) => {
   let result = null,
