@@ -22,9 +22,17 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
+import {
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
+
 const auth = getAuth(firebase_app);
 const db = getFirestore(firebase_app);
-
+const storage = getStorage(firebase_app);
 export const signIn = async (email, password) => {
   let result = null,
     error = null;
@@ -66,6 +74,41 @@ export const updateData = async (collection, id, data) => {
   };
 };
 
+// upload logo for company profile
+export const uploadCompanyLogo = async (id, file) => {
+  // delete the current logo first
+  const companyPath = ref(storage, `companies/${id}/logo`);
+  let result, error, downloadUrl;
+  // upload new file and get reference
+  // uploadBytes(companyPath, file)
+  //   .then((snapshot) => {
+  //     result = snapshot;
+  //   })
+  //   .catch((e) => {
+  //     error = e;
+  //   });
+  try {
+    result = await uploadBytes(companyPath, file);
+  } catch (e) {
+    error = e;
+  }
+
+  if (result?.ref) {
+    downloadUrl = await getDownloadURL(result?.ref);
+  }
+  // update the file path on the fly
+  const docRef = doc(db, "companies", id);
+  const updatePath = await updateDoc(docRef, {
+    "photo.url": downloadUrl,
+  });
+
+  return {
+    result,
+    error,
+    downloadUrl,
+  };
+};
+
 export const getProfile = async (id) => {
   let docRef = doc(db, "users", id);
   let result = null,
@@ -88,12 +131,12 @@ export const getCompanyById = async (id) => {
   try {
     result = await getDoc(docRef);
   } catch (e) {
-    error = e ;
+    error = e;
   }
   return {
     result,
-    error
-  }
+    error,
+  };
 };
 
 // Change primary email
