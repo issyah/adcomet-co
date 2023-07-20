@@ -33,8 +33,11 @@ import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlin
 import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import DataGrid from "../src/DataGrid";
 import CampaignTable from "../src/CampaignTable";
+import { useEffect } from "react";
+import { useContextProvider } from "../context/ContextProvider";
 export default function Dashboard() {
   const router = useRouter();
+  const {setLoading} = useContextProvider();
   const data = [
     {
       label: "Total Campaigns",
@@ -77,6 +80,10 @@ export default function Dashboard() {
       location: "Changi Airport Jewel level 1",
     },
   ];
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
   return (
     <AuthLayout>
