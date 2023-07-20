@@ -89,7 +89,9 @@ export default function Dashboard() {
             {data?.map((item, index) => (
               <Grid item md={3} xs={12} key={index}>
                 <Card sx={item?.sx ? item?.sx : undefined}>
-                  <CardContent>
+                  <CardContent sx={{
+                    overflow:'hidden'
+                  }}>
                     <Box
                       display="flex"
                       sx={{
@@ -99,13 +101,21 @@ export default function Dashboard() {
                     >
                       {item?.icon && item.icon}
                       <Box>
-                        <Typography
-                          variant="body1"
-                          color="grey.900"
-                          gutterBottom
-                        >
-                          {item?.label}
-                        </Typography>
+                        <Box >
+                          <Typography
+                            variant="body1"
+                            color="grey.900"
+                            gutterBottom
+                            sx={{
+                              overflow:'hidden',
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {item?.label}
+                          </Typography>
+                        </Box>
+
                         <Typography variant="h4" fontWeight="500">
                           {item?.prefix && (
                             <Typography sx={{ display: "inline" }}>

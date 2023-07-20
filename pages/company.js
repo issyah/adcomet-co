@@ -230,13 +230,10 @@ export default function Company(props) {
                           position: "relative",
                           width: "100%",
                           height: "60px",
-                          img: {
-                            objectFit: "contain",
-                          },
                         }}
                       >
                         {formData?.photo?.url && (
-                          <Image src={formData?.photo?.url} fill />
+                          <Image src={formData?.photo?.url} fill unoptimized className='img-responsive'/>
                         )}
                       </Box>
                     </CardContent>

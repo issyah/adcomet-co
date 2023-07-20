@@ -16,6 +16,7 @@ const ContextProvider = ({ children }) => {
     status: "",
     message: "",
   });
+  const [company, setCompany] = React.useState({});
   const [loading, setLoading] = React.useState(false);
 
   let value = {
@@ -25,22 +26,25 @@ const ContextProvider = ({ children }) => {
     setAlert,
     loading,
     setLoading,
+    company,
   };
 
-  const getProfileData = async(id) => {
-    const {error, result} = await getProfile(id);
-    if(result){
-      if(result?.exists()){
+  const getProfileData = async (id) => {
+    const { error, result } = await getProfile(id);
+    if (result) {
+      if (result?.exists()) {
         setUser({
           ...user,
-          profile: result?.data()
-        })
+          profile: result?.data(),
+        });
+        // set company id and name for quick reference
+        setCompany(result?.data()?.company);
       }
     }
-  } 
+  };
 
   React.useEffect(() => {
-    if(user?.uid){
+    if (user?.uid) {
       getProfileData(user?.uid);
     }
   }, [user?.uid]);
@@ -48,7 +52,7 @@ const ContextProvider = ({ children }) => {
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (usr) => {
       if (usr) {
-        // pull in his profile information for campaign id 
+        // pull in his profile information for campaign id
         // getProfileData(user, user?.uid)
         setUser(usr);
       } else {
@@ -59,8 +63,6 @@ const ContextProvider = ({ children }) => {
   }, []);
   return <context.Provider value={value}>{children}</context.Provider>;
 };
-
-
 
 // const useContextProvider = React.useContext(context);
 const useContextProvider = () => {

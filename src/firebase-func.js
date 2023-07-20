@@ -20,6 +20,10 @@ import {
   setDoc,
   getDoc,
   updateDoc,
+  collection,
+  query,
+  where,
+  getDocs,
 } from "firebase/firestore";
 
 import {
@@ -74,19 +78,28 @@ export const updateData = async (collection, id, data) => {
   };
 };
 
+// fetch current users in the company
+
+export const getUsersInCompany = async (id) => {
+  const userRef = collection(db, "users");
+  let result, error;
+  try {
+    const q = query(userRef, where("company.id", "==", id));
+    result = await getDocs(q);
+  } catch (e) {
+    error = e;
+  }
+  return {
+    result,
+    error,
+  };
+};
+
 // upload logo for company profile
 export const uploadCompanyLogo = async (id, file) => {
   // delete the current logo first
   const companyPath = ref(storage, `companies/${id}/logo`);
   let result, error, downloadUrl;
-  // upload new file and get reference
-  // uploadBytes(companyPath, file)
-  //   .then((snapshot) => {
-  //     result = snapshot;
-  //   })
-  //   .catch((e) => {
-  //     error = e;
-  //   });
   try {
     result = await uploadBytes(companyPath, file);
   } catch (e) {
