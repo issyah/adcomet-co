@@ -24,6 +24,9 @@ import { useEffect, useState } from "react";
 import DataGrid from "../src/DataGrid";
 import MenuIcon from "@mui/icons-material/Menu";
 import { DeleteOutline } from "@mui/icons-material";
+import { red } from "@mui/material/colors";
+import moment from "moment";
+import { Timestamp } from "firebase/firestore";
 
 export default function Users(props) {
   const [users, setUsers] = useState([]);
@@ -60,6 +63,8 @@ export default function Users(props) {
           ...data,
           id: doc.id,
           userType: data?.company?.userType,
+          created: data?.created?.toDate(),
+          lastSeen: data?.lastSeen.toDate()
         };
       });
       setUsers(newData);
@@ -83,6 +88,20 @@ export default function Users(props) {
     {
       label: "Address",
       id: "address",
+    },
+    {
+      label: 'Created on',
+      id: 'created',
+      render: (created) => (
+        <Typography variant='caption'>{moment(created).format('DD MMM YY')}</Typography>
+      )
+    },
+    {
+      label: 'Last seen',
+      id: 'lastSeen',
+      render: (value) => (
+        <Typography variant='caption'>{moment(value).format('DD MMM YY, hh:mm')}</Typography>
+      )
     },
     {
       label: "User type",
@@ -137,9 +156,7 @@ export default function Users(props) {
       <Box
         sx={{
           mt: 4,
-          width: {
-            md: "80%",
-          },
+ 
         }}
       >
         {company?.userType !== 'admin' && (
@@ -166,9 +183,15 @@ export default function Users(props) {
             }}
           >
             <MenuItem>
-              <Tooltip title={"Delete user"}>
-                <DeleteOutline />
-              </Tooltip>
+              Edit user details
+            </MenuItem>
+            <MenuItem>
+              Resend email verification
+            </MenuItem>
+            <MenuItem sx={{
+              color: red[500]
+            }}>
+              Delete user 
             </MenuItem>
           </Menu>
         )}
