@@ -27,7 +27,8 @@ import { DeleteOutline } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
 import moment from "moment";
 import { Timestamp } from "firebase/firestore";
-import ResendVerificationEmailDialog from "../src/ResendVerificationEmailDialog";
+import UserDrawerEditDetail from "../src/UserDrawerEditDetail";
+import AddNewUserDialog from "../src/AddNewUserDialog";
 
 export default function Users(props) {
   const [users, setUsers] = useState([]);
@@ -36,7 +37,9 @@ export default function Users(props) {
   const [anchorEl, setAnchorEl] = useState();
   const open = Boolean(anchorEl);
   const [selectedUser, setSelectedUser] = useState({});
-  const [openResendVEmail, setOpenResendVEmail] = useState(false);
+  const [updateUser, setUpdateUser] = useState({});
+  const [openEditUser, setOpenEditUser] = useState(false);
+  const [openAddUser, setOpenAddUser] = useState(false);
   const handleMenuAnchor = (e, id) => {
     setAnchorEl(e.currentTarget);
     const user = users?.find((i) => i.id == id);
@@ -51,13 +54,15 @@ export default function Users(props) {
   const handleMenuAction = (type) => {
     setAnchorEl();
     switch (type) {
-      case 'resend-verification-email':
-        setOpenResendVEmail(true);
+      case "edit-user":
+        setOpenEditUser(true);
         break;
+      case "add-user":
+        setOpenAddUser(true);
       default:
         break;
     }
-  }
+  };
 
   const handleFetchUsers = async () => {
     setLoading(true);
@@ -106,6 +111,10 @@ export default function Users(props) {
       id: "address",
     },
     {
+      label: "Postal",
+      id: "postal",
+    },
+    {
       label: "Created on",
       id: "created",
       render: (created) => (
@@ -118,9 +127,7 @@ export default function Users(props) {
       label: "Last seen",
       id: "lastSeen",
       render: (value) => (
-        <Typography variant="caption">
-          {moment(value).fromNow()}
-        </Typography>
+        <Typography variant="caption">{moment(value).fromNow()}</Typography>
       ),
     },
     {
@@ -159,18 +166,40 @@ export default function Users(props) {
   }, []);
 
   useEffect(() => {
-    if (company?.id) {
+    if (company?.id && !users) {
       handleFetchUsers();
     }
   }, [company]);
 
+  useEffect(() => {
+    if (updateUser?.uid) {
+      console.log(updateUser);
+      // get the current index of the user
+      let tempData = users;
+      let index = tempData.findIndex((i) => i.uid == updateUser?.uid);
+      if (index != -1) {
+        // update the data
+        tempData[index] = {
+          ...tempData[index],
+          ...updateUser,
+        };
+        setUsers(tempData);
+      }
+    }
+  }, [updateUser]);
+
   return (
     <AuthLayout>
-      <ResendVerificationEmailDialog
-        open={openResendVEmail}
-        setOpen={setOpenResendVEmail}
+      <UserDrawerEditDetail
+        open={openEditUser}
+        setOpen={setOpenEditUser}
         selectedUser={selectedUser}
-        setSelectedUser={setSelectedUser}
+        setUpdateUser={setUpdateUser}
+      />
+      <AddNewUserDialog
+        open={openAddUser}
+        setOpen={setOpenAddUser}
+        setUsers={setUsers}
       />
       <Typography variant="h3" component="h1" fontWeight="900">
         Users
@@ -191,7 +220,12 @@ export default function Users(props) {
           </Alert>
         )}
         {company?.userType == "admin" && (
-          <Button variant="contained">Add new user</Button>
+          <Button
+            variant="contained"
+            onClick={() => handleMenuAction("add-user")}
+          >
+            Add new user
+          </Button>
         )}
         <Card sx={{ mt: 2 }}>
           <DataGrid header={headers} data={users} loading={loading} />
@@ -207,9 +241,8 @@ export default function Users(props) {
               horizontal: "left",
             }}
           >
-            <MenuItem>Edit user details</MenuItem>
-            <MenuItem onClick={() => handleMenuAction('resend-verification-email') }>
-              Resend email verification
+            <MenuItem onClick={() => handleMenuAction("edit-user")}>
+              Edit user details
             </MenuItem>
             <MenuItem
               sx={{

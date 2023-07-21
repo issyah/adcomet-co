@@ -26,6 +26,7 @@ import {
   where,
   getDocs,
   Timestamp,
+  addDoc,
 } from "firebase/firestore";
 
 import {
@@ -52,7 +53,7 @@ export const signIn = async (email, password) => {
     const uid = result?.user?.uid;
     const docRef = doc(db, "users", uid);
     updateDoc(docRef, {
-      'lastSeen' : Timestamp.fromDate(new Date())
+      lastSeen: Timestamp.fromDate(new Date()),
     });
     // we don't do anything here
   }
@@ -90,7 +91,6 @@ export const updateData = async (collection, id, data) => {
 };
 
 // fetch current users in the company
-
 export const getUsersInCompany = async (id) => {
   const userRef = collection(db, "users");
   let result, error;
@@ -103,6 +103,62 @@ export const getUsersInCompany = async (id) => {
   return {
     result,
     error,
+  };
+};
+
+// fetch creatives assets via companyId
+export const getCreativesByCompany = async (id) => {
+  const collectionCreatives = collection(db, "creatives");
+  let result, error;
+  try {
+    const q = query(collectionCreatives, where("company", "==", id));
+    result = await getDocs(q);
+  } catch (e) {
+    error = e;
+  }
+  return {
+    result,
+    error,
+  };
+};
+// upload creatives
+export const uploadCreatives = async (id, file) => {
+  if (!file) {
+    return;
+  }
+  const name = file.name;
+  const path = `creatives/${id}/${name}`;
+  const creativePath = ref(storage, path);
+  const metadata = {
+    contentType: file.type,
+    name: name,
+    uploadedBy: auth.currentUser?.email,
+  };
+  let result, error, downloadUrl;
+  try {
+    result = await uploadBytes(creativePath, file, metadata);
+  } catch (e) {
+    error = e;
+  }
+  if (result?.ref) {
+    downloadUrl = await getDownloadURL(result?.ref);
+  }
+
+  // add in new creatives collection
+  const collectionRef = collection(db, "creatives");
+  const data = {
+    url: downloadUrl,
+    company: id,
+    metadata,
+    path: path,
+    created: Timestamp.fromDate(new Date())
+  };
+  await addDoc(collectionRef, data);
+  return {
+    result,
+    error,
+    downloadUrl,
+    data,
   };
 };
 

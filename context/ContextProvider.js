@@ -5,7 +5,8 @@
 import React from "react";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import firebase_app from "../src/firebase";
-import { getProfile } from "../src/firebase-func";
+import { getProfile, updateData } from "../src/firebase-func";
+import { Timestamp } from "firebase/firestore";
 const context = React.createContext();
 
 const auth = getAuth(firebase_app);
@@ -46,6 +47,10 @@ const ContextProvider = ({ children }) => {
   React.useEffect(() => {
     if (user?.uid) {
       getProfileData(user?.uid);
+      // update his lastSeen 
+      updateData('users', user?.uid, {
+        lastSeen: Timestamp.fromDate(new Date())
+      });
     }
   }, [user?.uid]);
 
