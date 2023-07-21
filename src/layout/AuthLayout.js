@@ -38,10 +38,11 @@ import Head from "next/head";
 import { useState } from "react";
 import SearchDialog from "../SearchDialog";
 import { Menu } from "@mui/icons-material";
+import { handleResendVerificationEmail } from "../firebase-func";
 export default function AuthLayout(props) {
   const width = 280;
   const { children } = props;
-  const { alert, setAlert, loading, setLoading } = useContextProvider();
+  const { alert, setAlert, loading, setLoading, user } = useContextProvider();
   const [showDrawer, setShowDrawer] = useState(false);
   const [openSearchDialog, setOpenSearchDialog] = useState(false);
   const router = useRouter();
@@ -51,6 +52,28 @@ export default function AuthLayout(props) {
       message: "",
       status: "",
     });
+  };
+
+  const handleClickResendVerificationEmail = async () => {
+    setLoading(true);
+    const { result, error } = await handleResendVerificationEmail();
+    if (error) {
+      setAlert({
+        open: true,
+        message: error?.message,
+        status: "error",
+      });
+      setLoading(false);
+      return;
+    }
+    // success
+    setAlert({
+      open: true,
+      message:
+        "Verification email sent! Please check your inbox, newsletter and spam mail for the email.",
+      status: "success",
+    });
+    setLoading(false);
   };
 
   return (
@@ -139,7 +162,7 @@ export default function AuthLayout(props) {
                 <Tooltip title="Create new campaign">
                   <Button
                     component={Link}
-                    href='/campaigns/create-campaign'
+                    href="/campaigns/create-campaign"
                     variant="outlined"
                     color="primary"
                     sx={{
@@ -204,6 +227,24 @@ export default function AuthLayout(props) {
           }}
         >
           <Toolbar />
+          {/* If user not verified */}
+          {user && !user?.emailVerified && (
+            <Alert
+              severity="warning"
+              sx={{
+                alignItems: "center",
+              }}
+            >
+              Your account is not verified. Please verify your email using the
+              email we have sent you. Didn't receive the email?{" "}
+              <Button
+                onClick={handleClickResendVerificationEmail}
+                color="inherit"
+              >
+                Resend verification email.
+              </Button>
+            </Alert>
+          )}
           {alert?.open && (
             <Snackbar
               open={alert?.open}

@@ -27,21 +27,37 @@ import { DeleteOutline } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
 import moment from "moment";
 import { Timestamp } from "firebase/firestore";
+import ResendVerificationEmailDialog from "../src/ResendVerificationEmailDialog";
 
 export default function Users(props) {
   const [users, setUsers] = useState([]);
-  const { loading, setLoading, user, company, setAlert } = useContextProvider();
+  const { loading, setLoading, company, setAlert } = useContextProvider();
   // menu dropdown
   const [anchorEl, setAnchorEl] = useState();
   const open = Boolean(anchorEl);
-
-  const handleMenuAnchor = (e) => {
+  const [selectedUser, setSelectedUser] = useState({});
+  const [openResendVEmail, setOpenResendVEmail] = useState(false);
+  const handleMenuAnchor = (e, id) => {
     setAnchorEl(e.currentTarget);
+    const user = users?.find((i) => i.id == id);
+    setSelectedUser(user);
   };
 
   const handleCloseMenu = () => {
     setAnchorEl();
+    setSelectedUser({});
   };
+
+  const handleMenuAction = (type) => {
+    setAnchorEl();
+    switch (type) {
+      case 'resend-verification-email':
+        setOpenResendVEmail(true);
+        break;
+      default:
+        break;
+    }
+  }
 
   const handleFetchUsers = async () => {
     setLoading(true);
@@ -64,7 +80,7 @@ export default function Users(props) {
           id: doc.id,
           userType: data?.company?.userType,
           created: data?.created?.toDate(),
-          lastSeen: data?.lastSeen.toDate()
+          lastSeen: data?.lastSeen.toDate(),
         };
       });
       setUsers(newData);
@@ -90,18 +106,22 @@ export default function Users(props) {
       id: "address",
     },
     {
-      label: 'Created on',
-      id: 'created',
+      label: "Created on",
+      id: "created",
       render: (created) => (
-        <Typography variant='caption'>{moment(created).format('DD MMM YY')}</Typography>
-      )
+        <Typography variant="caption">
+          {moment(created).format("DD MMM YY")}
+        </Typography>
+      ),
     },
     {
-      label: 'Last seen',
-      id: 'lastSeen',
+      label: "Last seen",
+      id: "lastSeen",
       render: (value) => (
-        <Typography variant='caption'>{moment(value).format('DD MMM YY, hh:mm')}</Typography>
-      )
+        <Typography variant="caption">
+          {moment(value).fromNow()}
+        </Typography>
+      ),
     },
     {
       label: "User type",
@@ -124,7 +144,7 @@ export default function Users(props) {
       id: "id",
       render: (id) =>
         company?.userType == "admin" && (
-          <IconButton onClick={handleMenuAnchor}>
+          <IconButton onClick={(e) => handleMenuAnchor(e, id)}>
             <MenuIcon />
           </IconButton>
         ),
@@ -146,6 +166,12 @@ export default function Users(props) {
 
   return (
     <AuthLayout>
+      <ResendVerificationEmailDialog
+        open={openResendVEmail}
+        setOpen={setOpenResendVEmail}
+        selectedUser={selectedUser}
+        setSelectedUser={setSelectedUser}
+      />
       <Typography variant="h3" component="h1" fontWeight="900">
         Users
       </Typography>
@@ -156,20 +182,19 @@ export default function Users(props) {
       <Box
         sx={{
           mt: 4,
- 
         }}
       >
-        {company?.userType !== 'admin' && (
+        {company?.userType !== "admin" && (
           <Alert severity="info">
-            Only admin / user who registered <b>{company?.name}</b> can manage users
-            and add new user.
+            Only admin / user who registered <b>{company?.name}</b> can manage
+            users and add new user.
           </Alert>
         )}
         {company?.userType == "admin" && (
           <Button variant="contained">Add new user</Button>
         )}
         <Card sx={{ mt: 2 }}>
-          <DataGrid header={headers} data={users} />
+          <DataGrid header={headers} data={users} loading={loading} />
         </Card>
         {/* menu options */}
         {company?.userType == "admin" && (
@@ -182,16 +207,16 @@ export default function Users(props) {
               horizontal: "left",
             }}
           >
-            <MenuItem>
-              Edit user details
-            </MenuItem>
-            <MenuItem>
+            <MenuItem>Edit user details</MenuItem>
+            <MenuItem onClick={() => handleMenuAction('resend-verification-email') }>
               Resend email verification
             </MenuItem>
-            <MenuItem sx={{
-              color: red[500]
-            }}>
-              Delete user 
+            <MenuItem
+              sx={{
+                color: red[500],
+              }}
+            >
+              Delete user
             </MenuItem>
           </Menu>
         )}

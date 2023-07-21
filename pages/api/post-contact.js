@@ -23,8 +23,8 @@ export default async function handler(req, res) {
   const { company, email, message, business } = body;
 
   const messageSend = await transport.sendMail({
-    from: "hello@Adcomet.com",
-    to: "issyah@Adcomet.com, fauzanj@Adcomet.com, fadli@Adcomet.com",
+    from: "hello@adcomet.co",
+    to: "issyah@adcomet.co, fauzanj@adcomet.co, fadli@adcomet.co",
     subject: `Adcomet enquiry from ${company}`,
     html: `<p>${message}</p> <p>Company: ${company}</p> <p>Email:${email}</p> <p>${business}</p>`,
   });

@@ -12,6 +12,7 @@ import {
   EmailAuthProvider,
   updateEmail,
   updatePassword,
+  sendEmailVerification,
 } from "firebase/auth";
 
 import {
@@ -24,6 +25,7 @@ import {
   query,
   where,
   getDocs,
+  Timestamp,
 } from "firebase/firestore";
 
 import {
@@ -44,6 +46,15 @@ export const signIn = async (email, password) => {
     result = await signInWithEmailAndPassword(auth, email, password);
   } catch (e) {
     error = e;
+  }
+  // update the lastSeen on users collection
+  if (result) {
+    const uid = result?.user?.uid;
+    const docRef = doc(db, "users", uid);
+    updateDoc(docRef, {
+      'lastSeen' : Timestamp.fromDate(new Date())
+    });
+    // we don't do anything here
   }
   return { result, error };
 };
@@ -119,6 +130,20 @@ export const uploadCompanyLogo = async (id, file) => {
     result,
     error,
     downloadUrl,
+  };
+};
+
+// handle resend email verification for a logged in user only
+export const handleResendVerificationEmail = async () => {
+  let result, error;
+  try {
+    result = await sendEmailVerification(auth.currentUser);
+  } catch (e) {
+    error = e;
+  }
+  return {
+    result,
+    error,
   };
 };
 

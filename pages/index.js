@@ -7,6 +7,7 @@ import Public from "../src/layout/Public";
 import {
   Alert,
   Button,
+  CircularProgress,
   FormControl,
   Grid,
   InputLabel,
@@ -409,6 +410,7 @@ export default function Index() {
                   rows={4}
                   variant="filled"
                   required
+                  value={message}
                   onChange={(e) => setMessage(e.target.value)}
                 />
                 <Button
@@ -416,6 +418,7 @@ export default function Index() {
                   fullWidth
                   size="large"
                   variant="contained"
+                  startIcon={loading && <CircularProgress size={16} color='inherit'/>}
                 >
                   Submit
                 </Button>

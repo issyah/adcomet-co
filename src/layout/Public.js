@@ -1,4 +1,4 @@
-// default layout adcommet
+// default layout Adcomet
 // build by issyah ismail
 
 import { Box, Toolbar } from "@mui/material";
@@ -12,12 +12,12 @@ export default function Public(props) {
     <Box>
       <Head>
         <title>
-          Adcommet | The marketplace for digital advertising on demand | Send
+          Adcomet | The marketplace for digital advertising on demand | Send
           your ads directly to digital signs anywhere, anytime and BE SEEN!
         </title>
         <meta
           name="description"
-          content="Meta Description: Revolutionise the way you connect with your audience, amplify your brand, and achieve unmatched advertising success. Sign up now with Adcommet."
+          content="Meta Description: Revolutionise the way you connect with your audience, amplify your brand, and achieve unmatched advertising success. Sign up now with Adcomet."
         />
       </Head>
       <Navbar />
