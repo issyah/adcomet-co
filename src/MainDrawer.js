@@ -17,7 +17,7 @@ import Logo from "../public/logo-white.png";
 import Link from "next/link";
 export default function MainDrawer(props) {
   const router = useRouter();
-  const { list, drawerWidth, mobileOpen, setMobileOpen } = props;
+  const { list, drawerWidth, mobileOpen, setMobileOpen, children } = props;
   const [variant, setVariant] = useState("permanent");
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -105,6 +105,7 @@ export default function MainDrawer(props) {
           ))}
         </List>
       )}
+      {children}
     </Drawer>
   );
 }

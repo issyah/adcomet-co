@@ -146,14 +146,18 @@ export const uploadCreatives = async (id, file) => {
 
   // add in new creatives collection
   const collectionRef = collection(db, "creatives");
-  const data = {
+  let data = {
     url: downloadUrl,
     company: id,
     metadata,
     path: path,
-    created: Timestamp.fromDate(new Date())
+    created: Timestamp.fromDate(new Date()),
+    size: result?.metadata?.size,
   };
-  await addDoc(collectionRef, data);
+  const addDocResult = await addDoc(collectionRef, data);
+  if (addDocResult) {
+    data["id"] = addDocResult.id;
+  }
   return {
     result,
     error,

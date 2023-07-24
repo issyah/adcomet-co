@@ -38,7 +38,6 @@ export default function Company(props) {
     industryType: "itsv",
     photo: {},
   });
-
   const company = user?.profile?.company;
 
   const handleFormData = (e, id) => {
