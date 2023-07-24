@@ -5,11 +5,17 @@
 import React from "react";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import firebase_app from "../src/firebase";
-import { getProfile, updateData, getData } from "../src/firebase-func";
-import { Timestamp } from "firebase/firestore";
+import {
+  getProfile,
+  updateData,
+  getData,
+  getCurrentStorage,
+} from "../src/firebase-func";
+import { doc, getFirestore, onSnapshot, Timestamp } from "firebase/firestore";
 const context = React.createContext();
 
 const auth = getAuth(firebase_app);
+const db = getFirestore(firebase_app);
 const ContextProvider = ({ children }) => {
   const [user, setUser] = React.useState();
   const [alert, setAlert] = React.useState({
@@ -20,8 +26,8 @@ const ContextProvider = ({ children }) => {
   const [company, setCompany] = React.useState({});
   const [loading, setLoading] = React.useState(false);
   const [storage, setStorage] = React.useState({
-    current: 0,
-    max: 0
+    currentSize: 0,
+    maxSize: 0,
   });
   let value = {
     user,
@@ -32,7 +38,7 @@ const ContextProvider = ({ children }) => {
     setLoading,
     company,
     storage,
-    setStorage
+    setStorage,
   };
 
   const getProfileData = async (id) => {
@@ -52,9 +58,9 @@ const ContextProvider = ({ children }) => {
   React.useEffect(() => {
     if (user?.uid) {
       getProfileData(user?.uid);
-      // update his lastSeen 
-      updateData('users', user?.uid, {
-        lastSeen: Timestamp.fromDate(new Date())
+      // update his lastSeen
+      updateData("users", user?.uid, {
+        lastSeen: Timestamp.fromDate(new Date()),
       });
     }
   }, [user?.uid]);
@@ -69,8 +75,24 @@ const ContextProvider = ({ children }) => {
         setUser(null);
       }
     });
+
     return () => unsubscribe();
   }, []);
+
+  React.useEffect(() => {
+    if (company.id) {
+      const unsubscribe = onSnapshot(
+        doc(db, "companies", company?.id),
+        (doc) => {
+          if (doc.exists()) {
+            setStorage(doc.data().creativeStorage);
+          }
+        }
+      );
+      return () => unsubscribe();
+    }
+  }, [company.id]);
+
   return <context.Provider value={value}>{children}</context.Provider>;
 };
 

@@ -6,6 +6,7 @@ import {
   Button,
   ButtonGroup,
   Card,
+  CardActionArea,
   CardContent,
   CardHeader,
   CardMedia,
@@ -29,12 +30,20 @@ import moment from "moment";
 import { bytesToMegaBytes } from "../src/common";
 import InsertPhotoOutlinedIcon from "@mui/icons-material/InsertPhotoOutlined";
 import SdStorageOutlinedIcon from "@mui/icons-material/SdStorageOutlined";
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import ViewCreativeDialog from "../src/ViewCreativeDialog";
 export default function Creatives(props) {
   const { setLoading, company, setAlert, loading } = useContextProvider();
   const [creatives, setCreatives] = useState([]);
   const [layout, setLayout] = useState("card");
+  const [selectedCreative, setSelectedCreative] = useState();
 
+  const handleOpenViewer = () => {
+    if (selectedCreative) {
+      return true;
+    }
+    return false;
+  };
   const handleChangeLayout = (type) => {
     setLayout(type);
   };
@@ -169,7 +178,12 @@ export default function Creatives(props) {
   }, [company]);
 
   return (
-    <AuthLayout>
+    <Box>
+      <ViewCreativeDialog
+        open={handleOpenViewer()}
+        selectedCreative={selectedCreative}
+        setSelectedCreative={setSelectedCreative}
+      />
       <Box
         display={"flex"}
         alignItems="center"
@@ -216,53 +230,55 @@ export default function Creatives(props) {
             <Grid container spacing={2} sx={{ mt: 2 }}>
               {creatives.map((item, index) => (
                 <Grid item md={3} key={index}>
-                  <Card
-                    sx={{
-                      ".MuiCardHeader-content": {
-                        display: "block",
-                        overflow: "hidden",
-                      },
-                      ".MuiCardHeader-title, .MuiCardHeader-subheader": {
-                        typography: "body1",
-                        overflow: "hidden",
-                        whiteSpace: "nowrap",
-                        textOverflow: "ellipsis",
-                      },
-                    }}
-                  >
-                    <CardHeader
-                      title={item?.name}
-                      subheader={
-                        <Box display={'flex'} alignItems='center' gap={1}>
-                          <AccountCircleOutlinedIcon />
-                          <Typography>{item?.uploadedBy}</Typography>
-                        </Box>
-                      }
-                    />
-                    <CardMedia
+                  <CardActionArea onClick={() => setSelectedCreative(item)}>
+                    <Card
                       sx={{
-                        height: "250px",
+                        ".MuiCardHeader-content": {
+                          display: "block",
+                          overflow: "hidden",
+                        },
+                        ".MuiCardHeader-title, .MuiCardHeader-subheader": {
+                          typography: "body1",
+                          overflow: "hidden",
+                          whiteSpace: "nowrap",
+                          textOverflow: "ellipsis",
+                        },
                       }}
-                      image={item?.url}
-                      title={item?.name}
-                    />
-                    <CardContent>
-                      <Stack spacing={1}>
-                        <Box display="flex" alignItems="center" gap={1}>
-                          <Tooltip title="File type">
-                            <InsertPhotoOutlinedIcon />
-                          </Tooltip>{" "}
-                          <b>{item?.contentType}</b>
-                        </Box>
-                        <Box alignItems={'center'} display='flex' gap={1}>
-                          <Tooltip title="File size">
-                            <SdStorageOutlinedIcon />
-                          </Tooltip>{" "}
-                          <b>{bytesToMegaBytes(item?.size)}</b>
-                        </Box>
-                      </Stack>
-                    </CardContent>
-                  </Card>
+                    >
+                      <CardHeader
+                        title={item?.name}
+                        subheader={
+                          <Box display={"flex"} alignItems="center" gap={1}>
+                            <AccountCircleOutlinedIcon />
+                            <Typography>{item?.uploadedBy}</Typography>
+                          </Box>
+                        }
+                      />
+                      <CardMedia
+                        sx={{
+                          height: "250px",
+                        }}
+                        image={item?.url}
+                        title={item?.name}
+                      />
+                      <CardContent>
+                        <Stack spacing={1}>
+                          <Box display="flex" alignItems="center" gap={1}>
+                            <Tooltip title="File type">
+                              <InsertPhotoOutlinedIcon />
+                            </Tooltip>{" "}
+                            <b>{item?.contentType}</b>
+                          </Box>
+                          <Box alignItems={"center"} display="flex" gap={1}>
+                            <Tooltip title="File size">
+                              <SdStorageOutlinedIcon />
+                            </Tooltip>{" "}
+                            <b>{bytesToMegaBytes(item?.size)}</b>
+                          </Box>
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  </CardActionArea>
                 </Grid>
               ))}
             </Grid>
@@ -312,6 +328,8 @@ export default function Creatives(props) {
           </Box>
         </Box>
       )}
-    </AuthLayout>
+    </Box>
   );
 }
+
+Creatives.getLayout = (page) => <AuthLayout>{page}</AuthLayout>;

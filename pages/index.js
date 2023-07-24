@@ -98,7 +98,7 @@ export default function Index() {
   ];
 
   return (
-    <Public>
+    <Box>
       <Snackbar
         anchorOrigin={{
           vertical: "top",
@@ -462,6 +462,9 @@ export default function Index() {
           </Box>
         </Container>
       </Box>
-    </Public>
+    </Box>
   );
 }
+
+
+Index.getLayout = (page) => <Public>{page}</Public>

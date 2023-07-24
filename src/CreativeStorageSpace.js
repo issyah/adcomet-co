@@ -7,14 +7,19 @@ import { useContextProvider } from "../context/ContextProvider";
 import { formatBytes } from "./common";
 export default function CreativeStorageSpace(props) {
   const { storage, setStorage } = useContextProvider();
-  const { current, max } = storage;
+  const { currentSize, maxSize } = storage;
   const handleValueState = () => {
-    if (current && max) {
-      return current / max;
+    if (currentSize && maxSize) {
+      return (currentSize / maxSize) * 100;
     } else {
       return 0;
     }
   };
+  // handle the listener here 
+  useEffect(() => {
+
+  }, []);
+
   return (
     <Box sx={{ mt: 2, px: 5, color: "grey.100", textAlign: "center" }}>
       <Typography
@@ -30,11 +35,12 @@ export default function CreativeStorageSpace(props) {
       </Typography>
       <LinearProgress
         sx={{ mt: 1 }}
+        color='primary'
         variant="determinate"
-        value={handleValueState}
+        value={handleValueState()}
       />
       <Typography sx={{ mt: 1, display: "block" }} variant="caption">
-        {current}MB / {max}MB
+        {currentSize.toFixed(2)}MB / {maxSize}MB
       </Typography>
     </Box>
   );

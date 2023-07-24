@@ -189,7 +189,7 @@ export default function Users(props) {
   }, [updateUser]);
 
   return (
-    <AuthLayout>
+    <Box>
       <UserDrawerEditDetail
         open={openEditUser}
         setOpen={setOpenEditUser}
@@ -255,6 +255,8 @@ export default function Users(props) {
         )}
       </Box>
       {/* fetch current users */}
-    </AuthLayout>
+    </Box>
   );
 }
+
+Users.getLayout = (page) => <AuthLayout>{page}</AuthLayout>

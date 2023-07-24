@@ -187,7 +187,7 @@ export default function Company(props) {
   }, [user]);
 
   return (
-    <AuthLayout>
+    <Box>
       <Typography variant="h3" fontWeight="900">
         Company profile
       </Typography>
@@ -312,6 +312,8 @@ export default function Company(props) {
           </CardContent>
         </Card>
       </Box>
-    </AuthLayout>
+    </Box>
   );
 }
+
+Company.getLayout = (page) => <AuthLayout>{page}</AuthLayout>

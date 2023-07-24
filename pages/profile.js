@@ -225,7 +225,7 @@ export default function Profile(props) {
     }
   }, [successCredential]);
   return (
-    <AuthLayout>
+    <Box>
       <VerifyCredentials
         open={openCredentialPrompt}
         setOpen={setOpenCredentialPrompt}
@@ -351,6 +351,8 @@ export default function Profile(props) {
           </CardContent>
         </Card>
       )}
-    </AuthLayout>
+    </Box>
   );
 }
+
+Profile.getLayout = (page) => <AuthLayout>{page}</AuthLayout>

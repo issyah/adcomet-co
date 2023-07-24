@@ -5,7 +5,7 @@ import { AddCircle } from "@mui/icons-material";
 import Link from "next/link";
 export default function Campaigns(props) {
   return (
-    <AuthLayout>
+    <Box>
       <Box sx={{
         //  display="flex" alignItems="center" justifyContent="space-between"
         display: 'flex',
@@ -22,6 +22,8 @@ export default function Campaigns(props) {
       <Card sx={{ mt: 4 }}>
         <CampaignTable />
       </Card>
-    </AuthLayout>
+    </Box>
   );
 }
+
+Campaigns.getLayout = (page) => <AuthLayout>{page}</AuthLayout>

@@ -27,6 +27,9 @@ import {
   getDocs,
   Timestamp,
   addDoc,
+  onSnapshot,
+  FieldValue,
+  increment,
 } from "firebase/firestore";
 
 import {
@@ -36,6 +39,7 @@ import {
   ref,
   uploadBytes,
 } from "firebase/storage";
+import { bytesToMegaBytes } from "./common";
 
 const auth = getAuth(firebase_app);
 const db = getFirestore(firebase_app);
@@ -122,7 +126,11 @@ export const getCreativesByCompany = async (id) => {
   };
 };
 
-
+// get storage space
+// export const getCurrentStorage = async(id) => {
+//   const companyRef = doc(db, 'companies', id);
+//   return onSnapshot(companyRef);
+// }
 
 // upload creatives
 export const uploadCreatives = async (id, file) => {
@@ -161,6 +169,11 @@ export const uploadCreatives = async (id, file) => {
   if (addDocResult) {
     data["id"] = addDocResult.id;
   }
+  // lastly add the storage size to the company page
+  const companyRef = doc(db, "companies", id);
+  await updateDoc(companyRef, {
+    'creativeStorage.currentSize': increment(bytesToMegaBytes(result?.metadata?.size)),
+  });
   return {
     result,
     error,

@@ -51,6 +51,7 @@ export default function AvatarDropdown(props) {
       attributes: {
         href: "/profile",
         component: Link,
+        onClick: handleClose
       },
     },
     {
@@ -59,6 +60,7 @@ export default function AvatarDropdown(props) {
       attributes: {
         href: "/company",
         component: Link,
+        onClick: handleClose
       },
     },
     {
@@ -66,7 +68,8 @@ export default function AvatarDropdown(props) {
      icon: <Group />,
      attributes: {
       href: '/users',
-      component: Link
+      component: Link,
+      onClick: handleClose
      } 
     },
     {
@@ -129,7 +132,7 @@ export default function AvatarDropdown(props) {
         </Box>
         <Divider sx={{ my: 1 }} />
         {menuList.map((item, index) => (
-          <MenuItem key={index} {...item?.attributes}>
+          <MenuItem key={index} {...item?.attributes} >
             <Box display={"flex"} gap={1}>
               {item?.icon}
               <Typography>{item?.label}</Typography>

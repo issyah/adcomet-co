@@ -86,7 +86,7 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <AuthLayout>
+    <Box>
       <Typography variant="h3" fontWeight="900">
         Overview
       </Typography>
@@ -158,6 +158,10 @@ export default function Dashboard() {
           <CampaignTable />
         </Card>
       </Box>
-    </AuthLayout>
+    </Box>
   );
 }
+
+Dashboard.getLayout = (page) =>  (
+  <AuthLayout>{page}</AuthLayout>
+)

@@ -12,7 +12,7 @@ const clientSideEmotionCache = createEmotionCache();
 import { ContextProvider } from "../context/ContextProvider";
 export default function MyApp(props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-
+  const getLayout = Component.getLayout || ((page) => page);
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -22,7 +22,7 @@ export default function MyApp(props) {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <ContextProvider>
           <CssBaseline />
-          <Component {...pageProps} />
+          {getLayout(<Component {...pageProps} />)}
         </ContextProvider>
       </ThemeProvider>
     </CacheProvider>
