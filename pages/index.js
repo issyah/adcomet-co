@@ -7,6 +7,7 @@ import Public from "../src/layout/Public";
 import {
   Alert,
   Button,
+  Card,
   CircularProgress,
   FormControl,
   Grid,
@@ -16,6 +17,7 @@ import {
   Snackbar,
   Stack,
   TextField,
+  CardContent,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import Banner1 from "../public/index-1.jpeg";
@@ -24,6 +26,8 @@ import illusLocation from "../svg/location.svg";
 import illusBudget from "../svg/budget.svg";
 import illusUpload from "../svg/upload.svg";
 import illusAgreement from "../svg/agreement.svg";
+import Banner from "../public/banner.jpg";
+import BannerImg from "../public/IndexBanner.jpg";
 import Image from "next/image";
 export default function Index() {
   const router = useRouter();
@@ -74,6 +78,25 @@ export default function Index() {
     window.scrollTo(0, elem?.offsetTop);
   };
 
+  const cardContent = [
+    {
+      title: "Digital signages & billboards ads",
+      subtitle: "Targeted and strategically placed",
+    },
+    {
+      title: "Website ads campaign",
+      subtitle: "Specific ads space banner to choose from",
+    },
+    {
+      title: "TV/Radio Ads campaign",
+      subtitle: "Target affluent audience through linear platform",
+    },
+    {
+      title: "Mobile ads <br/> campaign",
+      subtitle: "Engage interactive audience through app",
+    },
+  ];
+
   return (
     <Public>
       <Snackbar
@@ -93,136 +116,144 @@ export default function Index() {
           {alert.message}
         </Alert>
       </Snackbar>
-      <Box mb={4}>
-        <Container
-          maxWidth="lg"
-          sx={{
-            textAlign: "center",
-            height: {
-              md: "calc(100vh - 64px)",
-              xs: "auto",
-            },
-            mt: {
-              xs: 4,
-              md: 0,
-            },
-          }}
-        >
-          <Box
-            display={"flex"}
-            alignItems="center"
-            justifyContent={"center"}
-            height={"100%"}
-          >
-            <Box>
-              <Box
-                sx={{
-                  height: "150px",
-                  position: "relative",
-                  mb: 2,
-                }}
-              >
-                <Image src={illus1} fill />
-              </Box>
-              <Typography
-                fontWeight={900}
-                textAlign={"center"}
-                variant="h2"
-                component="h1"
-                gutterBottom
-              >
-                Supercharge Your Sales with Self-Serve Billboard Advertising
-              </Typography>
-              <Typography
-                mx="auto"
-                variant="h6"
-                textAlign="center"
-                fontWeight={"normal"}
-                sx={{
-                  mb: 4,
-                  width: {
-                    md: "80%",
-                    xs: "100%",
-                  },
-                }}
-              >
-                Unleash the Power of Digital Billboards to Capture New Audiences
-                and Skyrocket Your Sales. Take control of your marketing
-                strategy with ease, backed by affordable rates and awe-inspiring
-                results.
-              </Typography>
-              <Button
-                size="large"
-                variant="contained"
-                onClick={scrollToContent}
-              >
-                Learn more
-              </Button>
-            </Box>
-          </Box>
-        </Container>
-      </Box>
-      <div id="learn-more"></div>
       <Box
-        mb={4}
-        position="relative"
         sx={{
           height: {
-            md: "800px",
-            xs: "inherit",
+            md: "100vh",
+            xs: "auto",
           },
+          mt: {
+            md: -4,
+          },
+          pt: {
+            xs: 4,
+            md: 0,
+          },
+          background: `url(${Banner.src}) 50% 50% no-repeat`,
+          backgroundSize: "cover",
+          display: "flex",
+          alignItems: "center",
         }}
       >
-        <Box
-          width={"100%"}
-          height={"100%"}
-          position="absolute"
-          left={0}
-          top={0}
-          sx={{
-            img: {
-              objectFit: "cover",
-              objectPosition: "center",
-            },
-            ":after": {
-              position: "absolute",
-              height: "100%",
-              width: "100%",
-              content: '""',
-              background: "rgba(0,0,0,.1)",
-            },
-          }}
-        >
-          <Image src={Banner1} fill />
-        </Box>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent={"center"}
-          height={"100%"}
-        >
-          <Container maxWidth="md" sx={{ mb: 4, position: "relative" }}>
-            <Grid container maxWidth={"md"} sx={{ py: 10 }}>
-              <Grid xs={12} md={"12"} sx={{ textAlign: "center" }}>
-                <Typography
-                  variant="h3"
-                  fontWeight={900}
-                  color="white"
-                  gutterBottom
-                >
-                  Unlock an array of possibilities with thousands of
-                  easy-to-set-up digital billboard
-                </Typography>
-                <Typography fontWeight="normal" color="white" variant="h6">
-                  Tailored to business of every size. Experience unparalleled
-                  flexibility and accessibility like never before.
-                  {/* Tailored to Businesses of Every Size. Experience
-                  unparalleled flexibility and accessibility like never before. */}
-                </Typography>
-              </Grid>
+        <Container maxWidth="lg">
+          <Grid container spacing={2} alignItems="center">
+            <Grid item md={6}>
+              <Typography
+                variant="h2"
+                fontWeight="900"
+                component={"h1"}
+                gutterBottom
+                sx={{
+                  color: "primary.main",
+                }}
+              >
+                Unleash Endless Advertising Opportunities
+              </Typography>
+              <Typography variant="h6" fontWeight="normal">
+                Power sales, captivate audiences.
+              </Typography>
+              <Typography variant="h6" fontWeight="normal">
+                Affordable rates, incredible results.
+              </Typography>
             </Grid>
-          </Container>
-        </Box>
+            <Grid item md={6}>
+              <Image src={BannerImg} className="img-responsive" />
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+      <Box
+        my={10}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <Container maxWidth="lg">
+          <Box
+            mt={4}
+            textAlign="center"
+            sx={{
+              width: {
+                md: "80%",
+                sm: "auto",
+              },
+              mx: "auto",
+            }}
+          >
+            <Typography
+              variant="h3"
+              sx={{ color: "primary.main" }}
+              fontWeight="900"
+              gutterBottom
+            >
+              Elevate your Ads with our top-tier marketplace.
+            </Typography>
+          </Box>
+          <Grid container spacing={3} sx={{ mt: 4 }}>
+            {cardContent.map((item, index) => (
+              <Grid item md={3} sm={6} xs={12} key={index}>
+                <Card
+                  elevation={2}
+                  sx={{
+                    bgcolor: "grey.100",
+                    boxShadow: "none",
+                    height: "100%",
+                  }}
+                >
+                  <CardContent sx={{ height: "100%" }}>
+                    <Typography
+                      fontWeight="bold"
+                      variant="h5"
+                      gutterBottom
+                      component={"div"}
+                      dangerouslySetInnerHTML={{ __html: item.title }}
+                    ></Typography>
+                    <Typography>{item.subtitle}</Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </Box>
+      <Box
+        sx={{
+          my: 10,
+          display:'flex',
+          alignItems:'center',
+        }}
+      >
+        <Container maxWidth="lg">
+          <Grid container spacing={8} alignItems='center'>
+            <Grid item md={6}>
+              <Image src={Banner1} className='img-responsive'/>
+            </Grid>
+            <Grid item md={6}>
+              <Typography
+                variant="h3"
+                fontWeight={900}
+                gutterBottom
+                sx={{
+                  color: "primary.main",
+                }}
+              >
+                The World's Advertising Network Company
+              </Typography>
+              <Typography sx={{ mb: 4 }}>
+                We are dedicated to assisting business owners and marketing
+                professionals in reaching new audiences and maximizing sales
+                through an incredible wide range of advertising platforms.
+              </Typography>
+              <Typography>
+                Adcomet provides an empowering platform that grants businesses
+                of any scale the opportunity to effortlessly establish and
+                affordably utilize Digital, OOH, Linear, and Non-linear
+                advertising platforms.
+              </Typography>
+            </Grid>
+          </Grid>
+        </Container>
       </Box>
       <Box py={10}>
         <Container maxWidth="lg">
@@ -382,7 +413,9 @@ export default function Index() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <FormControl variant="filled">
-                  <InputLabel id='select-id'>Which sentence best describes your company?</InputLabel>
+                  <InputLabel id="select-id">
+                    Which sentence best describes your company?
+                  </InputLabel>
                   <Select
                     labelId="select-id"
                     variant="filled"
@@ -418,7 +451,9 @@ export default function Index() {
                   fullWidth
                   size="large"
                   variant="contained"
-                  startIcon={loading && <CircularProgress size={16} color='inherit'/>}
+                  startIcon={
+                    loading && <CircularProgress size={16} color="inherit" />
+                  }
                 >
                   Submit
                 </Button>

@@ -44,7 +44,7 @@ const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          "&.MuiPaper-elevation": {
+          "&.MuiPaper-elevation1": {
             boxShadow:
               "rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px",
           },

@@ -42,6 +42,7 @@ import { useState } from "react";
 import SearchDialog from "../SearchDialog";
 import { Menu } from "@mui/icons-material";
 import { handleResendVerificationEmail } from "../firebase-func";
+import CreativeStorageSpace from "../CreativeStorageSpace";
 export default function AuthLayout(props) {
   const width = 280;
   const { children } = props;
@@ -221,26 +222,7 @@ export default function AuthLayout(props) {
           setMobileOpen={setShowDrawer}
         >
           <Divider sx={{ mt: 2, borderColor: "rgba(255,255,255,.1)" }} />
-          <Box sx={{ mt: 2, px: 5, color: "grey.100", textAlign: "center" }}>
-            <Typography
-              sx={{
-                display: "flex",
-                gap: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Cloud />
-              Creative storage
-            </Typography>
-            <LinearProgress sx={{ mt: 1 }} variant="determinate" value={0} />
-            <Typography sx={{ mt: 1, display: "block" }} variant="caption">
-              0MB / 500MB
-            </Typography>
-            <Button variant="outlined" color="inherit" sx={{ my: 2 }}>
-              Upgrade storage
-            </Button>
-          </Box>
+          <CreativeStorageSpace />
           <Divider sx={{ mt: 2, borderColor: "rgba(255,255,255,.1)" }} />
         </MainDrawer>
         <Box

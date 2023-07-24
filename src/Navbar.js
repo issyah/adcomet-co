@@ -26,15 +26,23 @@ export default function Navbar() {
   const {user} = useContextProvider();
   const navArr = [
     {
-      label: "About us",
+      label: "About",
       href: "/about-us",
+      color: 'inherit'
     },
+    // {
+    //   label: 'Contact',
+    //   href: '/contact',
+    //   color: 'inherit'
+    // },
     {...(user !== null || user ) ? {
       label: "Back to account",
       href: '/dashboard'
     } : {
       label: "Log in",
-      href: '/login'
+      href: '/login',
+      color: 'primary',
+      variant:'contained'
     }}
   ];
   return (
@@ -53,6 +61,7 @@ export default function Navbar() {
             href="/"
             sx={{
               cursor: "pointer",
+              mt:0.5
             }}
           >
             <Image
@@ -82,7 +91,7 @@ export default function Navbar() {
               <Menu />
             </IconButton>
             <Stack
-              spacing={1}
+              spacing={2}
               flexWrap="wrap"
               direction={'row'}
               sx={{
@@ -94,7 +103,7 @@ export default function Navbar() {
               }}
             >
               {navArr.map((item, index) => (
-                <Button component={Link} href={item?.href} key={index} color='inherit'>
+                <Button component={Link} {...item}>
                   {item?.label}
                 </Button>
               ))}

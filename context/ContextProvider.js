@@ -5,7 +5,7 @@
 import React from "react";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import firebase_app from "../src/firebase";
-import { getProfile, updateData } from "../src/firebase-func";
+import { getProfile, updateData, getData } from "../src/firebase-func";
 import { Timestamp } from "firebase/firestore";
 const context = React.createContext();
 
@@ -19,7 +19,10 @@ const ContextProvider = ({ children }) => {
   });
   const [company, setCompany] = React.useState({});
   const [loading, setLoading] = React.useState(false);
-
+  const [storage, setStorage] = React.useState({
+    current: 0,
+    max: 0
+  });
   let value = {
     user,
     setUser,
@@ -28,6 +31,8 @@ const ContextProvider = ({ children }) => {
     loading,
     setLoading,
     company,
+    storage,
+    setStorage
   };
 
   const getProfileData = async (id) => {

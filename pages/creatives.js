@@ -15,6 +15,7 @@ import {
   ListItem,
   ListItemText,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import AuthLayout from "../src/layout/AuthLayout";
@@ -24,6 +25,11 @@ import { getCreativesByCompany, uploadCreatives } from "../src/firebase-func";
 import { useEffect, useState } from "react";
 import { Delete, GridView, ViewList } from "@mui/icons-material";
 import DataGrid from "../src/DataGrid";
+import moment from "moment";
+import { bytesToMegaBytes } from "../src/common";
+import InsertPhotoOutlinedIcon from "@mui/icons-material/InsertPhotoOutlined";
+import SdStorageOutlinedIcon from "@mui/icons-material/SdStorageOutlined";
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 export default function Creatives(props) {
   const { setLoading, company, setAlert, loading } = useContextProvider();
   const [creatives, setCreatives] = useState([]);
@@ -52,6 +58,22 @@ export default function Creatives(props) {
     {
       label: "Uploaded by",
       id: "uploadedBy",
+    },
+    {
+      label: "Created on",
+      id: "created",
+      render: (created) => {
+        return (
+          <Typography variant="body2">
+            {moment(created).format("MMM DD, YYYY")}
+          </Typography>
+        );
+      },
+    },
+    {
+      label: "Size",
+      id: "size",
+      render: (size) => <Typography>{bytesToMegaBytes(size)}</Typography>,
     },
     {
       label: "Content-type",
@@ -99,9 +121,11 @@ export default function Creatives(props) {
     // success
     if (result) {
       const newData = result?.docs.map((doc) => {
+        const data = doc.data();
         return {
-          ...doc.data(),
+          ...data,
           id: doc.id,
+          created: data?.created.toDate(),
         };
       });
       console.log(newData);
@@ -186,7 +210,7 @@ export default function Creatives(props) {
           />
         </Button>
       </Box>
-      {creatives  && (
+      {creatives && (
         <Box>
           {layout == "card" && (
             <Grid container spacing={2} sx={{ mt: 2 }}>
@@ -207,20 +231,34 @@ export default function Creatives(props) {
                     }}
                   >
                     <CardHeader
-                      title={item?.metadata?.name}
-                      subheader={item?.metadata?.uploadedBy}
+                      title={item?.name}
+                      subheader={
+                        <Box display={'flex'} alignItems='center' gap={1}>
+                          <AccountCircleOutlinedIcon />
+                          <Typography>{item?.uploadedBy}</Typography>
+                        </Box>
+                      }
                     />
                     <CardMedia
                       sx={{
                         height: "250px",
                       }}
                       image={item?.url}
-                      title={item?.metadata?.name}
+                      title={item?.name}
                     />
                     <CardContent>
                       <Stack spacing={1}>
-                        <Box>
-                          File type: <b>{item?.metadata?.contentType}</b>
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <Tooltip title="File type">
+                            <InsertPhotoOutlinedIcon />
+                          </Tooltip>{" "}
+                          <b>{item?.contentType}</b>
+                        </Box>
+                        <Box alignItems={'center'} display='flex' gap={1}>
+                          <Tooltip title="File size">
+                            <SdStorageOutlinedIcon />
+                          </Tooltip>{" "}
+                          <b>{bytesToMegaBytes(item?.size)}</b>
                         </Box>
                       </Stack>
                     </CardContent>
@@ -231,7 +269,13 @@ export default function Creatives(props) {
           )}
           {layout == "list" && (
             <Card sx={{ mt: 2 }}>
-              <DataGrid header={headers} data={renderTableData()} />
+              <DataGrid
+                tableProps={{
+                  size: "small",
+                }}
+                header={headers}
+                data={creatives}
+              />
               {/* <List>
                 {creatives.map((item,index) => (
                   <ListItem key={index}>

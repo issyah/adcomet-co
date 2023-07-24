@@ -10,10 +10,10 @@ import {
 } from "@mui/material";
 
 export default function DataGrid(props) {
-  const { data, header, loading } = props;
+  const { data, header, loading, tableProps } = props;
 
   return (
-    <Table>
+    <Table {...tableProps}>
       <TableHead>
         <TableRow>
           {header &&

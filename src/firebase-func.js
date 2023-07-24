@@ -121,6 +121,9 @@ export const getCreativesByCompany = async (id) => {
     error,
   };
 };
+
+
+
 // upload creatives
 export const uploadCreatives = async (id, file) => {
   if (!file) {
@@ -149,7 +152,7 @@ export const uploadCreatives = async (id, file) => {
   let data = {
     url: downloadUrl,
     company: id,
-    metadata,
+    ...metadata,
     path: path,
     created: Timestamp.fromDate(new Date()),
     size: result?.metadata?.size,
