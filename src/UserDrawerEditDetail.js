@@ -47,6 +47,7 @@ export default function UserDrawerEditDetail(props) {
         lastName: selectedUser?.lastName,
         address: selectedUser?.address,
         postal: selectedUser?.postal,
+        designation: selectedUser?.designation,
       });
     }
   }, [selectedUser]);
@@ -65,16 +66,22 @@ export default function UserDrawerEditDetail(props) {
       required: true,
     },
     {
+      label: 'Designation',
+      value: formData?.designation,
+      required: true,
+      onChange: (e) => handleUpdateFormData('designation', e.target.value),
+    },
+    {
       label: "Address",
       value: formData?.address,
+      multiline: true,
+      rows: 3,
       onChange: (e) => handleUpdateFormData("address", e.target.value),
-      required: true,
     },
     {
       label: "Postal code",
       value: formData?.postal,
       onChange: (e) => handleUpdateFormData("postal", e.target.value),
-      required: true,
     },
   ];
 

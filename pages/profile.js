@@ -13,6 +13,8 @@ import {
   CardHeader,
   CardActions,
   Button,
+  Avatar,
+  FormHelperText,
 } from "@mui/material";
 import AuthLayout from "../src/layout/AuthLayout";
 import { useEffect, useState } from "react";
@@ -22,9 +24,11 @@ import {
   updateData,
   handleConfirmChangeEmail,
   handleSignOut,
+  uploadAvatar,
 } from "../src/firebase-func";
 import VerifyCredentials from "../src/VerifyCredentials";
 import ChangePasswordDialog from "../src/ChangePasswordDialog";
+import { bytesToMegaBytes } from "../src/common";
 export default function Profile(props) {
   const { setLoading, user, setAlert, setUser } = useContextProvider();
   const [form, setForm] = useState({
@@ -121,6 +125,47 @@ export default function Profile(props) {
     })
     setLoading(false);
   };
+
+  // upload avatar 
+  const handleUploadAvatar = async (e) => {
+    const file = e.target.files[0];
+    const size = bytesToMegaBytes(file.size);
+    if (size > 1) {
+      setAlert({
+        open: true,
+        message: 'File size is too big, please upload a smaller size avatar',
+        status: 'error',
+      })
+      return;
+    };
+    setLoading(true);
+    const { result, error, downloadUrl } = await uploadAvatar(user?.uid, file);
+    if (error) {
+      setAlert({
+        open: true,
+        message: error.message,
+        status: 'error'
+      });
+      setLoading(false);
+      return;
+    }
+
+    setLoading(false);
+    // success ! 
+    setAlert({
+      open: true,
+      status: 'success',
+      message: 'Avatar uploaded successfully!'
+    })
+    setUser({
+      ...user,
+      profile: {
+        ...user?.profile,
+        avatar: downloadUrl
+      }
+    });
+
+  }
 
   const handleChangeEmail = (e) => {
     e.preventDefault();
@@ -264,6 +309,25 @@ export default function Profile(props) {
             <Typography variant="h4" gutterBottom>
               Profile
             </Typography>
+            <Box sx={{
+              mb: 4,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 2,
+              flexWrap: 'wrap'
+            }}>
+              <Avatar src={user?.profile?.avatar || undefined} size='large' sx={{
+                height: 120,
+                width: 120
+              }} />
+              <Box>
+                <Button component={'label'} variant='outlined'>
+                  Upload avatar
+                  <input type='file' accept=".jpg, .jpeg, .png" style={{ display: 'none' }} onChange={handleUploadAvatar} />
+                </Button>
+                <FormHelperText>Max size: 1mb</FormHelperText>
+              </Box>
+            </Box>
             <Box component={"form"} onSubmit={handleSubmitProfile}>
               <Box>
                 <Stack spacing={4}>

@@ -192,6 +192,34 @@ export const uploadCreatives = async (id, file) => {
   };
 };
 
+// upload user avatar 
+export const uploadAvatar = async (id, file) => {
+  const avatarRef = ref(storage, `avatars/${id}`);
+  let result, error, downloadUrl;
+  try {
+    result = await uploadBytes(avatarRef, file);
+  } catch (e) {
+    error = e;
+  }
+  if (result?.ref) {
+    downloadUrl = await getDownloadURL(result?.ref);
+  }
+  // need the download url to be saved on the users account 
+  const userRef = doc(db, 'users', id);
+  try {
+    result = await updateDoc(userRef, {
+      'avatar': downloadUrl
+    });
+  } catch (e) {
+    error = e;
+  };
+  return {
+    result,
+    error,
+    downloadUrl
+  }
+}
+
 // upload logo for company profile
 export const uploadCompanyLogo = async (id, file) => {
   // delete the current logo first

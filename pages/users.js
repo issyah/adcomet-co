@@ -17,6 +17,7 @@ import {
   MenuItem,
   Tooltip,
   Alert,
+  Avatar,
 } from "@mui/material";
 import { useContextProvider } from "../context/ContextProvider";
 import { getUsersInCompany } from "../src/firebase-func";
@@ -95,6 +96,22 @@ export default function Users(props) {
 
   const headers = [
     {
+      label: "Created on",
+      id: "created",
+      render: (created) => (
+        <Typography variant="caption">
+          {moment(created).format("DD MMM YY")}
+        </Typography>
+      ),
+    },
+    {
+      label: 'Avatar',
+      id: 'avatar',
+      render: (avatar) => (
+        <Avatar src={avatar || undefined} alt={'Avatar'}></Avatar>
+      )
+    },
+    {
       label: "Email",
       id: "email",
     },
@@ -106,22 +123,17 @@ export default function Users(props) {
       label: "Last Name",
       id: "lastName",
     },
+    // {
+    //   label: "Address",
+    //   id: "address",
+    // },
+    // {
+    //   label: "Postal",
+    //   id: "postal",
+    // },
     {
-      label: "Address",
-      id: "address",
-    },
-    {
-      label: "Postal",
-      id: "postal",
-    },
-    {
-      label: "Created on",
-      id: "created",
-      render: (created) => (
-        <Typography variant="caption">
-          {moment(created).format("DD MMM YY")}
-        </Typography>
-      ),
+      label: 'Designation',
+      id: 'designation'
     },
     {
       label: "Last seen",

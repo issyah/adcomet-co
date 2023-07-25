@@ -23,8 +23,9 @@ export default function AddNewUserDialog(props) {
     firstName: "",
     lastName: "",
     password: "",
-    address: "",
-    postal: "",
+    designation: "",
+    // address: "",
+    // postal: "",
   });
 
   const handleUpdateFormData = (id, e) => {
@@ -34,6 +35,12 @@ export default function AddNewUserDialog(props) {
     });
   };
   const formFields = [
+    {
+      label: "Designation",
+      value: formData?.designation,
+      onChange: (e) => handleUpdateFormData('designation',e),
+      required:true,
+    },
     {
       label: "Email address",
       value: formData?.email,
@@ -47,13 +54,6 @@ export default function AddNewUserDialog(props) {
       onChange: (e) => handleUpdateFormData("password", e),
       type: "password",
       required: true,
-    },
-    {
-      label: "Address",
-      value: formData?.address,
-      onChange: (e) => handleUpdateFormData("address", e),
-      multiline: true,
-      rows: 4,
     },
   ];
 
