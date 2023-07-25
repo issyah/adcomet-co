@@ -1,4 +1,4 @@
-import { Roboto } from "next/font/google";
+import { Roboto, Roboto_Slab } from "next/font/google";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { red } from "@mui/material/colors";
 
@@ -9,11 +9,19 @@ export const roboto = Roboto({
   fallback: ["Helvetica", "Arial", "sans-serif"],
 });
 
+export const robotoSlab = Roboto_Slab({
+  weight: ["500", "700", "900"],
+  subsets: ['latin'],
+  display: 'swap',
+  fallback: ["Helvetica", "Arial", "sans-serif"],
+})
+
 // Create a theme instance.
 const theme = createTheme({
   palette: {
     primary: {
       main: "#3a36db",
+      color4: '#211D42',
     },
     secondary: {
       main: "#0090ff",
@@ -39,6 +47,23 @@ const theme = createTheme({
     button: {
       textTransform: "none",
     },
+    h1: {
+      fontFamily: robotoSlab.style.fontFamily
+    }, h2: {
+      fontFamily: robotoSlab.style.fontFamily
+    },
+    h3: {
+      fontFamily: robotoSlab.style.fontFamily
+    },
+    h4: {
+      fontFamily: robotoSlab.style.fontFamily
+    },
+    h5: {
+      fontFamily: robotoSlab.style.fontFamily
+    },
+    h6: {
+      fontFamily: robotoSlab.style.fontFamily
+    }
   },
   components: {
     MuiCard: {

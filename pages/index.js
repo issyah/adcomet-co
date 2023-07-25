@@ -27,6 +27,11 @@ import illusBudget from "../svg/budget.svg";
 import illusUpload from "../svg/upload.svg";
 import illusAgreement from "../svg/agreement.svg";
 import Banner from "../public/banner.jpg";
+import Icon1 from '../public/icons/billboard.png';
+import Icon2 from '../public/icons/website.png';
+import Icon3 from '../public/icons/tv.png';
+import Icon4 from '../public/icons/mobile.png';
+import ServiceBg from '../public/services-bg.jpg';
 import BannerImg from "../public/IndexBanner.jpg";
 import Image from "next/image";
 export default function Index() {
@@ -82,20 +87,48 @@ export default function Index() {
     {
       title: "Digital signages & billboards ads",
       subtitle: "Targeted and strategically placed",
+      icon: Icon1,
     },
     {
+      icon: Icon2,
       title: "Website ads campaign",
       subtitle: "Specific ads space banner to choose from",
+      sx: {
+        background: `url(${ServiceBg.src}) 50% 50%`,
+        backgroundSize: 'cover',
+        color: 'grey.100'
+      }
     },
     {
+      icon: Icon3,
       title: "TV/Radio Ads campaign",
       subtitle: "Target affluent audience through linear platform",
     },
     {
+      icon: Icon4,
       title: "Mobile ads <br/> campaign",
       subtitle: "Engage interactive audience through app",
     },
   ];
+
+  const howItWorks = [
+    {
+      title: 'Pick Your Perfect Spot',
+      content: "Handpick the perfect location for your ads. Let your advertising strategy flourish in the perfect spots."
+    },
+    {
+      title: 'Set Your Budget And Schedule',
+      content: "We provide flexible options tailored for first timers, big-spenders, and everyone in between, ensuring every dollar is maximised."
+    },
+    {
+      title: "Upload Your Final Artwork",
+      content: "Create simple, easy to read artwork that stands out and grabs attention. Need help with your design? We have your back."
+    },
+    {
+      title: "Seal The Deal",
+      content: "Once approved, your campaign launches instantly, enabling you to witness results without delay."
+    }
+  ]
 
   return (
     <Box>
@@ -150,10 +183,7 @@ export default function Index() {
                 Unleash Endless Advertising Opportunities
               </Typography>
               <Typography variant="h6" fontWeight="normal">
-                Power sales, captivate audiences.
-              </Typography>
-              <Typography variant="h6" fontWeight="normal">
-                Affordable rates, incredible results.
+                Power sales, captivate audiences. <Box sx={{ display: { xs: 'inline', md: 'block' } }}></Box> Affordable rates, incredible results.
               </Typography>
             </Grid>
             <Grid item md={6}>
@@ -199,9 +229,15 @@ export default function Index() {
                     bgcolor: "grey.100",
                     boxShadow: "none",
                     height: "100%",
+                    ...(item.sx && { ...item.sx })
                   }}
                 >
                   <CardContent sx={{ height: "100%" }}>
+                    {item.icon &&
+                      <Box mb={2}>
+                        <Image src={item.icon} height={69} width={69} alt={item.title} />
+                      </Box>
+                    }
                     <Typography
                       fontWeight="bold"
                       variant="h5"
@@ -220,14 +256,14 @@ export default function Index() {
       <Box
         sx={{
           my: 10,
-          display:'flex',
-          alignItems:'center',
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
         <Container maxWidth="lg">
           <Grid container spacing={8} alignItems='center'>
             <Grid item md={6}>
-              <Image src={Banner1} className='img-responsive'/>
+              <Image src={Banner1} className='img-responsive' />
             </Grid>
             <Grid item md={6}>
               <Typography
@@ -255,110 +291,71 @@ export default function Index() {
           </Grid>
         </Container>
       </Box>
+      <Box bgcolor='primary.color4' overflow='hidden' sx={{
+        py: 10
+      }}>
+        <Container maxWidth='lg'>
+          <Grid container spacing={4} alignItems='center'>
+            <Grid item md={6} xs={12}>
+              <Typography variant='h3' color={'grey.100'} fontWeight='900' gutterBottom>
+                Drive Traffic That Converts
+              </Typography>
+              <Typography color='grey.300'>
+                Promote your business and reach the right audience
+              </Typography>
+            </Grid>
+            <Grid item md={6} xs={12} >
+              <Image src={'/campaigns.jpg'} width={1018} height={690} style={{
+                height: '100%',
+                width: '100%'
+              }} />
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
       <Box py={10}>
-        <Container maxWidth="lg">
-          <Typography
-            variant="h3"
-            fontWeight={900}
-            textAlign={"center"}
-            sx={{ mb: 20 }}
-          >
-            How it works
-          </Typography>
-          <Grid container spacing={4} sx={{ mb: 10 }} alignItems="center">
-            <Grid item md={6} xs={12}>
-              <Box height={250} width={"100%"} position="relative">
-                <Image src={illusLocation} fill />
-              </Box>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <Typography variant="body2">Step 1</Typography>
-              <Typography variant="h4" gutterBottom>
-                Pick your perfect spot
-              </Typography>
-              <Typography>
-                Handpick the perfect locations for your Ads to thrive and shine!
-                Take control with single or multiple locations of your choice.
-                Let your advertising strategy flourish in the perfect spots.
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            spacing={4}
-            sx={{
-              mb: 10,
-              flexDirection: {
-                md: "row-reverse",
-                xs: "row",
-              },
-            }}
-            alignItems="center"
-          >
-            <Grid item md={6} xs={12}>
-              <Box height={250} width={"100%"} position="relative">
-                <Image src={illusBudget} fill />
-              </Box>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <Typography variant="body2">Step 2</Typography>
-              <Typography variant="h4" gutterBottom>
-                Set your budget and schedule
-              </Typography>
-              <Typography>
-                Harmonise your spend and schedule with your growth objectives.
-                We provide flexible options tailored for first-timers,
-                big-spenders, and everyone in Between, ensuring every dollar is
-                maximised.
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid container spacing={4} sx={{ mb: 10 }} alignItems="center">
-            <Grid item md={6} xs={12}>
-              <Box height={250} width={"100%"} position="relative">
-                <Image src={illusUpload} fill />
-              </Box>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <Typography variant="body2">Step 3</Typography>
-              <Typography variant="h4" gutterBottom>
-                Upload your final artwork
-              </Typography>
-              <Typography>
-                Create simple, easy to read artwork that stands out and grabs
-                attention. Need help with your design? We have your back.
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            spacing={4}
-            sx={{
-              mb: 10,
-              flexDirection: {
-                md: "row-reverse",
-                xs: "row",
-              },
-            }}
-            alignItems="center"
-          >
-            <Grid item md={6} xs={12}>
-              <Box height={250} width={"100%"} position="relative">
-                <Image src={illusAgreement} fill />
-              </Box>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <Typography variant="body2">Step 4</Typography>
-              <Typography variant="h4" gutterBottom>
-                Seal the deal with our approval process
-              </Typography>
-              <Typography>
-                Rest assured as our expert sign partners review and approve your
-                designs, ensuring they're ready for action. Once approved, your
-                campaign launches instantly, enabling you to witness results
-                without delay.
-              </Typography>
-            </Grid>
+        <Container maxWidth='lg'>
+          <Box sx={{
+            width: {
+              md: '50%'
+            }
+          }}>
+            <Typography variant='h3' fontWeight='900'>
+              How To Create Ad Campaign
+            </Typography>
+          </Box>
+          <Grid container spacing={4} sx={{ mt: 2 }}>
+            {howItWorks.map((item, index) => (
+              <Grid item md={6} xs={12} key={index}>
+                <Card sx={{height:'100%', boxShadow:0, bgcolor:'grey.100'}} elevation={2}>
+                  <CardContent>
+                    <Box sx={{
+                      display: 'flex',
+                      gap: 2,
+                      alignItems: 'center'
+                    }}>
+                      <Box sx={{
+                        borderRadius: 12,
+                        color: 'grey.100',
+                        bgcolor: 'primary.main',
+                        height: '64px',
+                        width: '64px',
+                        display:'flex',
+                        alignItems:'center',
+                        justifyContent:'center',
+                        flexShrink:0,
+                      }}>
+                        <Typography variant='h4'>{index + 1}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant='h6' gutterBottom>{item.title}</Typography>
+                        <Typography>{item.content}</Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
           </Grid>
         </Container>
       </Box>

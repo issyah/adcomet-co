@@ -4,6 +4,7 @@
 import { Box, Toolbar } from "@mui/material";
 import Head from "next/head";
 import Navbar from "../Navbar";
+import { PublicFooter } from "../PublicFooter";
 
 export default function Public(props) {
   const { children } = props;
@@ -23,6 +24,7 @@ export default function Public(props) {
       <Navbar />
       <Toolbar />
       <Box mt={4}>{children}</Box>
+      <PublicFooter/>
     </Box>
   );
 }
