@@ -32,6 +32,7 @@ import InsertPhotoOutlinedIcon from "@mui/icons-material/InsertPhotoOutlined";
 import SdStorageOutlinedIcon from "@mui/icons-material/SdStorageOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import ViewCreativeDialog from "../src/ViewCreativeDialog";
+import CreativeCard from "../src/CreativeCard";
 export default function Creatives(props) {
   const { setLoading, company, setAlert, loading } = useContextProvider();
   const [creatives, setCreatives] = useState([]);
@@ -82,7 +83,7 @@ export default function Creatives(props) {
     {
       label: "Size",
       id: "size",
-      render: (size) => <Typography>{bytesToMegaBytes(size)}</Typography>,
+      render: (size) => <Typography>{bytesToMegaBytes(size)}MB</Typography>,
     },
     {
       label: "Content-type",
@@ -99,18 +100,7 @@ export default function Creatives(props) {
     },
   ];
 
-  const renderTableData = () => {
-    if (creatives?.length) {
-      const data = creatives.map((item) => {
-        return {
-          id: item?.id,
-          url: item?.url || undefined,
-          ...item?.metadata,
-        };
-      });
-      return data;
-    }
-  };
+
 
   const handleFetchCreatives = async () => {
     if (!company?.id) {
@@ -137,7 +127,6 @@ export default function Creatives(props) {
           created: data?.created.toDate(),
         };
       });
-      console.log(newData);
       setCreatives(newData);
     }
 
@@ -168,9 +157,6 @@ export default function Creatives(props) {
     setCreatives([...creatives, ...[data]]);
   };
 
-  // useEffect(() => {
-  //   handleFetchCreatives();
-  // }, []);
   useEffect(() => {
     if (company?.id) {
       handleFetchCreatives();
@@ -217,7 +203,7 @@ export default function Creatives(props) {
           Add creatives{" "}
           <input
             onChange={handleFileUpload}
-            accept={".jpg,.jpeg,.png,.gif"}
+            accept={".jpg,.jpeg,.png,.gif, .mp4"}
             type={"file"}
             style={{ display: "none" }}
             id={"upload-creative"}
@@ -230,55 +216,10 @@ export default function Creatives(props) {
             <Grid container spacing={2} sx={{ mt: 2 }}>
               {creatives.map((item, index) => (
                 <Grid item md={3} key={index}>
-                  <CardActionArea onClick={() => setSelectedCreative(item)}>
-                    <Card
-                      sx={{
-                        ".MuiCardHeader-content": {
-                          display: "block",
-                          overflow: "hidden",
-                        },
-                        ".MuiCardHeader-title, .MuiCardHeader-subheader": {
-                          typography: "body1",
-                          overflow: "hidden",
-                          whiteSpace: "nowrap",
-                          textOverflow: "ellipsis",
-                        },
-                      }}
-                    >
-                      <CardHeader
-                        title={item?.name}
-                        subheader={
-                          <Box display={"flex"} alignItems="center" gap={1}>
-                            <AccountCircleOutlinedIcon />
-                            <Typography>{item?.uploadedBy}</Typography>
-                          </Box>
-                        }
-                      />
-                      <CardMedia
-                        sx={{
-                          height: "250px",
-                        }}
-                        image={item?.url}
-                        title={item?.name}
-                      />
-                      <CardContent>
-                        <Stack spacing={1}>
-                          <Box display="flex" alignItems="center" gap={1}>
-                            <Tooltip title="File type">
-                              <InsertPhotoOutlinedIcon />
-                            </Tooltip>{" "}
-                            <b>{item?.contentType}</b>
-                          </Box>
-                          <Box alignItems={"center"} display="flex" gap={1}>
-                            <Tooltip title="File size">
-                              <SdStorageOutlinedIcon />
-                            </Tooltip>{" "}
-                            <b>{bytesToMegaBytes(item?.size)}</b>
-                          </Box>
-                        </Stack>
-                      </CardContent>
-                    </Card>
-                  </CardActionArea>
+                  <CreativeCard 
+                    item={item}
+                    setSelectedCreative={setSelectedCreative}
+                  />
                 </Grid>
               ))}
             </Grid>

@@ -165,15 +165,25 @@ export const uploadCreatives = async (id, file) => {
     created: Timestamp.fromDate(new Date()),
     size: result?.metadata?.size,
   };
-  const addDocResult = await addDoc(collectionRef, data);
+  try {
+    await addDoc(collectionRef, data);
+  } catch (e) {
+    error = e;
+  }
   if (addDocResult) {
     data["id"] = addDocResult.id;
   }
   // lastly add the storage size to the company page
   const companyRef = doc(db, "companies", id);
-  await updateDoc(companyRef, {
-    'creativeStorage.currentSize': increment(bytesToMegaBytes(result?.metadata?.size)),
-  });
+  try {
+    await updateDoc(companyRef, {
+      "creativeStorage.currentSize": increment(
+        bytesToMegaBytes(result?.metadata?.size)
+      ),
+    });
+  } catch (e) {
+    error = e;
+  }
   return {
     result,
     error,

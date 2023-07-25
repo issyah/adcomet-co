@@ -46,6 +46,6 @@ const formatBytes = (a, b = 2) => {
 };
 const bytesToMegaBytes = (bytes) => {
   if(bytes == 0) { return 0};
-  return (bytes / (1024 * 1024)).toFixed(2) + 'MB';
+  return (bytes / (1024 * 1024)).toFixed(2);
 };
 export { formatNumber, formatNumberCompact, setStatusColor, formatBytes, bytesToMegaBytes };
