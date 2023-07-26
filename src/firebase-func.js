@@ -13,6 +13,7 @@ import {
   updateEmail,
   updatePassword,
   sendEmailVerification,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 
 import {
@@ -94,6 +95,67 @@ export const updateData = async (collection, id, data) => {
   };
 };
 
+export const createNewUser = async (email, data) => {
+  let result, error;
+  if (!email || !data) {
+    error = {
+      message: 'Missing required fields.'
+    };
+    return { error }
+  };
+
+  const {
+    password,
+  } = data;
+  // create the new user 
+  try {
+    result = await auth.createUser({
+      email: email,
+      password: password,
+    })
+    // result = await createUserWithEmailAndPassword(auth, email, password);
+  } catch (e) {
+    error = e;
+    return {
+      error
+    }
+  }
+  // successfully 
+  const userCredential = result.user;
+  const uid = userCredential.uid;
+
+  // add to users collection 
+  const userRef = collection(db, 'users');
+  const userData = {
+    ...data,
+    id: uid,
+  }
+  try {
+    await addDoc(userRef, userData);
+  } catch (e) {
+    error = e;
+    return { error }
+  }
+
+  // send verification email to user 
+  try {
+    await sendEmailVerification(userCredential);
+  } catch (e) {
+    error = e;
+    return {
+      error
+    }
+  }
+  // return new user information 
+  return {
+    newUser: userData,
+    result,
+    error,
+  }
+
+}
+
+
 // fetch current users in the company
 export const getUsersInCompany = async (id) => {
   const userRef = collection(db, "users");
@@ -165,8 +227,9 @@ export const uploadCreatives = async (id, file) => {
     created: Timestamp.fromDate(new Date()),
     size: result?.metadata?.size,
   };
+  let addDocResult;
   try {
-    await addDoc(collectionRef, data);
+    addDocResult = await addDoc(collectionRef, data);
   } catch (e) {
     error = e;
   }

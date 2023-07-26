@@ -215,7 +215,7 @@ export default function Creatives(props) {
           {layout == "card" && (
             <Grid container spacing={2} sx={{ mt: 2 }}>
               {creatives.map((item, index) => (
-                <Grid item md={3} key={index}>
+                <Grid item md={3} xs={6} key={index}>
                   <CreativeCard 
                     item={item}
                     setSelectedCreative={setSelectedCreative}

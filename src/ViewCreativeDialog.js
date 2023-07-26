@@ -87,7 +87,7 @@ export default function ViewCreativeDialog({
                 },
               }}
             >
-              <video>
+              <video controls>
                 <source src={selectedCreative?.url} />
               </video>
             </Box>

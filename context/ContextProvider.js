@@ -12,8 +12,8 @@ import {
   getCurrentStorage,
 } from "../src/firebase-func";
 import { doc, getFirestore, onSnapshot, Timestamp } from "firebase/firestore";
+import jwt from 'jsonwebtoken'
 const context = React.createContext();
-
 const auth = getAuth(firebase_app);
 const db = getFirestore(firebase_app);
 const ContextProvider = ({ children }) => {
@@ -45,9 +45,15 @@ const ContextProvider = ({ children }) => {
     const { error, result } = await getProfile(id);
     if (result) {
       if (result?.exists()) {
+        const data = result?.data();
+        let accessToken = jwt.sign({
+          role: data?.company?.userType,
+          companyId: data?.company?.id
+        }, process.env.NEXT_PUBLIC_JWT_KEY)
         setUser({
           ...user,
-          profile: result?.data(),
+          profile: data,
+          accessToken,
         });
         // set company id and name for quick reference
         setCompany(result?.data()?.company);
