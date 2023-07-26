@@ -43,21 +43,19 @@ const ContextProvider = ({ children }) => {
 
   const getProfileData = async (id) => {
     const { error, result } = await getProfile(id);
-    if (result) {
-      if (result?.exists()) {
-        const data = result?.data();
-        let accessToken = jwt.sign({
-          role: data?.company?.userType,
-          companyId: data?.company?.id
-        }, process.env.NEXT_PUBLIC_JWT_KEY)
-        setUser({
-          ...user,
-          profile: data,
-          accessToken,
-        });
-        // set company id and name for quick reference
-        setCompany(result?.data()?.company);
-      }
+    if (result?.exists()) {
+      const data = result?.data();
+      let accessToken = jwt.sign({
+        role: data?.company?.userType,
+        companyId: data?.company?.id
+      }, process.env.NEXT_PUBLIC_JWT_KEY)
+      setUser({
+        ...user,
+        profile: data,
+        accessToken,
+      });
+      // set company id and name for quick reference
+      setCompany(result?.data()?.company);
     }
   };
 

@@ -35,22 +35,15 @@ export default function CreativeCard({ item, setSelectedCreative }) {
     setAnchorEl(e.currentTarget);
   };
 
-  const handleDownloadFile = () => {
-    handleCloseMenu();
-    const xhr = new XMLHttpRequest();
-    xhr.responseType = "blob";
-    xhr.onload = (event) => {
-      const blob = xhr.response;
-    };
-    xhr.open("GET", item.url)
-    xhr.send();
-    // const a = document.createElement("a");
-    // a.href = item.url;
-    // a.download = item.name;
-    // a.setAttribute("target", "_blank");
-    // document.body.appendChild(a);
-    // a.click();
-    // document.body.removeChild(a);
+  const handleDownloadFile = (url, type) => {
+    const a = document.createElement("a");
+    a.href = `/api/creatives/download-file?type=${type}&url=${url}`;
+    console.log(a.href);
+    a.download = item.name;
+    a.setAttribute("target", "_blank");
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 
   return (
@@ -77,7 +70,7 @@ export default function CreativeCard({ item, setSelectedCreative }) {
         }}
         onClose={handleCloseMenu}
       >
-        <MenuItem onClick={handleDownloadFile}>Download file</MenuItem>
+        <MenuItem onClick={() => handleDownloadFile(item?.url, item?.contentType)}>Download file</MenuItem>
         <MenuItem sx={{ color: red[500] }}>Delete file</MenuItem>
       </Menu>
       <CardHeader

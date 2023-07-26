@@ -7,6 +7,7 @@
 import moment from "moment";
 import admin from "../../../utils/firebase-admin";
 import jwt from 'jsonwebtoken';
+import { handlePermission } from "../../../utils/handlePermission";
 const auth = admin.auth();
 // const db = getFirestore(firebase_admin_app);
 const db = admin.firestore();
@@ -19,33 +20,13 @@ export default async function handler(req, res) {
   }
   // get authorization header 
   const authorization = req.headers['authorization'];
-  if (!authorization) {
-    return res.status(401).json({ message: 'Not authorized. Token not valid' });
-  };
-  const token = authorization.split(" ")[1];
-  // check authorization 
-  // const { role, companyId } = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_KEY);
-  // if (!role || role !== 'admin' || !companyId) {
-  //   return res.status(401).json({ message: 'Not authorized' });
-  // }
-  if (!token) {
-    return res.status(401).json({ message: 'Your are not authorized to perform this action.' });
+  const { result: r, error } = handlePermission(authorization, ['admin']);
+  if (error) {
+    return res.status(400).json({
+      message: error,
+    })
   }
-  let userToken;
-  try {
-    userToken = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_KEY);
-  } catch (error) {
-    res.status(400).json({
-      message: error.message,
-      code: error.code
-    });
-  };
-  const { role, companyId } = userToken;
-  if (role !== 'admin') {
-    // you are not allowed to access this resource 
-    res.status(401).json({ message: 'You are not authorized to perform this action.' })
-  };
-
+  const { role, companyId } = r;
   const {
     firstName,
     lastName,
@@ -98,7 +79,7 @@ export default async function handler(req, res) {
   }
   return res.status(200).json({
     ...userData,
-    id: resUser.id,
+    id: result.uid,
     created: new Date(),
     lastSeen: new Date(),
     userType: 'user',
