@@ -68,7 +68,7 @@ const generateVideoThumbnail = (file) => {
 
       ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
       video.pause();
-      return resolve(canvas.toDataURL("image/jpg"));
+      return resolve(canvas.toDataURL("image/jpeg", 0.8));
     };
   });
 };
