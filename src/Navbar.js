@@ -1,6 +1,6 @@
 /**
  * The main navbar for the Adcomet*/
-import { Menu } from "@mui/icons-material";
+import { AccountCircleOutlined, Menu } from "@mui/icons-material";
 import {
   AppBar,
   Container,
@@ -23,27 +23,48 @@ import Logo from "../public/logo.png";
 import { useContextProvider } from "../context/ContextProvider";
 export default function Navbar() {
   const [open, setOpen] = React.useState(false);
-  const {user} = useContextProvider();
+  const { user } = useContextProvider();
   const navArr = [
     {
       label: "About",
       href: "/about-us",
-      color: 'inherit'
+      color: "inherit",
+    },
+    {
+      label: "Solutions",
+      href: "/",
+      color: "inherit",
+    },
+    {
+      label: "Pricing & Plans",
+      href: "/",
+      color: "inherit",
+    },
+    {
+      label: "Contact Us",
+      href: "/contact",
+      color: "inherit",
     },
     // {
     //   label: 'Contact',
     //   href: '/contact',
     //   color: 'inherit'
     // },
-    {...(user !== null || user ) ? {
-      label: "Back to account",
-      href: '/dashboard'
-    } : {
-      label: "Log in",
-      href: '/login',
-      color: 'primary',
-      variant:'contained'
-    }}
+    {
+      ...(user !== null || user
+        ? {
+            label: "Back to account",
+            href: "/dashboard",
+            startIcon: <AccountCircleOutlined />,
+            color: "inherit",
+          }
+        : {
+            label: "Log in",
+            href: "/login",
+            color: "primary",
+            variant: "contained",
+          }),
+    },
   ];
   return (
     <AppBar
@@ -61,7 +82,7 @@ export default function Navbar() {
             href="/"
             sx={{
               cursor: "pointer",
-              mt:0.5
+              mt: 0.5,
             }}
           >
             <Image
@@ -93,7 +114,7 @@ export default function Navbar() {
             <Stack
               spacing={2}
               flexWrap="wrap"
-              direction={'row'}
+              direction={"row"}
               sx={{
                 display: {
                   md: "flex",
@@ -119,13 +140,13 @@ export default function Navbar() {
         >
           <List>
             <ListItem>
-              <ListItemButton component={Link} href='/'>
+              <ListItemButton component={Link} href="/">
                 <ListItemText>Home</ListItemText>
               </ListItemButton>
             </ListItem>
             {navArr.map((item, index) => (
               <ListItem key={index}>
-                <ListItemButton component={Link} href={item?.href}>
+                <ListItemButton component={Link} href={item?.href} onClick={() => setOpen(false)}>
                   <ListItemText>{item?.label}</ListItemText>
                 </ListItemButton>
               </ListItem>
