@@ -154,7 +154,7 @@ export default function Creatives(props) {
 
   useEffect(() => {
     if (company?.id) {
-      // handleFetchCreatives();
+      handleFetchCreatives();
     }
   }, [company]);
 
