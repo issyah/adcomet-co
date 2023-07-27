@@ -90,12 +90,30 @@ export default function Creatives(props) {
       label: "",
       id: "id",
       render: (id) => (
-        <IconButton>
-          <Delete />
-        </IconButton>
+        <Box display="flex" alignItems="center" gap={1}>
+          <Button onClick={() => handleTableAction(id, 'view-creative')}>
+            View
+          </Button>
+          <IconButton
+            color="error"
+            onClick={() => handleTableAction(id, "delete-creative")}
+          >
+            <Delete />
+          </IconButton>
+        </Box>
       ),
     },
   ];
+
+  const handleTableAction = (id, type) => {
+    const item = creatives?.find((i) => i.id == id);
+    setSelectedCreative(item);
+    if (type == "view-creative") {
+      setOpenViewDialog(true);
+    } else if (type == "delete-creative") {
+      setOpenDeleteCreative(true);
+    }
+  };
 
   const handleFetchCreatives = async () => {
     if (!company?.id) {
@@ -215,23 +233,26 @@ export default function Creatives(props) {
         </Button>
       </Box>
       {creatives && (
-        <Box >
+        <Box>
           {layout == "card" && (
-            <Grid container spacing={2} >
+            <Grid container spacing={2}>
               {uploadLoading && (
-                <Grid item md={3} xs={6}>
+                <Grid item md={4} lg={3} xs={6}>
                   <Card sx={{ height: "100%" }}>
                     <CardContent>
                       <Skeleton variant={"line"} sx={{ mb: 2 }} />
                       <Skeleton variant={"line"} sx={{ mb: 2 }} />
-                      <Skeleton variant="box" height={250} sx={{ mb: 2 }} />
+                      <Skeleton variant="box" sx={{ mb: 2, height:{
+                        md: 250,
+                        xs: 120
+                      } }} />
                       <Skeleton variant={"line"} />
                     </CardContent>
                   </Card>
                 </Grid>
               )}
               {creatives.map((item, index) => (
-                <Grid item md={3} xs={6} key={index}>
+                <Grid item md={4} lg={3} xs={6} key={index}>
                   <CreativeCard
                     item={item}
                     setOpenDeleteCreative={setOpenDeleteCreative}

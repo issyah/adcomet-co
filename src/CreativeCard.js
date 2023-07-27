@@ -43,14 +43,22 @@ export default function CreativeCard({
   const handleDownloadFile = (item) => {
     const url = item?.url;
     if(url){
-      const xhr = new XMLHttpRequest();
-      xhr.responseType = 'blob';
-      xhr.onload = (event) => {
-        const blob = xhr.response;
-      };
-      xhr.open('GET', url);
-      xhr.send();
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = item?.name;
+      a.setAttribute('style', 'display:none');
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
+    //   const xhr = new XMLHttpRequest();
+    //   xhr.responseType = 'blob';
+    //   xhr.onload = (event) => {
+    //     const blob = xhr.response;
+    //   };
+    //   xhr.open('GET', url);
+    //   xhr.send();
+    // }
   };
   const handleViewFile = () => {
     setOpenViewDialog(true);
@@ -100,11 +108,9 @@ export default function CreativeCard({
       </Menu>
       <CardHeader
         title={item?.name}
-        // subheader={
-        //   <Box display={"flex"} alignItems="center" gap={1}>
-        //     <Typography variant='body1'>{item?.uploadedBy}</Typography>
-        //   </Box>
-        // }
+        subheader={
+          item?.uploadedBy
+        }
         action={
           <IconButton onClick={handleClickMenu}>
             <MoreVertOutlined />
