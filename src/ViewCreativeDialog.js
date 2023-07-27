@@ -1,6 +1,6 @@
 /**
  * A generic view creative dialog*/
-import { Close, KeyboardArrowLeftOutlined } from "@mui/icons-material";
+import { Close  } from "@mui/icons-material";
 import {
   Dialog,
   DialogContent,
@@ -8,6 +8,7 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export default function ViewCreativeDialog({
   open,
@@ -60,7 +61,9 @@ export default function ViewCreativeDialog({
             textOverflow: 'ellipsis',
           }}>
             <IconButton onClick={handleClose} color="inherit" size="large">
-              <KeyboardArrowLeftOutlined />
+              {/* <KeyboardArrowLeftOutlined />
+               */}
+               <ArrowBackIcon />
             </IconButton>
             {selectedCreative?.name}
           </Typography>

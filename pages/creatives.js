@@ -29,7 +29,7 @@ import { useEffect, useState } from "react";
 import { Delete, GridView, ViewList } from "@mui/icons-material";
 import DataGrid from "../src/DataGrid";
 import moment from "moment";
-import { bytesToMegaBytes } from "../src/common";
+import { bytesToMegaBytes, generateVideoThumbnail } from "../src/common";
 import ViewCreativeDialog from "../src/ViewCreativeDialog";
 import CreativeCard from "../src/CreativeCard";
 import CreativeDeleteDialog from "../src/CreativeDeleteDialog";
@@ -91,7 +91,7 @@ export default function Creatives(props) {
       id: "id",
       render: (id) => (
         <Box display="flex" alignItems="center" gap={1}>
-          <Button onClick={() => handleTableAction(id, 'view-creative')}>
+          <Button onClick={() => handleTableAction(id, "view-creative")}>
             View
           </Button>
           <IconButton
@@ -149,7 +149,34 @@ export default function Creatives(props) {
   const handleFileUpload = async (e) => {
     setUploadLoading(true);
     const file = e.target.files[0];
-    const { error, data } = await uploadCreatives(company?.id, file);
+    const type = file?.type;
+    const acceptFileFormat = [
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+      "video/mp4",
+      "image/gif",
+    ];
+
+    if (!acceptFileFormat.includes(type)) {
+      setAlert({
+        open: true,
+        message: `File format ${type} is not supported.`,
+        status: "error",
+      });
+      setUploadLoading(false);
+      return;
+    }
+    let thumbnailImage;
+    if (type == "video/mp4") {
+      // we need to create a thumbnail
+      thumbnailImage = await generateVideoThumbnail(file);
+    }
+    const { error, data } = await uploadCreatives(
+      company?.id,
+      file,
+      thumbnailImage
+    );
     if (error) {
       setAlert({
         open: true,
@@ -242,10 +269,16 @@ export default function Creatives(props) {
                     <CardContent>
                       <Skeleton variant={"line"} sx={{ mb: 2 }} />
                       <Skeleton variant={"line"} sx={{ mb: 2 }} />
-                      <Skeleton variant="box" sx={{ mb: 2, height:{
-                        md: 250,
-                        xs: 120
-                      } }} />
+                      <Skeleton
+                        variant="box"
+                        sx={{
+                          mb: 2,
+                          height: {
+                            md: 250,
+                            xs: 120,
+                          },
+                        }}
+                      />
                       <Skeleton variant={"line"} />
                     </CardContent>
                   </Card>
@@ -286,7 +319,7 @@ export default function Creatives(props) {
           )}
         </Box>
       )}
-      {!loading && creatives.length == 0 && (
+      {(!loading && creatives.length == 0 && !uploadLoading) && (
         <Box
           sx={{
             mt: 2,

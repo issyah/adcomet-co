@@ -42,11 +42,12 @@ export default function CreativeCard({
 
   const handleDownloadFile = (item) => {
     const url = item?.url;
-    if(url){
-      const a = document.createElement('a');
+    if (url) {
+      const a = document.createElement("a");
       a.href = url;
       a.download = item?.name;
-      a.setAttribute('style', 'display:none');
+      a.target = "_blank";
+      a.setAttribute("style", "display:none");
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -79,8 +80,8 @@ export default function CreativeCard({
         },
         ".MuiCardHeader-title, .MuiCardHeader-subheader": {
           typography: {
-            md: 'body1',
-            xs: 'caption'
+            md: "body1",
+            xs: "caption",
           },
           overflow: "hidden",
           whiteSpace: "nowrap",
@@ -97,9 +98,7 @@ export default function CreativeCard({
         }}
         onClose={handleCloseMenu}
       >
-        <MenuItem
-          onClick={() => handleDownloadFile(item)}
-        >
+        <MenuItem onClick={() => handleDownloadFile(item)}>
           Download file
         </MenuItem>
         <MenuItem onClick={() => handleDeleteFile()} sx={{ color: red[500] }}>
@@ -108,9 +107,7 @@ export default function CreativeCard({
       </Menu>
       <CardHeader
         title={item?.name}
-        subheader={
-          item?.uploadedBy
-        }
+        subheader={item?.uploadedBy}
         action={
           <IconButton onClick={handleClickMenu}>
             <MoreVertOutlined />
@@ -122,22 +119,32 @@ export default function CreativeCard({
           sx={{
             height: {
               md: "250px",
-              xs: '120px'
+              xs: "120px",
             },
           }}
-          image={item?.url}
+          image={item?.thumbUrl ? item?.thumbUrl : item?.url}
           title={item?.name}
           alt={item?.name}
         />
         <CardContent>
           <Stack spacing={1}>
-            <Box display="flex" alignItems="center" gap={1} typography={'caption'}>
+            <Box
+              display="flex"
+              alignItems="center"
+              gap={1}
+              typography={"caption"}
+            >
               <Tooltip title={"File type"}>
                 <InsertPhotoOutlined />
               </Tooltip>
               {item?.contentType}
             </Box>
-            <Box alignItems="center" display="flex" gap={1} typography={'caption'}>
+            <Box
+              alignItems="center"
+              display="flex"
+              gap={1}
+              typography={"caption"}
+            >
               <Tooltip title="File size">
                 <SdStorageOutlined />
               </Tooltip>

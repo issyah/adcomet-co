@@ -41,6 +41,7 @@ import {
   getStorage,
   ref,
   uploadBytes,
+  uploadString,
 } from "firebase/storage";
 import { bytesToMegaBytes } from "./common";
 
@@ -187,7 +188,7 @@ export const getCreativesByCompany = async (id) => {
 };
 
 export const deleteCreatives = async (item) => {
-  const { id, path, company, size } = item;
+  const { id, path, company, size, thumbPath } = item;
 
   if (!id) {
     return {
@@ -200,9 +201,23 @@ export const deleteCreatives = async (item) => {
     };
   }
   let result, error;
-
+  let fileRef = ref(storage, path);
+  try {
+    await deleteObject(fileRef);
+  } catch (e) {
+    error = e.message;
+    return { error };
+  }
+  if (thumbPath) {
+    let thumbRef = ref(storage, thumbPath);
+    try {
+      await deleteObject(thumbRef);
+    } catch (e) {
+      error = e.message;
+      return { error };
+    }
+  }
   const batch = writeBatch(db);
-
   // delete creative reference from creatives document
   const creativeRef = doc(db, "creatives", id);
   batch.delete(creativeRef);
@@ -223,7 +238,7 @@ export const deleteCreatives = async (item) => {
 };
 
 // upload creatives
-export const uploadCreatives = async (id, file) => {
+export const uploadCreatives = async (id, file, thumbnail) => {
   if (!file) {
     return;
   }
@@ -244,6 +259,21 @@ export const uploadCreatives = async (id, file) => {
   if (result?.ref) {
     downloadUrl = await getDownloadURL(result?.ref);
   }
+  let thumbnailResult, thumbnailUrl;
+  const thumbnailPath = `creatives/${id}/thumb_${name}`;
+  const thumbRef = ref(storage, thumbnailPath);
+  if (thumbnail) {
+    // upload a thumbnail using putstring
+    try {
+      thumbnailResult = await uploadString(thumbRef, thumbnail, "data_url");
+    } catch (e) {
+      error = e;
+      return { error };
+    }
+  }
+  if (thumbnailResult?.ref) {
+    thumbnailUrl = await getDownloadURL(thumbnailResult?.ref);
+  }
 
   // add in new creatives collection
   const batch = writeBatch(db);
@@ -257,13 +287,17 @@ export const uploadCreatives = async (id, file) => {
     size: result?.metadata?.size,
     id: creativeRef.id,
   };
+  if (thumbnailUrl) {
+    data["thumbUrl"] = thumbnailUrl;
+    data["thumbPath"] = thumbnailPath;
+    data["size"] = data["size"] + thumbnailResult?.metadata?.size;
+  }
   batch.set(creativeRef, data);
   // lastly add the storage size to the company page
   const companyRef = doc(db, "companies", id);
+  let incrementSize = bytesToMegaBytes(data["size"]);
   batch.update(companyRef, {
-    "creativeStorage.currentSize": increment(
-      bytesToMegaBytes(result?.metadata?.size)
-    ),
+    "creativeStorage.currentSize": increment(incrementSize),
   });
   try {
     await batch.commit();
