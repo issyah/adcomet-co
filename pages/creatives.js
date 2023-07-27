@@ -15,6 +15,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Skeleton,
   Stack,
   Tooltip,
   Typography,
@@ -28,23 +29,18 @@ import { Delete, GridView, ViewList } from "@mui/icons-material";
 import DataGrid from "../src/DataGrid";
 import moment from "moment";
 import { bytesToMegaBytes } from "../src/common";
-import InsertPhotoOutlinedIcon from "@mui/icons-material/InsertPhotoOutlined";
-import SdStorageOutlinedIcon from "@mui/icons-material/SdStorageOutlined";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import ViewCreativeDialog from "../src/ViewCreativeDialog";
 import CreativeCard from "../src/CreativeCard";
+import CreativeDeleteDialog from "../src/CreativeDeleteDialog";
 export default function Creatives(props) {
   const { setLoading, company, setAlert, loading } = useContextProvider();
   const [creatives, setCreatives] = useState([]);
+  const [uploadLoading, setUploadLoading] = useState(false);
   const [layout, setLayout] = useState("card");
   const [selectedCreative, setSelectedCreative] = useState();
+  const [openDeleteCreative, setOpenDeleteCreative] = useState(false);
+  const [openViewDialog, setOpenViewDialog] = useState(false);
 
-  const handleOpenViewer = () => {
-    if (selectedCreative) {
-      return true;
-    }
-    return false;
-  };
   const handleChangeLayout = (type) => {
     setLayout(type);
   };
@@ -100,8 +96,6 @@ export default function Creatives(props) {
     },
   ];
 
-
-
   const handleFetchCreatives = async () => {
     if (!company?.id) {
       return;
@@ -134,7 +128,7 @@ export default function Creatives(props) {
   };
 
   const handleFileUpload = async (e) => {
-    setLoading(true);
+    setUploadLoading(true);
     const file = e.target.files[0];
     const { error, data } = await uploadCreatives(company?.id, file);
     if (error) {
@@ -143,7 +137,7 @@ export default function Creatives(props) {
         message: error?.message,
         status: "error",
       });
-      setLoading(false);
+      setUploadLoading(false);
       return;
     }
     // success
@@ -152,9 +146,9 @@ export default function Creatives(props) {
       message: "File uploaded successfully!",
       status: "success",
     });
-    setLoading(false);
+    setUploadLoading(false);
     // add to creatives
-    setCreatives([...creatives, ...[data]]);
+    setCreatives([...[data], ...creatives]);
   };
 
   useEffect(() => {
@@ -166,15 +160,24 @@ export default function Creatives(props) {
   return (
     <Box>
       <ViewCreativeDialog
-        open={handleOpenViewer()}
+        open={openViewDialog}
+        setOpen={setOpenViewDialog}
         selectedCreative={selectedCreative}
         setSelectedCreative={setSelectedCreative}
+      />
+      <CreativeDeleteDialog
+        open={openDeleteCreative}
+        setOpen={setOpenDeleteCreative}
+        selectedCreative={selectedCreative}
+        setCreatives={setCreatives}
+        creatives={creatives}
       />
       <Box
         display={"flex"}
         alignItems="center"
         justifyContent={"space-between"}
         flexWrap="wrap"
+        gap={2}
       >
         <Box>
           <Typography variant="h3" fontWeight="900">
@@ -214,11 +217,25 @@ export default function Creatives(props) {
         <Box>
           {layout == "card" && (
             <Grid container spacing={2} sx={{ mt: 2 }}>
+              {uploadLoading && (
+                <Grid item md={3} xs={6}>
+                  <Card sx={{ height: "100%" }}>
+                    <CardContent>
+                      <Skeleton variant={"line"} sx={{ mb: 2 }} />
+                      <Skeleton variant={"line"} sx={{ mb: 2 }} />
+                      <Skeleton variant="box" height={250} sx={{ mb: 2 }} />
+                      <Skeleton variant={"line"} />
+                    </CardContent>
+                  </Card>
+                </Grid>
+              )}
               {creatives.map((item, index) => (
                 <Grid item md={3} xs={6} key={index}>
-                  <CreativeCard 
+                  <CreativeCard
                     item={item}
+                    setOpenDeleteCreative={setOpenDeleteCreative}
                     setSelectedCreative={setSelectedCreative}
+                    setOpenViewDialog={setOpenViewDialog}
                   />
                 </Grid>
               ))}
@@ -226,23 +243,23 @@ export default function Creatives(props) {
           )}
           {layout == "list" && (
             <Card sx={{ mt: 2 }}>
-              <DataGrid
-                tableProps={{
-                  size: "small",
-                }}
-                header={headers}
-                data={creatives}
-              />
-              {/* <List>
-                {creatives.map((item,index) => (
-                  <ListItem key={index}>
-                    <ListItemText
-                      primary={item?.metadata?.name}
-                      secondary={item?.metadata?.contentType}
-                    />
-                  </ListItem>
-                ))}
-              </List> */}
+              <Box sx={{ overflow: "auto" }}>
+                <Box
+                  sx={{
+                    width: "100%",
+                    display: "table",
+                    tableLayout: "fixed",
+                  }}
+                >
+                  <DataGrid
+                    tableProps={{
+                      size: "small",
+                    }}
+                    header={headers}
+                    data={creatives}
+                  />
+                </Box>
+              </Box>
             </Card>
           )}
         </Box>

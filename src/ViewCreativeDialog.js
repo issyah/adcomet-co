@@ -13,9 +13,11 @@ export default function ViewCreativeDialog({
   open,
   selectedCreative,
   setSelectedCreative,
+  setOpen,
 }) {
   const handleClose = () => {
     setSelectedCreative();
+    setOpen(false);
   };
   const isImage = (contentType) => {
     if (
@@ -53,8 +55,8 @@ export default function ViewCreativeDialog({
           flexWrap="wrap"
         >
           <Typography variant="h4">
-            <IconButton onClick={handleClose} color='inherit' size='large'>
-              <KeyboardArrowLeftOutlined/>
+            <IconButton onClick={handleClose} color="inherit" size="large">
+              <KeyboardArrowLeftOutlined />
             </IconButton>
             {selectedCreative?.name}
           </Typography>

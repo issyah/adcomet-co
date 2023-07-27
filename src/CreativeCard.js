@@ -23,7 +23,12 @@ import {
 import { bytesToMegaBytes } from "./common";
 import { useState } from "react";
 import { red } from "@mui/material/colors";
-export default function CreativeCard({ item, setSelectedCreative }) {
+export default function CreativeCard({
+  item,
+  setSelectedCreative,
+  setOpenDeleteCreative,
+  setOpenViewDialog,
+}) {
   const [anchorEl, setAnchorEl] = useState();
   const open = Boolean(anchorEl);
 
@@ -35,15 +40,26 @@ export default function CreativeCard({ item, setSelectedCreative }) {
     setAnchorEl(e.currentTarget);
   };
 
-  const handleDownloadFile = (url, type) => {
-    const a = document.createElement("a");
-    a.href = `/api/creatives/download-file?type=${type}&url=${url}`;
-    console.log(a.href);
-    a.download = item.name;
-    a.setAttribute("target", "_blank");
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+  const handleDownloadFile = (item) => {
+    const url = item?.url;
+    if(url){
+      const xhr = new XMLHttpRequest();
+      xhr.responseType = 'blob';
+      xhr.onload = (event) => {
+        const blob = xhr.response;
+      };
+      xhr.open('GET', url);
+      xhr.send();
+    }
+  };
+  const handleViewFile = () => {
+    setOpenViewDialog(true);
+    setSelectedCreative(item);
+  };
+  const handleDeleteFile = () => {
+    setAnchorEl();
+    setSelectedCreative(item);
+    setOpenDeleteCreative(true);
   };
 
   return (
@@ -70,15 +86,20 @@ export default function CreativeCard({ item, setSelectedCreative }) {
         }}
         onClose={handleCloseMenu}
       >
-        <MenuItem onClick={() => handleDownloadFile(item?.url, item?.contentType)}>Download file</MenuItem>
-        <MenuItem sx={{ color: red[500] }}>Delete file</MenuItem>
+        <MenuItem
+          onClick={() => handleDownloadFile(item)}
+        >
+          Download file
+        </MenuItem>
+        <MenuItem onClick={() => handleDeleteFile()} sx={{ color: red[500] }}>
+          Delete file
+        </MenuItem>
       </Menu>
       <CardHeader
         title={item?.name}
         subheader={
           <Box display={"flex"} alignItems="center" gap={1}>
-            <AccountCircleOutlined />
-            <Typography>{item?.uploadedBy}</Typography>
+            <Typography variant='body1'>{item?.uploadedBy}</Typography>
           </Box>
         }
         action={
@@ -87,7 +108,7 @@ export default function CreativeCard({ item, setSelectedCreative }) {
           </IconButton>
         }
       />
-      <CardActionArea onClick={() => setSelectedCreative(item)}>
+      <CardActionArea onClick={handleViewFile}>
         <CardMedia
           sx={{
             height: "250px",
@@ -98,17 +119,17 @@ export default function CreativeCard({ item, setSelectedCreative }) {
         />
         <CardContent>
           <Stack spacing={1}>
-            <Box display="flex" alignItems="center" gap={1}>
+            <Box display="flex" alignItems="center" gap={1} typography={'caption'}>
               <Tooltip title={"File type"}>
                 <InsertPhotoOutlined />
               </Tooltip>
-              <b>{item?.contentType}</b>
+              {item?.contentType}
             </Box>
-            <Box alignItems="center" display="flex" gap={1}>
+            <Box alignItems="center" display="flex" gap={1} typography={'caption'}>
               <Tooltip title="File size">
                 <SdStorageOutlined />
               </Tooltip>
-              <b>{bytesToMegaBytes(item?.size)}MB</b>
+              {bytesToMegaBytes(item?.size)}MB
             </Box>
           </Stack>
         </CardContent>

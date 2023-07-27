@@ -31,6 +31,8 @@ import {
   onSnapshot,
   FieldValue,
   increment,
+  deleteDoc,
+  writeBatch,
 } from "firebase/firestore";
 
 import {
@@ -99,62 +101,58 @@ export const createNewUser = async (email, data) => {
   let result, error;
   if (!email || !data) {
     error = {
-      message: 'Missing required fields.'
+      message: "Missing required fields.",
     };
-    return { error }
-  };
+    return { error };
+  }
 
-  const {
-    password,
-  } = data;
-  // create the new user 
+  const { password } = data;
+  // create the new user
   try {
     result = await auth.createUser({
       email: email,
       password: password,
-    })
+    });
     // result = await createUserWithEmailAndPassword(auth, email, password);
   } catch (e) {
     error = e;
     return {
-      error
-    }
+      error,
+    };
   }
-  // successfully 
+  // successfully
   const userCredential = result.user;
   const uid = userCredential.uid;
 
-  // add to users collection 
-  const userRef = collection(db, 'users');
+  // add to users collection
+  const userRef = collection(db, "users");
   const userData = {
     ...data,
     id: uid,
-  }
+  };
   try {
     await addDoc(userRef, userData);
   } catch (e) {
     error = e;
-    return { error }
+    return { error };
   }
 
-  // send verification email to user 
+  // send verification email to user
   try {
     await sendEmailVerification(userCredential);
   } catch (e) {
     error = e;
     return {
-      error
-    }
+      error,
+    };
   }
-  // return new user information 
+  // return new user information
   return {
     newUser: userData,
     result,
     error,
-  }
-
-}
-
+  };
+};
 
 // fetch current users in the company
 export const getUsersInCompany = async (id) => {
@@ -188,11 +186,41 @@ export const getCreativesByCompany = async (id) => {
   };
 };
 
-// get storage space
-// export const getCurrentStorage = async(id) => {
-//   const companyRef = doc(db, 'companies', id);
-//   return onSnapshot(companyRef);
-// }
+export const deleteCreatives = async (item) => {
+  const { id, path, company, size } = item;
+
+  if (!id) {
+    return {
+      error: "ID document is required to delete the creative asset.",
+    };
+  }
+  if (!path) {
+    return {
+      error: "Missing path reference to delete file.",
+    };
+  }
+  let result, error;
+
+  const batch = writeBatch(db);
+
+  // delete creative reference from creatives document
+  const creativeRef = doc(db, "creatives", id);
+  batch.delete(creativeRef);
+  const companyRef = doc(db, "companies", company);
+  batch.update(companyRef, {
+    "creativeStorage.currentSize": increment(-bytesToMegaBytes(size)),
+  });
+
+  try {
+    result = await batch.commit();
+  } catch (e) {
+    error = e.message;
+    return {
+      error,
+    };
+  }
+  return { result, error };
+};
 
 // upload creatives
 export const uploadCreatives = async (id, file) => {
@@ -218,7 +246,8 @@ export const uploadCreatives = async (id, file) => {
   }
 
   // add in new creatives collection
-  const collectionRef = collection(db, "creatives");
+  const batch = writeBatch(db);
+  const creativeRef = doc(collection(db, "creatives"));
   let data = {
     url: downloadUrl,
     company: id,
@@ -226,24 +255,18 @@ export const uploadCreatives = async (id, file) => {
     path: path,
     created: Timestamp.fromDate(new Date()),
     size: result?.metadata?.size,
+    id: creativeRef.id,
   };
-  let addDocResult;
-  try {
-    addDocResult = await addDoc(collectionRef, data);
-  } catch (e) {
-    error = e;
-  }
-  if (addDocResult) {
-    data["id"] = addDocResult.id;
-  }
+  batch.set(creativeRef, data);
   // lastly add the storage size to the company page
   const companyRef = doc(db, "companies", id);
+  batch.update(companyRef, {
+    "creativeStorage.currentSize": increment(
+      bytesToMegaBytes(result?.metadata?.size)
+    ),
+  });
   try {
-    await updateDoc(companyRef, {
-      "creativeStorage.currentSize": increment(
-        bytesToMegaBytes(result?.metadata?.size)
-      ),
-    });
+    await batch.commit();
   } catch (e) {
     error = e;
   }
@@ -255,7 +278,7 @@ export const uploadCreatives = async (id, file) => {
   };
 };
 
-// upload user avatar 
+// upload user avatar
 export const uploadAvatar = async (id, file) => {
   const avatarRef = ref(storage, `avatars/${id}`);
   let result, error, downloadUrl;
@@ -267,21 +290,21 @@ export const uploadAvatar = async (id, file) => {
   if (result?.ref) {
     downloadUrl = await getDownloadURL(result?.ref);
   }
-  // need the download url to be saved on the users account 
-  const userRef = doc(db, 'users', id);
+  // need the download url to be saved on the users account
+  const userRef = doc(db, "users", id);
   try {
     result = await updateDoc(userRef, {
-      'avatar': downloadUrl
+      avatar: downloadUrl,
     });
   } catch (e) {
     error = e;
-  };
+  }
   return {
     result,
     error,
-    downloadUrl
-  }
-}
+    downloadUrl,
+  };
+};
 
 // upload logo for company profile
 export const uploadCompanyLogo = async (id, file) => {
