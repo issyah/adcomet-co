@@ -70,7 +70,10 @@ export default function CreativeCard({
           overflow: "hidden",
         },
         ".MuiCardHeader-title, .MuiCardHeader-subheader": {
-          typography: "body1",
+          typography: {
+            md: 'body1',
+            xs: 'caption'
+          },
           overflow: "hidden",
           whiteSpace: "nowrap",
           textOverflow: "ellipsis",
@@ -97,11 +100,11 @@ export default function CreativeCard({
       </Menu>
       <CardHeader
         title={item?.name}
-        subheader={
-          <Box display={"flex"} alignItems="center" gap={1}>
-            <Typography variant='body1'>{item?.uploadedBy}</Typography>
-          </Box>
-        }
+        // subheader={
+        //   <Box display={"flex"} alignItems="center" gap={1}>
+        //     <Typography variant='body1'>{item?.uploadedBy}</Typography>
+        //   </Box>
+        // }
         action={
           <IconButton onClick={handleClickMenu}>
             <MoreVertOutlined />
@@ -111,7 +114,10 @@ export default function CreativeCard({
       <CardActionArea onClick={handleViewFile}>
         <CardMedia
           sx={{
-            height: "250px",
+            height: {
+              md: "250px",
+              xs: '120px'
+            },
           }}
           image={item?.url}
           title={item?.name}

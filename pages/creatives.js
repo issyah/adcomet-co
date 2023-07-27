@@ -18,6 +18,7 @@ import {
   Skeleton,
   Stack,
   Tooltip,
+  Container,
   Typography,
 } from "@mui/material";
 import AuthLayout from "../src/layout/AuthLayout";
@@ -153,7 +154,7 @@ export default function Creatives(props) {
 
   useEffect(() => {
     if (company?.id) {
-      handleFetchCreatives();
+      // handleFetchCreatives();
     }
   }, [company]);
 
@@ -201,7 +202,7 @@ export default function Creatives(props) {
           </ButtonGroup>
         </Box>
       </Box>
-      <Box sx={{ mt: 2 }}>
+      <Box sx={{ my: 2 }}>
         <Button variant="contained" component={"label"}>
           Add creatives{" "}
           <input
@@ -214,9 +215,9 @@ export default function Creatives(props) {
         </Button>
       </Box>
       {creatives && (
-        <Box>
+        <Box >
           {layout == "card" && (
-            <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid container spacing={2} >
               {uploadLoading && (
                 <Grid item md={3} xs={6}>
                   <Card sx={{ height: "100%" }}>

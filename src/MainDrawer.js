@@ -91,6 +91,7 @@ export default function MainDrawer(props) {
                 selected={router.pathname == item?.href}
                 component={Link}
                 href={item?.href}
+                onClick={handleDrawerToggle}
               >
                 <ListItemIcon
                   sx={{
