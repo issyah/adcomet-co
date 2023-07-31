@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Card,
+  CardActionArea,
   CardActions,
   CardContent,
   Divider,
@@ -21,6 +22,18 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 export default function CreateCampaign(props) {
   const router = useRouter();
+  const adsType = [
+    {
+      title: "Website campaign ads",
+      content:
+        "Ads on websites are an effective way for businesses to reach their target audience and generate revenue. The purpose of website ads is to promote products, services, or brands to users who visit the site.",
+    },
+    {
+      title: "Billboard campaign ads",
+      content:
+        "Billboards, with their large size and strategic placement in high-traffic areas, have the power to grab the attention of passersby and create a lasting impression.",
+    },
+  ];
   return (
     <AuthLayout>
       <Box mb={2}>
@@ -46,7 +59,35 @@ export default function CreateCampaign(props) {
         Create a campaign
       </Typography>
       <Typography>Choose your preferred medium for your campaign.</Typography>
-      <Box sx={{ mt: 4 }}>
+      <Grid container spacing={4} sx={{ mt: 2 }}>
+        <Grid item md={4}>
+          <Stack spacing={2}>
+            {adsType.map((item, index) => (
+              <CardActionArea
+                key={index}
+                sx={{
+                  ".MuiCardActionArea-focusHighlight": {
+                    bgcolor: "primary.main",
+                  },
+                  ".MuiCardActionArea-root:hover .MuiCardActionArea-focusHighlight" : {
+                    opacity:0.5
+                  }
+                }}
+              >
+                <Card>
+                  <CardContent>
+                    <Typography gutterBottom variant="h6">
+                      {item?.title}
+                    </Typography>
+                    <Typography variant="body2">{item.content}</Typography>
+                  </CardContent>
+                </Card>
+              </CardActionArea>
+            ))}
+          </Stack>
+        </Grid>
+      </Grid>
+      {/* <Box sx={{ mt: 4 }}>
         <Grid container spacing={4} justifyContent={"center"}>
           <Grid item xs="12" md="6">
             <Card sx={{ width: "100%", height: "100%" }}>
@@ -99,7 +140,7 @@ export default function CreateCampaign(props) {
             </Card>
           </Grid>
         </Grid>
-      </Box>
+      </Box> */}
     </AuthLayout>
   );
 }
