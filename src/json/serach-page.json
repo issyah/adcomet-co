@@ -3,30 +3,30 @@
     "name": "Campaigns",
     "id" : "campaigns",
     "description": "Manage and create campaigns for your business needs",
-    "href" : "/campaigns"
+    "href" : "/ad/campaigns"
   },
   {
     "name": "Creatives",
     "id" : "creatives",
     "description": "Manage and upload your creatives for you campaigns.",
-    "href" : "/creatives"
+    "href" : "/ad/creatives"
   },
   {
     "name": "Ad locator",
     "id" : "adlocator",
     "description": "Find ad spaces for you to launch your campaings",
-    "href" : "/ad-locator"
+    "href" : "/ad/ad-locator"
   },
   {
     "name": "Analytics",
     "id": "analytics",
     "description": "View your analytical results and metrics for you campaigns",
-    "href" : "/analytics"
+    "href" : "/ad/analytics"
   },
   {
     "name": "Profile Settings",
     "id": "profilesettings",
     "description": "View and update your profile information",
-    "href" : "/profile"
+    "href" : "/ad/profile"
   }
 ]

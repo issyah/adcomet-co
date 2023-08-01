@@ -21,18 +21,18 @@ import {
   Container,
   Typography,
 } from "@mui/material";
-import AuthLayout from "../src/layout/AuthLayout";
+import AuthLayout from "@/src/layout/AuthLayout";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
-import { useContextProvider } from "../context/ContextProvider";
-import { getCreativesByCompany, uploadCreatives } from "../src/firebase-func";
+import { useContextProvider } from "@/context/ContextProvider";
+import { getCreativesByCompany, uploadCreatives } from "@/src/firebase-func";
 import { useEffect, useState } from "react";
 import { Delete, GridView, ViewList } from "@mui/icons-material";
-import DataGrid from "../src/DataGrid";
+import DataGrid from "@/src/DataGrid";
 import moment from "moment";
-import { bytesToMegaBytes, generateVideoThumbnail } from "../src/common";
-import ViewCreativeDialog from "../src/ViewCreativeDialog";
-import CreativeCard from "../src/CreativeCard";
-import CreativeDeleteDialog from "../src/CreativeDeleteDialog";
+import { bytesToMegaBytes, generateVideoThumbnail } from "@/src/common";
+import ViewCreativeDialog from "@/src/ViewCreativeDialog";
+import CreativeCard from "@/src/CreativeCard";
+import CreativeDeleteDialog from "@/src/CreativeDeleteDialog";
 export default function Creatives(props) {
   const { setLoading, company, setAlert, loading } = useContextProvider();
   const [creatives, setCreatives] = useState([]);
@@ -80,7 +80,7 @@ export default function Creatives(props) {
     {
       label: "Size",
       id: "size",
-      render: (size) => <Typography>{bytesToMegaBytes(size)}MB</Typography>,
+      render: (size) => <Typography>{size}MB</Typography>,
     },
     {
       label: "Content-type",

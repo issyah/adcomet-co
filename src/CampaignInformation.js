@@ -15,6 +15,7 @@ import {
   Typography,
   Button,
   CardHeader,
+  Autocomplete,
 } from "@mui/material";
 import Industry from "./json/industry.json";
 import CreateCampaignProgress from "./CreateCampaignProgress";
@@ -56,14 +57,14 @@ export default function CampaignInformation({ formData, setFormData }) {
     };
   }, []);
   return (
-    <Box>
+    <Stack spacing={2}>
       <Box>
-        <Card sx={{ mt: 2, p: { md: 2 } }}>
+        <Card sx={{ mt: 2 }}>
           <CardContent>
-            <Typography variant="h3" component={"h1"} fontWeight={900}>
+            <Typography variant="h4" component={"h1"} fontWeight={900}>
               Campaign Information
             </Typography>
-            <Typography gutterBottom>Write your campaign details</Typography>
+            <Typography sx={{ mb: 2 }}>Write your campaign details</Typography>
             <Box component={"form"}>
               <Stack spacing={2}>
                 {formField?.map((item, index) =>
@@ -90,38 +91,25 @@ export default function CampaignInformation({ formData, setFormData }) {
                     />
                   )
                 )}
-
-                {/* <TextField label="Campaign name" required />
-                <TextField
-                  multiline
-                  rows={3}
-                  label="Campaign description"
-                  required
+                {/* autocomplete input with chips */}
+                <Autocomplete
+                  label={"Campaign tags"}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={"Campaign tags"}
+                      variant="outlined"
+                    />
+                  )}
                 />
-                <FormControl>
-                  <InputLabel id="campaignType">Campaign Type</InputLabel>
-                  <Select labelId="campaignType" label="Campaign Type" required>
-                    {Object.keys(Industry)?.map((key) => (
-                      <MenuItem key={key} value={key}>
-                        {Industry[key]?.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl> */}
               </Stack>
-              {/* <Box mt={2} textAlign="right">
-                <Button
-                  variant="contained"
-                  type="submit"
-                  endIcon={<KeyboardArrowRightOutlined />}
-                >
-                  Continue
-                </Button>
-              </Box> */}
             </Box>
           </CardContent>
         </Card>
       </Box>
-    </Box>
+      <Box sx={{ mt: "auto" }}>
+        <Button>Next</Button>
+      </Box>
+    </Stack>
   );
 }

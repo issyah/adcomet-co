@@ -14,11 +14,11 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import AuthLayout from "../../src/layout/AuthLayout";
-import ImageWebsite from "../../public/campaign-website.jpeg";
-import ImageBillboard from "../../public/campaign-billboard.jpeg";
+import AuthLayout from "@/src/layout/AuthLayout";
+import ImageWebsite from "@/public/campaign-website.jpeg";
+import ImageBillboard from "@/public/campaign-billboard.jpeg";
 import Image from "next/image";
-import CreateCampaignProgress from "../../src/CreateCampaignProgress";
+import CreateCampaignProgress from "@/src/CreateCampaignProgress";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useState } from "react";
@@ -30,7 +30,7 @@ export default function CreateCampaign(props) {
       title: "Website campaign ads",
       content:
         "Ads on websites are an effective way for businesses to reach their target audience and generate revenue. The purpose of website ads is to promote products, services, or brands to users who visit the site.",
-      href: "/campaigns/campaign-creator/?type=website",
+      href: "/ad/campaigns/campaign-creator/?type=website",
       id: "website",
     },
     {
@@ -129,7 +129,7 @@ export default function CreateCampaign(props) {
           variant="contained"
           disable={!selected}
           endIcon={<KeyboardArrowRight />}
-          onClick={() => router.push(`/campaigns/campaign-creator/?type=${selected}`)}
+          onClick={() => router.push(`/ad/campaigns/campaign-creator/?type=${selected}`)}
         >
           Continue
         </Button>

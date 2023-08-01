@@ -1,3 +1,5 @@
+import jwt from "jsonwebtoken";
+const jwtKey = process.env.NEXT_PUBLIC_JWT_KEY;
 const formatNumber = (number) => {
   if (isNaN(number)) {
     return number;
@@ -45,10 +47,11 @@ const formatBytes = (a, b = 2) => {
   }`;
 };
 const bytesToMegaBytes = (bytes) => {
-  if(bytes == 0) { return 0};
+  if (bytes == 0) {
+    return 0;
+  }
   return (bytes / (1024 * 1024)).toFixed(2);
 };
-
 
 const generateVideoThumbnail = (file) => {
   return new Promise((resolve) => {
@@ -73,4 +76,50 @@ const generateVideoThumbnail = (file) => {
   });
 };
 
-export { formatNumber, formatNumberCompact, setStatusColor, formatBytes, bytesToMegaBytes, generateVideoThumbnail };
+const handlePermissionAuth = async (token, arr) => {
+  if (!token) {
+    return;
+  }
+  let result;
+  try {
+    result = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_KEY);
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+  const { role, companyId, companyRole } = result;
+  if (!arr.includes(role)) {
+    return false;
+  }
+  return true;
+};
+
+const handleRedirectAuth = (token) => {
+  if (!token) {
+    return;
+  }
+  let result;
+  try {
+    result = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_KEY);
+  } catch (error) {
+    console.log(error);
+    return "/";
+  }
+  const { role } = result;
+  if (role == "advertiser") {
+    return "/ad/dashboard";
+  } else if (role == "owner") {
+    return "/owner/dashboard";
+  }
+};
+
+export {
+  formatNumber,
+  formatNumberCompact,
+  setStatusColor,
+  formatBytes,
+  bytesToMegaBytes,
+  generateVideoThumbnail,
+  handlePermissionAuth,
+  handleRedirectAuth,
+};

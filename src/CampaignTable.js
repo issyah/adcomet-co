@@ -42,7 +42,7 @@ export default function CampaignTable() {
       label: "",
       id: "id",
       render: (id) => (
-        <Button size="small" onClick={() => router.push(`/campaigns/${id}`)}>
+        <Button size="small" onClick={() => router.push(`/ad/campaigns/${id}`)}>
           View
         </Button>
       ),

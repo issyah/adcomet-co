@@ -16,14 +16,14 @@ export default function Private(props) {
     setLoading(true);
   }, []);
   useEffect(() => {
-    if(user === null) {
-      router.push('/login')
-    };
+    if (user === null) {
+      router.push("/login");
+    }
     setLoading(false);
   }, [user]);
   return (
     <>
-      {!user ? (
+      {!user || loading ? (
         <Backdrop open={loading} variant="transparent">
           <CircularProgress color="primary" />
         </Backdrop>

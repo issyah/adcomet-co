@@ -2,7 +2,7 @@
  * setup the token access */
 import jwt from 'jsonwebtoken';
 
-export const handlePermission = (authorization, arr) => {
+export const handlePermission = (authorization, permissionType, arr) => {
   let result, error;
   if (!authorization) {
     error = 'You are not allowed to perform this action';
@@ -20,8 +20,7 @@ export const handlePermission = (authorization, arr) => {
     error = e.message;
     return { error }
   }
-  const { role, companyId } = result;
-  if (!arr.includes(role)) {
+  if (!arr.includes(result[permissionType])) {
     error = 'You are not allowed to perform this action';
     return { error };
   }

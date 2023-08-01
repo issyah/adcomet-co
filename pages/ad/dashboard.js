@@ -19,22 +19,22 @@ import {
   TableBody,
   Chip,
 } from "@mui/material";
-import AuthLayout from "../src/layout/AuthLayout";
+import AuthLayout from "@/src/layout/AuthLayout";
 import { useRouter } from "next/router";
 import {
   formatNumber,
   formatNumberCompact,
   setStatusColor,
-} from "../src/common";
+} from "@/src/common";
 import Link from "next/link";
 import ContentPasteOutlinedIcon from "@mui/icons-material/ContentPasteOutlined";
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
-import DataGrid from "../src/DataGrid";
-import CampaignTable from "../src/CampaignTable";
+import DataGrid from "@/src/DataGrid";
+import CampaignTable from "@/src/CampaignTable";
 import { useEffect } from "react";
-import { useContextProvider } from "../context/ContextProvider";
+import { useContextProvider } from "@/context/ContextProvider";
 export default function Dashboard() {
   const router = useRouter();
   const {setLoading} = useContextProvider();
@@ -148,7 +148,7 @@ export default function Dashboard() {
           </Typography>
           <Button
             component={Link}
-            href="/campaigns"
+            href="/ad/campaigns"
             endIcon={<KeyboardArrowRightOutlined />}
           >
             View all campaigns

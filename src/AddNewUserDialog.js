@@ -21,7 +21,7 @@ import { createNewUser } from "./firebase-func";
 
 export default function AddNewUserDialog(props) {
   const { open, setOpen, setUsers, users } = props;
-  const { user, setAlert } = useContextProvider();
+  const { user, setAlert, accessToken } = useContextProvider();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -79,7 +79,7 @@ export default function AddNewUserDialog(props) {
       method: "POST",
       body: JSON.stringify(formData),
       headers: {
-        authorization: `Bearer ${user?.accessToken}`
+        authorization: `Bearer ${accessToken}`
       }
     });
     const result = await res.json(); 

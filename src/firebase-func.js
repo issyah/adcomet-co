@@ -1,5 +1,5 @@
 /**
- * FIrebase function for signin in*/
+ * FIrebase function*/
 
 import firebase_app from "./firebase";
 import {
@@ -63,7 +63,6 @@ export const signIn = async (email, password) => {
     updateDoc(docRef, {
       lastSeen: Timestamp.fromDate(new Date()),
     });
-    // we don't do anything here
   }
   return { result, error };
 };
@@ -223,7 +222,7 @@ export const deleteCreatives = async (item) => {
   batch.delete(creativeRef);
   const companyRef = doc(db, "companies", company);
   batch.update(companyRef, {
-    "creativeStorage.currentSize": increment(-bytesToMegaBytes(size)),
+    "creativeStorage.currentSize": increment(-size),
   });
 
   try {
@@ -284,20 +283,19 @@ export const uploadCreatives = async (id, file, thumbnail) => {
     ...metadata,
     path: path,
     created: Timestamp.fromDate(new Date()),
-    size: result?.metadata?.size,
+    size: bytesToMegaBytes(result?.metadata?.size),
     id: creativeRef.id,
   };
   if (thumbnailUrl) {
     data["thumbUrl"] = thumbnailUrl;
     data["thumbPath"] = thumbnailPath;
-    data["size"] = data["size"] + thumbnailResult?.metadata?.size;
+    data["size"] = data["size"] + bytesToMegaBytes(thumbnailResult?.metadata?.size)
   }
   batch.set(creativeRef, data);
   // lastly add the storage size to the company page
   const companyRef = doc(db, "companies", id);
-  let incrementSize = bytesToMegaBytes(data["size"]);
   batch.update(companyRef, {
-    "creativeStorage.currentSize": increment(incrementSize),
+    "creativeStorage.currentSize": increment(data['size']),
   });
   try {
     await batch.commit();

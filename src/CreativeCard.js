@@ -148,7 +148,7 @@ export default function CreativeCard({
               <Tooltip title="File size">
                 <SdStorageOutlined />
               </Tooltip>
-              {bytesToMegaBytes(item?.size)}MB
+              {item?.size}MB
             </Box>
           </Stack>
         </CardContent>
