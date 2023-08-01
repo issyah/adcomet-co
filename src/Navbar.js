@@ -1,6 +1,6 @@
 /**
  * The main navbar for the Adcomet*/
-import { Menu } from "@mui/icons-material";
+import { AccountCircleOutlined, Menu } from "@mui/icons-material";
 import {
   AppBar,
   Container,
@@ -32,6 +32,21 @@ export default function Navbar() {
       color: "inherit",
     },
     // {
+    //   label: "Solutions",
+    //   href: "/",
+    //   color: "inherit",
+    // },
+    // {
+    //   label: "Pricing & Plans",
+    //   href: "/",
+    //   color: "inherit",
+    // },
+    {
+      label: "Contact Us",
+      href: "/contact",
+      color: "inherit",
+    },
+    // {
     //   label: 'Contact',
     //   href: '/contact',
     //   color: 'inherit'
@@ -39,17 +54,17 @@ export default function Navbar() {
     {
       ...(user !== null || user
         ? {
-            label: "Back to account",
-            href: accessToken
-              ? handleRedirectAuth(accessToken)
-              : "/ad/dashboard",
-          }
+          label: "Back to account",
+          href: accessToken
+            ? handleRedirectAuth(accessToken)
+            : "/ad/dashboard",
+        }
         : {
-            label: "Log in",
-            href: "/login",
-            color: "primary",
-            variant: "contained",
-          }),
+          label: "Log in",
+          href: "/login",
+          color: "primary",
+          variant: "contained",
+        }),
     },
   ];
   return (
@@ -132,7 +147,7 @@ export default function Navbar() {
             </ListItem>
             {navArr.map((item, index) => (
               <ListItem key={index}>
-                <ListItemButton component={Link} href={item?.href}>
+                <ListItemButton component={Link} href={item?.href} onClick={() => setOpen(false)}>
                   <ListItemText>{item?.label}</ListItemText>
                 </ListItemButton>
               </ListItem>
