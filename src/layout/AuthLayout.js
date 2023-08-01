@@ -30,23 +30,28 @@ import {
   LinearProgress,
   Divider,
 } from "@mui/material";
-import MainDrawer from "../MainDrawer";
-import Private from "./Private";
+import MainDrawer from "@/src/MainDrawer";
+import Private from "@/layout/Private";
 import Link from "next/link";
-import { useContextProvider } from "../../context/ContextProvider";
+import { useContextProvider } from "@/context/ContextProvider";
 import { useRouter } from "next/router";
-import AvatarDropdown from "../AvatarDropdown";
+import AvatarDropdown from "@/src/AvatarDropdown";
 import moment from "moment";
 import Head from "next/head";
-import { useState } from "react";
-import SearchDialog from "../SearchDialog";
+import { useEffect, useState } from "react";
+import SearchDialog from "@/src/SearchDialog";
 import { Menu } from "@mui/icons-material";
-import { handleResendVerificationEmail } from "../firebase-func";
-import CreativeStorageSpace from "../CreativeStorageSpace";
+import {
+  handleResendVerificationEmail,
+  handleSignOut,
+} from "@/src/firebase-func";
+import CreativeStorageSpace from "@/src/CreativeStorageSpace";
+import { handlePermissionAuth } from "@/src/common";
 export default function AuthLayout(props) {
   const width = 280;
   const { children } = props;
-  const { alert, setAlert, loading, setLoading, user } = useContextProvider();
+  const { alert, setAlert, loading, setLoading, user, accessToken } =
+    useContextProvider();
   const [showDrawer, setShowDrawer] = useState(false);
   const [openSearchDialog, setOpenSearchDialog] = useState(false);
   const router = useRouter();
@@ -79,6 +84,22 @@ export default function AuthLayout(props) {
     });
     setLoading(false);
   };
+
+  useEffect(() => {
+    // check permission
+    // if (!handlePermissionAuth(user?.accessToken, ['advertiser'])) {
+    // handleSignOut();
+    // }
+    // console.log(handlePermissionAuth(user?.accessToken, ["advertiser"]));
+    // if (!handlePermissionAuth(user?.accessToken, ["advertiser"])) {
+    //   handleSignOut();
+    // }
+    if(accessToken){
+      if(!handlePermissionAuth(user?.accessToken, ['advertiser'])){
+        handleSignOut();
+      }
+    }
+  }, [accessToken]);
 
   return (
     <Private>
@@ -166,7 +187,7 @@ export default function AuthLayout(props) {
                 <Tooltip title="Create new campaign">
                   <Button
                     component={Link}
-                    href="/campaigns/create-campaign"
+                    href="/ad/campaigns/create-campaign"
                     variant="outlined"
                     color="primary"
                     sx={{
@@ -195,27 +216,27 @@ export default function AuthLayout(props) {
             {
               label: "Home",
               icon: <HomeOutlined />,
-              href: "/dashboard",
+              href: "/ad/dashboard",
             },
             {
               label: "Campaigns",
               icon: <MailOutlineOutlined />,
-              href: "/campaigns",
+              href: "/ad/campaigns",
             },
             {
               label: "Ads Locator",
               icon: <PinDropOutlined />,
-              href: "/ads-locator",
+              href: "/ad/ads-locator",
             },
             {
               icon: <DonutLargeOutlined />,
               label: "Analytics",
-              href: "/analytics",
+              href: "/ad/analytics",
             },
             {
               icon: <UploadFileOutlined />,
               label: "Creatives",
-              href: "/creatives",
+              href: "/ad/creatives",
             },
           ]}
           mobileOpen={showDrawer}

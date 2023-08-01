@@ -94,14 +94,15 @@ export default function AvatarDropdown(props) {
           >
             <Avatar
               sx={{
-                width: 32,
-                height: 32,
+                width: 36,
+                height: 36,
                 bgcolor: "primary.main",
                 color: "grey.200",
                 textTransform: "uppercase",
               }}
+              src={user?.profile?.avatar || undefined}
             >
-              {email ? email[0] : "A"}
+              {(!user?.avatar && email) ? email[0] : "A"}
             </Avatar>
           </IconButton>
         </Tooltip>

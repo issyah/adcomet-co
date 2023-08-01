@@ -17,6 +17,8 @@
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "firebase": "^10.0.0",
+    "firebase-admin": "^11.10.1",
+    "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.4",
     "next": "latest",
     "nodemailer": "^6.9.3",

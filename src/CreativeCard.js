@@ -23,7 +23,12 @@ import {
 import { bytesToMegaBytes } from "./common";
 import { useState } from "react";
 import { red } from "@mui/material/colors";
-export default function CreativeCard({ item, setSelectedCreative }) {
+export default function CreativeCard({
+  item,
+  setSelectedCreative,
+  setOpenDeleteCreative,
+  setOpenViewDialog,
+}) {
   const [anchorEl, setAnchorEl] = useState();
   const open = Boolean(anchorEl);
 
@@ -35,22 +40,35 @@ export default function CreativeCard({ item, setSelectedCreative }) {
     setAnchorEl(e.currentTarget);
   };
 
-  const handleDownloadFile = () => {
-    handleCloseMenu();
-    const xhr = new XMLHttpRequest();
-    xhr.responseType = "blob";
-    xhr.onload = (event) => {
-      const blob = xhr.response;
-    };
-    xhr.open("GET", item.url)
-    xhr.send();
-    // const a = document.createElement("a");
-    // a.href = item.url;
-    // a.download = item.name;
-    // a.setAttribute("target", "_blank");
-    // document.body.appendChild(a);
-    // a.click();
-    // document.body.removeChild(a);
+  const handleDownloadFile = (item) => {
+    const url = item?.url;
+    if (url) {
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = item?.name;
+      a.target = "_blank";
+      a.setAttribute("style", "display:none");
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+    //   const xhr = new XMLHttpRequest();
+    //   xhr.responseType = 'blob';
+    //   xhr.onload = (event) => {
+    //     const blob = xhr.response;
+    //   };
+    //   xhr.open('GET', url);
+    //   xhr.send();
+    // }
+  };
+  const handleViewFile = () => {
+    setOpenViewDialog(true);
+    setSelectedCreative(item);
+  };
+  const handleDeleteFile = () => {
+    setAnchorEl();
+    setSelectedCreative(item);
+    setOpenDeleteCreative(true);
   };
 
   return (
@@ -61,7 +79,10 @@ export default function CreativeCard({ item, setSelectedCreative }) {
           overflow: "hidden",
         },
         ".MuiCardHeader-title, .MuiCardHeader-subheader": {
-          typography: "body1",
+          typography: {
+            md: "body1",
+            xs: "caption",
+          },
           overflow: "hidden",
           whiteSpace: "nowrap",
           textOverflow: "ellipsis",
@@ -77,45 +98,57 @@ export default function CreativeCard({ item, setSelectedCreative }) {
         }}
         onClose={handleCloseMenu}
       >
-        <MenuItem onClick={handleDownloadFile}>Download file</MenuItem>
-        <MenuItem sx={{ color: red[500] }}>Delete file</MenuItem>
+        <MenuItem onClick={() => handleDownloadFile(item)}>
+          Download file
+        </MenuItem>
+        <MenuItem onClick={() => handleDeleteFile()} sx={{ color: red[500] }}>
+          Delete file
+        </MenuItem>
       </Menu>
       <CardHeader
         title={item?.name}
-        subheader={
-          <Box display={"flex"} alignItems="center" gap={1}>
-            <AccountCircleOutlined />
-            <Typography>{item?.uploadedBy}</Typography>
-          </Box>
-        }
+        subheader={item?.uploadedBy}
         action={
           <IconButton onClick={handleClickMenu}>
             <MoreVertOutlined />
           </IconButton>
         }
       />
-      <CardActionArea onClick={() => setSelectedCreative(item)}>
+      <CardActionArea onClick={handleViewFile}>
         <CardMedia
           sx={{
-            height: "250px",
+            height: {
+              md: "250px",
+              xs: "120px",
+            },
           }}
-          image={item?.url}
+          image={item?.thumbUrl ? item?.thumbUrl : item?.url}
           title={item?.name}
           alt={item?.name}
         />
         <CardContent>
           <Stack spacing={1}>
-            <Box display="flex" alignItems="center" gap={1}>
+            <Box
+              display="flex"
+              alignItems="center"
+              gap={1}
+              typography={"caption"}
+            >
               <Tooltip title={"File type"}>
                 <InsertPhotoOutlined />
               </Tooltip>
-              <b>{item?.contentType}</b>
+              {item?.contentType}
             </Box>
-            <Box alignItems="center" display="flex" gap={1}>
+            <Box
+              alignItems="center"
+              display="flex"
+              gap={1}
+              typography={"caption"}
+            >
               <Tooltip title="File size">
                 <SdStorageOutlined />
               </Tooltip>
-              <b>{bytesToMegaBytes(item?.size)}MB</b>
+              {item?.size}MB
             </Box>
           </Stack>
         </CardContent>

@@ -21,25 +21,26 @@ import Link from "next/link";
 import React from "react";
 import Logo from "../public/logo.png";
 import { useContextProvider } from "../context/ContextProvider";
+import { handleRedirectAuth } from "./common";
 export default function Navbar() {
   const [open, setOpen] = React.useState(false);
-  const { user } = useContextProvider();
+  const { user, accessToken } = useContextProvider();
   const navArr = [
     {
       label: "About",
       href: "/about-us",
       color: "inherit",
     },
-    {
-      label: "Solutions",
-      href: "/",
-      color: "inherit",
-    },
-    {
-      label: "Pricing & Plans",
-      href: "/",
-      color: "inherit",
-    },
+    // {
+    //   label: "Solutions",
+    //   href: "/",
+    //   color: "inherit",
+    // },
+    // {
+    //   label: "Pricing & Plans",
+    //   href: "/",
+    //   color: "inherit",
+    // },
     {
       label: "Contact Us",
       href: "/contact",
@@ -53,17 +54,17 @@ export default function Navbar() {
     {
       ...(user !== null || user
         ? {
-            label: "Back to account",
-            href: "/dashboard",
-            startIcon: <AccountCircleOutlined />,
-            color: "inherit",
-          }
+          label: "Back to account",
+          href: accessToken
+            ? handleRedirectAuth(accessToken)
+            : "/ad/dashboard",
+        }
         : {
-            label: "Log in",
-            href: "/login",
-            color: "primary",
-            variant: "contained",
-          }),
+          label: "Log in",
+          href: "/login",
+          color: "primary",
+          variant: "contained",
+        }),
     },
   ];
   return (

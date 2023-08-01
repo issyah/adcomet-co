@@ -51,5 +51,45 @@
             }
         ],
         "tests": []
+    },
+    {
+        "_id": "a579cdb3-9841-493f-acd1-d46920c922e1",
+        "colId": "history",
+        "containerId": "",
+        "name": "localhost:3000/api/download-file/?path=creatives/7idmrPliNK629E4hroP6/fat-burner.jpeg",
+        "url": "localhost:3000/api/download-file/?path=creatives/7idmrPliNK629E4hroP6/fat-burner.jpeg",
+        "method": "GET",
+        "sortNum": 0,
+        "created": "2023-07-27T09:47:35.254Z",
+        "modified": "2023-07-27T09:47:35.254Z",
+        "headers": [],
+        "params": [
+            {
+                "name": "path",
+                "value": "creatives/7idmrPliNK629E4hroP6/fat-burner.jpeg",
+                "isPath": false
+            }
+        ],
+        "tests": []
+    },
+    {
+        "_id": "4911836e-5496-4160-a8c5-9abc7c7be234",
+        "colId": "history",
+        "containerId": "",
+        "name": "localhost:3000/api/creatives/download-file/?path=creatives/7idmrPliNK629E4hroP6/fat-burner.jpeg",
+        "url": "localhost:3000/api/creatives/download-file/?path=creatives/7idmrPliNK629E4hroP6/fat-burner.jpeg",
+        "method": "GET",
+        "sortNum": 0,
+        "created": "2023-07-27T09:47:49.518Z",
+        "modified": "2023-07-27T09:47:49.518Z",
+        "headers": [],
+        "params": [
+            {
+                "name": "path",
+                "value": "creatives/7idmrPliNK629E4hroP6/fat-burner.jpeg",
+                "isPath": false
+            }
+        ],
+        "tests": []
     }
 ]

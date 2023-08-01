@@ -17,6 +17,7 @@ import {
   MenuItem,
   Tooltip,
   Alert,
+  Avatar,
 } from "@mui/material";
 import { useContextProvider } from "../context/ContextProvider";
 import { getUsersInCompany } from "../src/firebase-func";
@@ -29,7 +30,7 @@ import moment from "moment";
 import { Timestamp } from "firebase/firestore";
 import UserDrawerEditDetail from "../src/UserDrawerEditDetail";
 import AddNewUserDialog from "../src/AddNewUserDialog";
-
+import DeleteUserDialog from "../src/DeleteUserDialog";
 export default function Users(props) {
   const [users, setUsers] = useState([]);
   const { loading, setLoading, company, setAlert } = useContextProvider();
@@ -40,6 +41,7 @@ export default function Users(props) {
   const [updateUser, setUpdateUser] = useState({});
   const [openEditUser, setOpenEditUser] = useState(false);
   const [openAddUser, setOpenAddUser] = useState(false);
+  const [openDeleteUser, setOpenDeleteUser] = useState(false);
   const handleMenuAnchor = (e, id) => {
     setAnchorEl(e.currentTarget);
     const user = users?.find((i) => i.id == id);
@@ -59,6 +61,10 @@ export default function Users(props) {
         break;
       case "add-user":
         setOpenAddUser(true);
+        break;
+      case "delete-user":
+        setOpenDeleteUser(true);
+        break;
       default:
         break;
     }
@@ -85,7 +91,7 @@ export default function Users(props) {
           id: doc.id,
           userType: data?.company?.userType,
           created: data?.created?.toDate(),
-          lastSeen: data?.lastSeen.toDate(),
+          lastSeen: data?.lastSeen?.toDate(),
         };
       });
       setUsers(newData);
@@ -94,6 +100,22 @@ export default function Users(props) {
   };
 
   const headers = [
+    {
+      label: "Created on",
+      id: "created",
+      render: (created) => (
+        <Typography variant="caption">
+          {moment(created).format("DD MMM YY")}
+        </Typography>
+      ),
+    },
+    {
+      label: 'Avatar',
+      id: 'avatar',
+      render: (avatar) => (
+        <Avatar src={avatar || undefined} alt={'Avatar'}></Avatar>
+      )
+    },
     {
       label: "Email",
       id: "email",
@@ -106,22 +128,17 @@ export default function Users(props) {
       label: "Last Name",
       id: "lastName",
     },
+    // {
+    //   label: "Address",
+    //   id: "address",
+    // },
+    // {
+    //   label: "Postal",
+    //   id: "postal",
+    // },
     {
-      label: "Address",
-      id: "address",
-    },
-    {
-      label: "Postal",
-      id: "postal",
-    },
-    {
-      label: "Created on",
-      id: "created",
-      render: (created) => (
-        <Typography variant="caption">
-          {moment(created).format("DD MMM YY")}
-        </Typography>
-      ),
+      label: 'Designation',
+      id: 'designation'
     },
     {
       label: "Last seen",
@@ -159,17 +176,16 @@ export default function Users(props) {
   ];
 
   useEffect(() => {
-    setLoading(true);
     if (company?.id) {
       handleFetchUsers();
     }
   }, []);
 
   useEffect(() => {
-    if (company?.id && !users) {
+    if (company?.id) {
       handleFetchUsers();
     }
-  }, [company]);
+  }, [company])
 
   useEffect(() => {
     if (updateUser?.uid) {
@@ -200,6 +216,14 @@ export default function Users(props) {
         open={openAddUser}
         setOpen={setOpenAddUser}
         setUsers={setUsers}
+        users={users}
+      />
+      <DeleteUserDialog
+        open={openDeleteUser}
+        setOpen={setOpenDeleteUser}
+        selectedUser={selectedUser}
+        setUsers={setUsers}
+        users={users}
       />
       <Typography variant="h3" component="h1" fontWeight="900">
         Users
@@ -228,7 +252,16 @@ export default function Users(props) {
           </Button>
         )}
         <Card sx={{ mt: 2 }}>
-          <DataGrid header={headers} data={users} loading={loading} />
+          <Box sx={{ overflowX: 'auto' }}>
+            <Box sx={{
+              width: '100%',
+              display: 'table',
+              tableLayout: 'fixed'
+            }}>
+              <DataGrid header={headers} data={users} loading={loading} />
+
+            </Box>
+          </Box>
         </Card>
         {/* menu options */}
         {company?.userType == "admin" && (
@@ -248,6 +281,7 @@ export default function Users(props) {
               sx={{
                 color: red[500],
               }}
+              onClick={() => handleMenuAction('delete-user')}
             >
               Delete user
             </MenuItem>

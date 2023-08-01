@@ -1,5 +1,5 @@
 /**
- * FIrebase function for signin in*/
+ * FIrebase function*/
 
 import firebase_app from "./firebase";
 import {
@@ -13,6 +13,7 @@ import {
   updateEmail,
   updatePassword,
   sendEmailVerification,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 
 import {
@@ -30,6 +31,8 @@ import {
   onSnapshot,
   FieldValue,
   increment,
+  deleteDoc,
+  writeBatch,
 } from "firebase/firestore";
 
 import {
@@ -38,6 +41,7 @@ import {
   getStorage,
   ref,
   uploadBytes,
+  uploadString,
 } from "firebase/storage";
 import { bytesToMegaBytes } from "./common";
 
@@ -59,7 +63,6 @@ export const signIn = async (email, password) => {
     updateDoc(docRef, {
       lastSeen: Timestamp.fromDate(new Date()),
     });
-    // we don't do anything here
   }
   return { result, error };
 };
@@ -89,6 +92,63 @@ export const updateData = async (collection, id, data) => {
     error = e;
   }
   return {
+    result,
+    error,
+  };
+};
+
+export const createNewUser = async (email, data) => {
+  let result, error;
+  if (!email || !data) {
+    error = {
+      message: "Missing required fields.",
+    };
+    return { error };
+  }
+
+  const { password } = data;
+  // create the new user
+  try {
+    result = await auth.createUser({
+      email: email,
+      password: password,
+    });
+    // result = await createUserWithEmailAndPassword(auth, email, password);
+  } catch (e) {
+    error = e;
+    return {
+      error,
+    };
+  }
+  // successfully
+  const userCredential = result.user;
+  const uid = userCredential.uid;
+
+  // add to users collection
+  const userRef = collection(db, "users");
+  const userData = {
+    ...data,
+    id: uid,
+  };
+  try {
+    await addDoc(userRef, userData);
+  } catch (e) {
+    error = e;
+    return { error };
+  }
+
+  // send verification email to user
+  try {
+    await sendEmailVerification(userCredential);
+  } catch (e) {
+    error = e;
+    return {
+      error,
+    };
+  }
+  // return new user information
+  return {
+    newUser: userData,
     result,
     error,
   };
@@ -126,14 +186,58 @@ export const getCreativesByCompany = async (id) => {
   };
 };
 
-// get storage space
-// export const getCurrentStorage = async(id) => {
-//   const companyRef = doc(db, 'companies', id);
-//   return onSnapshot(companyRef);
-// }
+export const deleteCreatives = async (item) => {
+  const { id, path, company, size, thumbPath } = item;
+
+  if (!id) {
+    return {
+      error: "ID document is required to delete the creative asset.",
+    };
+  }
+  if (!path) {
+    return {
+      error: "Missing path reference to delete file.",
+    };
+  }
+  let result, error;
+  let fileRef = ref(storage, path);
+  try {
+    await deleteObject(fileRef);
+  } catch (e) {
+    error = e.message;
+    return { error };
+  }
+  if (thumbPath) {
+    let thumbRef = ref(storage, thumbPath);
+    try {
+      await deleteObject(thumbRef);
+    } catch (e) {
+      error = e.message;
+      return { error };
+    }
+  }
+  const batch = writeBatch(db);
+  // delete creative reference from creatives document
+  const creativeRef = doc(db, "creatives", id);
+  batch.delete(creativeRef);
+  const companyRef = doc(db, "companies", company);
+  batch.update(companyRef, {
+    "creativeStorage.currentSize": increment(-size),
+  });
+
+  try {
+    result = await batch.commit();
+  } catch (e) {
+    error = e.message;
+    return {
+      error,
+    };
+  }
+  return { result, error };
+};
 
 // upload creatives
-export const uploadCreatives = async (id, file) => {
+export const uploadCreatives = async (id, file, thumbnail) => {
   if (!file) {
     return;
   }
@@ -154,33 +258,47 @@ export const uploadCreatives = async (id, file) => {
   if (result?.ref) {
     downloadUrl = await getDownloadURL(result?.ref);
   }
+  let thumbnailResult, thumbnailUrl;
+  const thumbnailPath = `creatives/${id}/thumb_${name}`;
+  const thumbRef = ref(storage, thumbnailPath);
+  if (thumbnail) {
+    // upload a thumbnail using putstring
+    try {
+      thumbnailResult = await uploadString(thumbRef, thumbnail, "data_url");
+    } catch (e) {
+      error = e;
+      return { error };
+    }
+  }
+  if (thumbnailResult?.ref) {
+    thumbnailUrl = await getDownloadURL(thumbnailResult?.ref);
+  }
 
   // add in new creatives collection
-  const collectionRef = collection(db, "creatives");
+  const batch = writeBatch(db);
+  const creativeRef = doc(collection(db, "creatives"));
   let data = {
     url: downloadUrl,
     company: id,
     ...metadata,
     path: path,
     created: Timestamp.fromDate(new Date()),
-    size: result?.metadata?.size,
+    size: bytesToMegaBytes(result?.metadata?.size),
+    id: creativeRef.id,
   };
-  try {
-    await addDoc(collectionRef, data);
-  } catch (e) {
-    error = e;
+  if (thumbnailUrl) {
+    data["thumbUrl"] = thumbnailUrl;
+    data["thumbPath"] = thumbnailPath;
+    data["size"] = data["size"] + bytesToMegaBytes(thumbnailResult?.metadata?.size)
   }
-  if (addDocResult) {
-    data["id"] = addDocResult.id;
-  }
+  batch.set(creativeRef, data);
   // lastly add the storage size to the company page
   const companyRef = doc(db, "companies", id);
+  batch.update(companyRef, {
+    "creativeStorage.currentSize": increment(data['size']),
+  });
   try {
-    await updateDoc(companyRef, {
-      "creativeStorage.currentSize": increment(
-        bytesToMegaBytes(result?.metadata?.size)
-      ),
-    });
+    await batch.commit();
   } catch (e) {
     error = e;
   }
@@ -189,6 +307,34 @@ export const uploadCreatives = async (id, file) => {
     error,
     downloadUrl,
     data,
+  };
+};
+
+// upload user avatar
+export const uploadAvatar = async (id, file) => {
+  const avatarRef = ref(storage, `avatars/${id}`);
+  let result, error, downloadUrl;
+  try {
+    result = await uploadBytes(avatarRef, file);
+  } catch (e) {
+    error = e;
+  }
+  if (result?.ref) {
+    downloadUrl = await getDownloadURL(result?.ref);
+  }
+  // need the download url to be saved on the users account
+  const userRef = doc(db, "users", id);
+  try {
+    result = await updateDoc(userRef, {
+      avatar: downloadUrl,
+    });
+  } catch (e) {
+    error = e;
+  }
+  return {
+    result,
+    error,
+    downloadUrl,
   };
 };
 

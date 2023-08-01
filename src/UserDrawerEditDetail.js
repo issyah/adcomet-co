@@ -13,6 +13,7 @@ import {
   IconButton,
   Button,
   CircularProgress,
+  Avatar,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useContextProvider } from "../context/ContextProvider";
@@ -25,6 +26,7 @@ export default function UserDrawerEditDetail(props) {
   const [errorMessage, setErrorMessage] = useState("");
   const handleClose = () => {
     setOpen(false);
+    setErrorMessage("");
   };
   const [formData, setFormData] = useState({
     firstName: "",
@@ -47,6 +49,7 @@ export default function UserDrawerEditDetail(props) {
         lastName: selectedUser?.lastName,
         address: selectedUser?.address,
         postal: selectedUser?.postal,
+        designation: selectedUser?.designation,
       });
     }
   }, [selectedUser]);
@@ -65,32 +68,43 @@ export default function UserDrawerEditDetail(props) {
       required: true,
     },
     {
+      label: 'Designation',
+      value: formData?.designation,
+      required: true,
+      onChange: (e) => handleUpdateFormData('designation', e.target.value),
+    },
+    {
       label: "Address",
       value: formData?.address,
+      multiline: true,
+      rows: 3,
       onChange: (e) => handleUpdateFormData("address", e.target.value),
-      required: true,
     },
     {
       label: "Postal code",
       value: formData?.postal,
       onChange: (e) => handleUpdateFormData("postal", e.target.value),
-      required: true,
     },
   ];
 
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
-    const { firstName, lastName, address } = formData;
-    if (!firstName || !lastName || !address) {
+    const { firstName, lastName, address, postal, designation } = formData;
+    if (!firstName || !lastName || !designation) {
       setErrorMessage("Please fill in all the required fields");
       setLoading(false);
       return;
     }
     // update the doc
-    const { result, error } = await updateData("users", selectedUser?.uid, {
-      ...formData,
-    });
+    const data = {
+      firstName,
+      lastName,
+      designation,
+      ...(postal ? postal : undefined),
+      ...(address ? address : undefined)
+    }
+    const { result, error } = await updateData("users", selectedUser?.uid, data);
     if (error) {
       setAlert({
         open: true,
@@ -123,7 +137,10 @@ export default function UserDrawerEditDetail(props) {
       sx={{
         minWidth: {
           ".MuiPaper-root.MuiDrawer-paper": {
-            width: "45%",
+            width: {
+              md: '45%',
+              xs: '100%',
+            },
           },
         },
       }}
@@ -147,6 +164,16 @@ export default function UserDrawerEditDetail(props) {
           Email address cannot be updated due to security issues. To update an
           email, please delete the user and create a new one.
         </Alert>
+        <Box textAlign='center' mt={2}>
+          <Avatar
+            sx={{
+              height: 120,
+              width: 120,
+              mx:'auto'
+            }}
+            src={selectedUser?.avatar}
+          />
+        </Box>
         <Stack
           spacing={4}
           sx={{ mt: 4 }}
@@ -166,7 +193,7 @@ export default function UserDrawerEditDetail(props) {
           >
             Update
           </Button>
-          {errorMessage && <Alert severify="error">{errorMessage}</Alert>}
+          {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
         </Stack>
       </Box>
     </Drawer>

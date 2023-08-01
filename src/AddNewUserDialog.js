@@ -6,6 +6,7 @@ import { Close } from "@mui/icons-material";
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogContent,
   Grid,
@@ -14,17 +15,22 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { useContextProvider } from "../context/ContextProvider";
+import { createNewUser } from "./firebase-func";
 
 export default function AddNewUserDialog(props) {
-  const { open, setOpen, setUsers } = props;
+  const { open, setOpen, setUsers, users } = props;
+  const { user, setAlert, accessToken } = useContextProvider();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     firstName: "",
     lastName: "",
     password: "",
-    address: "",
-    postal: "",
+    designation: "",
+    // address: "",
+    // postal: "",
   });
 
   const handleUpdateFormData = (id, e) => {
@@ -34,6 +40,12 @@ export default function AddNewUserDialog(props) {
     });
   };
   const formFields = [
+    {
+      label: "Designation",
+      value: formData?.designation,
+      onChange: (e) => handleUpdateFormData('designation', e),
+      required: true,
+    },
     {
       label: "Email address",
       value: formData?.email,
@@ -48,18 +60,56 @@ export default function AddNewUserDialog(props) {
       type: "password",
       required: true,
     },
-    {
-      label: "Address",
-      value: formData?.address,
-      onChange: (e) => handleUpdateFormData("address", e),
-      multiline: true,
-      rows: 4,
-    },
   ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { firstName, lastName, password, email, designation } = formData;
+    if (!firstName || !lastName || !password || !email || !designation) {
+      setAlert({
+        open: true,
+        status: 'error',
+        message: 'Missing required fields. Please key in all the fields'
+      })
+      return;
+    }
+    setLoading(true);
+    // const { result, error, newUser } = await createNewUser(email, formData);
+    const res = await fetch('/api/users/create-user', {
+      method: "POST",
+      body: JSON.stringify(formData),
+      headers: {
+        authorization: `Bearer ${accessToken}`
+      }
+    });
+    const result = await res.json(); 
+    if (!res.ok) {
+      setAlert({
+        message: result.message,
+        status: 'error',
+        open:true
+      });
+      setLoading(false);
+      return;
+    }
+    // success
+    setAlert({
+      open: true,
+      message: 'New user added successfully!',
+      status: 'success'
+    });
+
+    // add new user 
+    setUsers([
+      ...users,
+      result,
+    ]);
+    setLoading(false);
+    setOpen(false);
   };
+
+
+
 
   const handleClose = () => {
     setOpen(false);
@@ -84,7 +134,7 @@ export default function AddNewUserDialog(props) {
           Add a new user on the dashboard to allow them to create and manage
           campaigns.
         </Typography>
-        <Box component={"form"} onSubmit={"handleSubmit"}>
+        <Box component={"form"} onSubmit={handleSubmit}>
           <Grid container sx={{ mt: 2 }} spacing={2}>
             <Grid item md={6}>
               <TextField
@@ -94,7 +144,7 @@ export default function AddNewUserDialog(props) {
                 onChange={(e) => handleUpdateFormData("firstName", e)}
                 required
                 sx={{
-                  '.input:invalid' : {
+                  '.input:invalid': {
                     borderColor: 'red',
                   }
                 }}
@@ -114,7 +164,7 @@ export default function AddNewUserDialog(props) {
             {formFields.map((item, index) => (
               <TextField key={index} {...item} />
             ))}
-            <Button variant="contained" size="large" type="submit">
+            <Button variant="contained" size="large" type="submit" startIcon={loading && <CircularProgress color='inherit' size={16} />}>
               Add user
             </Button>
           </Stack>

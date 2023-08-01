@@ -1,6 +1,6 @@
 /**
  * A generic view creative dialog*/
-import { Close, KeyboardArrowLeftOutlined } from "@mui/icons-material";
+import { Close  } from "@mui/icons-material";
 import {
   Dialog,
   DialogContent,
@@ -8,14 +8,17 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export default function ViewCreativeDialog({
   open,
   selectedCreative,
   setSelectedCreative,
+  setOpen,
 }) {
   const handleClose = () => {
     setSelectedCreative();
+    setOpen(false);
   };
   const isImage = (contentType) => {
     if (
@@ -52,9 +55,15 @@ export default function ViewCreativeDialog({
           justifyContent="space-between"
           flexWrap="wrap"
         >
-          <Typography variant="h4">
-            <IconButton onClick={handleClose} color='inherit' size='large'>
-              <KeyboardArrowLeftOutlined/>
+          <Typography variant="h4" sx={{
+            overflow:'hidden',
+            whiteSpace:'nowrap',
+            textOverflow: 'ellipsis',
+          }}>
+            <IconButton onClick={handleClose} color="inherit" size="large">
+              {/* <KeyboardArrowLeftOutlined />
+               */}
+               <ArrowBackIcon />
             </IconButton>
             {selectedCreative?.name}
           </Typography>
@@ -66,17 +75,34 @@ export default function ViewCreativeDialog({
           }}
         >
           {isImage(selectedCreative?.contentType) && (
-            <img
-              src={selectedCreative.url}
-              style={{
-                marginLeft: "auto",
-                marginRight: "auto",
-                display: "block",
-                width: "100%",
-                height: "100vh",
-                objectFit: "contain",
+            <Box
+              component={'img'}
+              src={selectedCreative?.url}
+              sx={{
+                mx:'auto',
+                display: 'block',
+                width: '100%',
+                height: {
+                  height:'100%',
+                  md: 'calc(100vh - 80px)'
+                },
+                objectFit:'contain'
               }}
+              alt={selectedCreative?.name}
             />
+            // <img
+            //   src={selectedCreative.url}
+            //   style={{
+            //     marginLeft: "auto",
+            //     marginRight: "auto",
+            //     display: "block",
+            //     width: "100%",
+            //     height: {
+            //       md: "calc(100vh - 64px)",
+            //     },
+            //     objectFit: "contain",
+            //   }}
+            // />
           )}
           {selectedCreative?.contentType == "video/mp4" && (
             <Box
@@ -87,7 +113,7 @@ export default function ViewCreativeDialog({
                 },
               }}
             >
-              <video>
+              <video controls>
                 <source src={selectedCreative?.url} />
               </video>
             </Box>
