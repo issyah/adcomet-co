@@ -33,8 +33,8 @@ export const PublicFooter = (props) => {
               <Typography variant='h6' color='primary.main'>Useful Links</Typography>
               <Stack spacing={2} sx={{ mt: 2 }}>
                 <Link color='inherit' underline='none' href='/about'>About</Link>
-                <Link color='inherit' underline='none' href='/advertise'>Advertise</Link>
-                <Link color='inherit' underline='none' href='/advertise'>Plans & Pricing</Link>
+                {/* <Link color='inherit' underline='none' href='/advertise'>Advertise</Link> */}
+                {/* <Link color='inherit' underline='none' href='/advertise'>Plans & Pricing</Link> */}
                 <Link color='inherit' underline='none' href='/login'>Login</Link>
               </Stack>
             </Grid>
@@ -66,8 +66,8 @@ export const PublicFooter = (props) => {
               }}
               separator={'|'}
             >
-              <Link color='inherit' href='/privacy'>Privacy</Link>
-              <Link color='inherit' href='/terms'>Terms</Link>
+              {/* <Link color='inherit' href='/privacy'>Privacy</Link> */}
+              {/* <Link color='inherit' href='/terms'>Terms</Link> */}
             </Breadcrumbs>
           </Box>
         </Container>
