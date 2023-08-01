@@ -24,7 +24,7 @@ import { useContextProvider } from "../context/ContextProvider";
 import { handleRedirectAuth } from "./common";
 export default function Navbar() {
   const [open, setOpen] = React.useState(false);
-  const { user } = useContextProvider();
+  const { user, accessToken } = useContextProvider();
   const navArr = [
     {
       label: "About",
@@ -40,8 +40,8 @@ export default function Navbar() {
       ...(user !== null || user
         ? {
             label: "Back to account",
-            href: user?.accessToken
-              ? handleRedirectAuth(user?.accessToken)
+            href: accessToken
+              ? handleRedirectAuth(accessToken)
               : "/ad/dashboard",
           }
         : {
