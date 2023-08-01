@@ -32,7 +32,7 @@ export const PublicFooter = (props) => {
             <Grid item md={4} xs={12}>
               <Typography variant='h6' color='primary.main'>Useful Links</Typography>
               <Stack spacing={2} sx={{ mt: 2 }}>
-                <Link color='inherit' underline='none' href='/about'>About</Link>
+                <Link color='inherit' underline='none' href='/about-us'>About</Link>
                 {/* <Link color='inherit' underline='none' href='/advertise'>Advertise</Link> */}
                 {/* <Link color='inherit' underline='none' href='/advertise'>Plans & Pricing</Link> */}
                 <Link color='inherit' underline='none' href='/login'>Login</Link>

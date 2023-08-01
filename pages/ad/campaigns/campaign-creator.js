@@ -26,7 +26,7 @@ export default function CampaignCreator(props) {
       name: "",
       campaignLink: "",
       industry: "",
-      campaignTags: ["Sports"],
+      campaignTags: [],
     }
   });
 
