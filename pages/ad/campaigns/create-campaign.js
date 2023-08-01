@@ -42,7 +42,7 @@ export default function CreateCampaign(props) {
   ];
   const [selected, setSelected] = useState("website");
   return (
-    <AuthLayout>
+    <Box>
       <Box mb={2}>
         <CreateCampaignProgress
           list={[
@@ -73,7 +73,7 @@ export default function CreateCampaign(props) {
               <Button
                 key={index}
                 fullWidth
-                color="secondary"
+                color={selected == item?.id ? "primary" : 'inherit'}
                 variant={selected == item?.id ? "contained" : "outlined"}
                 onClick={() => setSelected(item?.id)}
                 sx={{
@@ -134,6 +134,8 @@ export default function CreateCampaign(props) {
           Continue
         </Button>
       </Box>
-    </AuthLayout>
+    </Box >
   );
 }
+
+CreateCampaign.getLayout = (page) => <AuthLayout>{page}</AuthLayout>

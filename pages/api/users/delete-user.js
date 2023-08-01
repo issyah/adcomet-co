@@ -6,7 +6,7 @@ import { handlePermission } from "../../../utils/handlePermission";
 
 const auth = admin.auth();
 const db = admin.firestore();
-
+const storage = admin.storage();
 export default async function handler(req, res) {
   if (req.method !== 'DELETE') {
     return res.status(400).json({
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     });
   };
   const authorization = req.headers['authorization'];
-  const { error, result } = handlePermission(authorization, ['admin']);
+  const { error, result } = handlePermission(authorization, "companyRole", ['admin']);
   if (error) {
     return res.status(400).json({
       message: error,
@@ -42,6 +42,16 @@ export default async function handler(req, res) {
       code: error.code,
     })
   };
+
+  // delete avatar as well from storage to save space 
+  try {
+    const avatarRef = await storage.bucket().file(`avatars/${id}`).delete();
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message,
+      code: error.code
+    })
+  }
   // success 
   return res.status(200).json({
     status: true,

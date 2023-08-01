@@ -24,7 +24,8 @@
     "nodemailer": "^6.9.3",
     "prop-types": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "react-hook-form": "^7.45.2"
   },
   "devDependencies": {
     "eslint": "latest",

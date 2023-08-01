@@ -24,23 +24,23 @@ import { useContextProvider } from "../context/ContextProvider";
 import { handleRedirectAuth } from "./common";
 export default function Navbar() {
   const [open, setOpen] = React.useState(false);
-  const { user } = useContextProvider();
+  const { user, accessToken } = useContextProvider();
   const navArr = [
     {
       label: "About",
       href: "/about-us",
       color: "inherit",
     },
-    {
-      label: "Solutions",
-      href: "/",
-      color: "inherit",
-    },
-    {
-      label: "Pricing & Plans",
-      href: "/",
-      color: "inherit",
-    },
+    // {
+    //   label: "Solutions",
+    //   href: "/",
+    //   color: "inherit",
+    // },
+    // {
+    //   label: "Pricing & Plans",
+    //   href: "/",
+    //   color: "inherit",
+    // },
     {
       label: "Contact Us",
       href: "/contact",

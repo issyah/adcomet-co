@@ -16,40 +16,46 @@ import {
   Button,
   CardHeader,
   Autocomplete,
+  FormHelperText,
+  Chip,
+  Grid,
 } from "@mui/material";
 import Industry from "./json/industry.json";
 import CreateCampaignProgress from "./CreateCampaignProgress";
 import { KeyboardArrowRightOutlined } from "@mui/icons-material";
 import { useEffect } from "react";
-export default function CampaignInformation({ formData, setFormData }) {
-  const handleFormData = (e, id) => {
-    setFormData({
-      ...formData,
-      [id]: e.target.value,
-    });
-  };
-  const formField = [
-    {
-      label: "Campaign name",
-      id: "name",
-    },
-    {
-      label: "Campaign link",
-      helperText: "The link when the user clicks on your campaign",
-      placeholder: "https://www.adcomet.co/example",
-    },
-    {
-      label: "Campaign industry",
-      id: "industry",
-      type: "select",
-      options: () =>
-        Object.keys(Industry).map((key) => (
-          <MenuItem key={key} value={key}>
-            {Industry[key].label}
-          </MenuItem>
-        )),
-    },
-  ];
+import { Controller } from 'react-hook-form';
+export default function CampaignInformation({ control, formFields, handleSubmit, errors, setValue, getValues, watch }) {
+  const renderTags = () => {
+    const tags = getValues('campaignTags');
+    if (tags?.length) {
+      return (
+        <Grid container spacing={1}>
+          {tags?.map((item, index) => (
+            <Grid item md={'auto'} xs={'auto'} key={index}>
+              <Chip size="small" color='secondary' label={item} onDelete={() => handleRemoveTags(item)} />
+            </Grid>
+          ))}
+        </Grid>
+      )
+    }
+  }
+  const handleAddTags = (e, newValue) => {
+    const tags = watch('campaignTags');
+    if (newValue) {
+      setValue('campaignTags', [...tags, newValue]);
+    }
+  }
+
+  const handleRemoveTags = (item) => {
+    const tags = getValues('campaignTags');
+    setValue('campaignTags', tags?.filter((i) => i !== item));
+  }
+
+  const onSubmit = (data) => {
+    console.log(data);
+  }
+
 
   useEffect(() => {
     return () => {
@@ -65,9 +71,35 @@ export default function CampaignInformation({ formData, setFormData }) {
               Campaign Information
             </Typography>
             <Typography sx={{ mb: 2 }}>Write your campaign details</Typography>
-            <Box component={"form"}>
+            <Box component={"form"} onSubmit={handleSubmit(onSubmit)}>
               <Stack spacing={2}>
-                {formField?.map((item, index) =>
+                {formFields &&
+                  formFields?.map((item, index) => (
+                    <Controller
+                      key={index}
+                      {...item?.Controller}
+                      control={control}
+                      render={({ field }) =>
+                        item?.type == 'select' ?
+                          <FormControl error={errors[item?.id]}>
+                            <InputLabel>{item?.Field?.label}</InputLabel>
+                            <Select {...field} {...item?.Field}>
+                              {item?.options()}
+                            </Select>
+                            {errors[item?.id]?.message && <FormHelperText>{errors[item?.id]?.message}</FormHelperText>}
+                          </FormControl> :
+                          <TextField
+                            {...field}
+                            {...item?.Field}
+                            error={errors[item?.id]}
+                            helperText={errors[item?.id]?.message}
+                            fullWidth
+                          />
+                      }
+                    />
+                  ))
+                }
+                {/* {formField?.map((item, index) =>
                   item.type == "select" ? (
                     <FormControl key={index}>
                       <InputLabel id={`${item?.id}-inputLabel`}>
@@ -90,7 +122,7 @@ export default function CampaignInformation({ formData, setFormData }) {
                       onChange={(e) => handleFormData(e, item.id)}
                     />
                   )
-                )}
+                )} */}
                 {/* autocomplete input with chips */}
                 <Autocomplete
                   label={"Campaign tags"}
@@ -101,14 +133,47 @@ export default function CampaignInformation({ formData, setFormData }) {
                       variant="outlined"
                     />
                   )}
+                  options={[
+                    "Banking & Finance",
+                    "Beauty & Wellness",
+                    "Food & Dining",
+                    "Home & Garden",
+                    "Lifestyles & Hobbies",
+                    "Media & Entertainment",
+                    "News & Politics",
+                    "Sports",
+                    "Technology",
+                    "Travel",
+                    "Vehicles & Transportation",
+                    "Apparels & Accessories",
+                    "Business Services",
+                    "Computers & Peripherals",
+                    "Employment",
+                    "Event Tickets",
+                    "Financial Services",
+                    "Gifts & Occassions",
+                    "Political Cause",
+                    "Real Estate",
+                    "Software",
+                    "Education",
+                    "Arts & Entertainment",
+                    "Video games",
+                    "Industrial",
+                    "Pets & Animals",
+                    "Science",
+                    "Shopping",
+                  ]}
+                  onChange={handleAddTags}
+                  defaultValue={getValues('campaignTags')}
+                  // renderTags={renderTags()}
+                  multiple
                 />
+                <Button size='large' variant='contained' type='submit'>Next</Button>
+
               </Stack>
             </Box>
           </CardContent>
         </Card>
-      </Box>
-      <Box sx={{ mt: "auto" }}>
-        <Button>Next</Button>
       </Box>
     </Stack>
   );

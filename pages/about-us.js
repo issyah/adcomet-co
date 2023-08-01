@@ -15,18 +15,18 @@ export default function AboutUs() {
   const teamMembers = [
     {
       name: "Fadli Sazali",
-      designation: "Chief Operating Officer, Founder",
+      designation: "Chief Executive Officer, Founder",
       image: "/images/fad.jpg",
     },
     {
       name: 'Fauzan Johari',
-      designation: "Chief Executive Officer",
+      designation: "Chief Operating Officer, Founder",
       image: "/images/zan.jpg"
     },
     {
       name: 'Issyah Ismail',
       designation: "Chief Technology Officer, Founder",
-      image:'/images/sya.jpg'
+      image: '/images/sya.jpg'
     }
   ];
   return (
@@ -86,15 +86,21 @@ export default function AboutUs() {
           </Typography>
           <Grid container spacing={2} sx={{ mt: 4, }}>
             {teamMembers.map((item, index) => (
-              <Grid item md={4} xs={6} key={index}>
-                <Card sx={{height:'100%'}}>
+              <Grid item md={4} xs={6} sm={4} key={index}>
+                <Card sx={{ height: '100%' }}>
                   <CardMedia
                     image={item?.image}
                     title={item?.name}
                     alt={item?.name}
                     sx={{
-                      height: "350px",
-                      backgroundPosition:'top',
+                      height: {
+                        md: 350,
+                        xs: 160
+                      },
+                      backgroundPosition: {
+                        md: 'top',
+                        xs: 'center'
+                      },
                     }}
                   />
                   <CardContent sx={{ textAlign: "center" }}>

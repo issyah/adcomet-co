@@ -1,14 +1,21 @@
 // default layout Adcomet
 // build by issyah ismail
 
-import { Box, Toolbar } from "@mui/material";
+import { Alert, Box, Snackbar, Toolbar } from "@mui/material";
 import Head from "next/head";
 import Navbar from "../Navbar";
 import { PublicFooter } from "../PublicFooter";
-
+import { useContextProvider } from "@/context/ContextProvider";
 export default function Public(props) {
   const { children } = props;
-
+  const { alert, setAlert } = useContextProvider();
+  const handleAlertClose = () => {
+    setAlert({
+      open: false,
+      message: "",
+      status: ""
+    })
+  }
   return (
     <Box>
       <Head>
@@ -23,8 +30,27 @@ export default function Public(props) {
       </Head>
       <Navbar />
       <Toolbar />
+      {alert?.open && (
+        <Snackbar
+          open={alert?.open}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+          autoHideDuration={5000}
+          onClose={handleAlertClose}
+        >
+          <Alert
+            severity={alert?.status}
+            onClose={handleAlertClose}
+            sx={{ width: "100%" }}
+          >
+            {alert?.message}
+          </Alert>
+        </Snackbar>
+      )}
       <Box mt={4}>{children}</Box>
-      <PublicFooter/>
+      <PublicFooter />
     </Box>
   );
 }
