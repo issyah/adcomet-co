@@ -100,7 +100,7 @@ const ContextProvider = ({ children }) => {
   }, []);
 
   React.useEffect(() => {
-    if (company.id) {
+    if (company?.id) {
       const unsubscribe = onSnapshot(
         doc(db, "companies", company?.id),
         (doc) => {
