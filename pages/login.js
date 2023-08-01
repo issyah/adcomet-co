@@ -17,7 +17,8 @@ import { Alert, CircularProgress, Snackbar } from "@mui/material";
 import { useContextProvider } from "../context/ContextProvider";
 import { KeyboardArrowRightOutlined } from "@mui/icons-material";
 import LoginBanner from "@/public/login-bg.jpg";
-import { handlePermissionAuth, handleRedirectAuth } from "@/src/common";
+import { handlePermissionAuth, handleRedirectAuth, regexEmail } from "@/src/common";
+import { Controller, useForm } from 'react-hook-form';
 function Copyright(props) {
   return (
     <Typography
@@ -50,9 +51,50 @@ export default function SignIn() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    }
+  })
+
+  const formFields = [
+    {
+      id: 'email',
+      Controller: {
+        name: 'email',
+        rules: {
+          required: 'Please fill in your email address',
+          pattern: {
+            value: regexEmail(),
+            message: 'Please enter a valid email address'
+          }
+        }
+      },
+      Field: {
+        label: 'Email address',
+      }
+    },
+    {
+      id: 'password',
+      Controller: {
+        name: 'password',
+        rules: {
+          required: 'Please fill in your password'
+        }
+      },
+      Field: {
+        label: 'Password',
+        type: 'password',
+      }
+    }
+  ]
+
+
+  const onSubmit = async (data) => {
     setLoading(true);
-    e.preventDefault();
+    // e.preventDefault();
+    const { email, password } = data;
     const { result, error } = await signIn(email, password);
     if (error) {
       const code = error.code;
@@ -122,8 +164,28 @@ export default function SignIn() {
               <Typography component="h1" variant="h5" fontWeight={900}>
                 Sign in
               </Typography>
-              <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                <TextField
+              <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
+                {formFields.map((item, index) => (
+                  <Controller
+                    key={index}
+                    control={control}
+                    {...item.Controller}
+                    render={({ field }) => <TextField margin="normal" fullWidth {...field}  {...item.Field} error={errors[item?.id]} helperText={errors[item.id]?.message} />}
+                  />
+                ))}
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  size="large"
+                  sx={{ mt: 3, mb: 2 }}
+                  startIcon={
+                    loading && <CircularProgress size={16} color="inherit" />
+                  }
+                >
+                  Sign In
+                </Button>
+                {/* <TextField
                   margin="normal"
                   required
                   fullWidth
@@ -146,10 +208,6 @@ export default function SignIn() {
                   autoComplete="current-password"
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                {/* <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          /> */}
                 <Button
                   type="submit"
                   fullWidth
@@ -161,7 +219,7 @@ export default function SignIn() {
                   }
                 >
                   Sign In
-                </Button>
+                </Button> */}
                 <Grid container justifyContent={"flex-end"}>
                   <Grid item xs={"auto"}>
                     <Button

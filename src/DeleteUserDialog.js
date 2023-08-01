@@ -16,14 +16,14 @@ export default function DeleteUserDialog({
   setUsers,
 }) {
   const [loading, setLoading] = useState(false);
-  const { user, setAlert } = useContextProvider();
+  const { user, setAlert, accessToken } = useContextProvider();
   const handleClose = () => { setOpen(false) }
   const handleSubmit = async () => {
     setLoading(true);
     const res = await fetch(`/api/users/delete-user?id=${selectedUser?.id}`, {
       method: 'DELETE',
       headers: {
-        authorization: `Bearer ${user?.accessToken}`
+        authorization: `Bearer ${accessToken}`
       }
     });
     const result = await res.json();

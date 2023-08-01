@@ -62,12 +62,12 @@ export const PublicFooter = (props) => {
             </Box>
             <Breadcrumbs
               sx={{
-                color:'grey.100'
+                color: 'grey.100'
               }}
               separator={'|'}
             >
-              {/* <Link color='inherit' href='/privacy'>Privacy</Link> */}
-              {/* <Link color='inherit' href='/terms'>Terms</Link> */}
+              {/* <Link color='inherit' href='/privacy'>Privacy</Link>
+              <Link color='inherit' href='/terms'>Terms</Link> */}
             </Breadcrumbs>
           </Box>
         </Container>
