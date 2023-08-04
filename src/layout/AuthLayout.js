@@ -86,17 +86,9 @@ export default function AuthLayout(props) {
   };
 
   useEffect(() => {
-    // check permission
-    // if (!handlePermissionAuth(user?.accessToken, ['advertiser'])) {
-    // handleSignOut();
-    // }
-    // console.log(handlePermissionAuth(user?.accessToken, ["advertiser"]));
-    // if (!handlePermissionAuth(user?.accessToken, ["advertiser"])) {
-    //   handleSignOut();
-    // }
-    if(accessToken){
-      if(!handlePermissionAuth(user?.accessToken, ['advertiser'])){
-        handleSignOut();
+    if (accessToken) {
+      if (!handlePermissionAuth(accessToken, ["advertiser"])) {
+        router.replace("/401");
       }
     }
   }, [accessToken]);

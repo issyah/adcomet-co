@@ -1,76 +1,152 @@
-{
-  "1": {
-    "label": "Daily Deals",
-    "value": "deal",
-    "description": "The Daily Deal industry operates as an online marketplace or platform that brings together businesses and consumers to offer highly discounted deals for a limited period of time. This industry has evolved from traditional coupon clipping into a digital space where consumers can browse and purchase attractive deals conveniently from their computers or mobile devices."
+[
+  {
+    "id": 1,
+    "label": "Agriculture",
+    "description": "Agriculture involves cultivation of plants, farming of animals, and other related activities for the production of food, fibers, medicinal plants, and other products used to sustain and enhance human life."
   },
-  "2": {
-    "label": "Educational",
-    "value": "educ",
-    "description": "The educational industry is a broad sector that encompasses institutions, organizations, and processes involved in the delivery of education and training. It includes various levels of education, from early childhood education to primary, secondary, and higher education, as well as vocational and technical training."
+  {
+    "id": 2,
+    "label": "Automotive",
+    "description": "The automotive industry encompasses the design, development, manufacture, marketing, and sale of motor vehicles such as cars, trucks, motorcycles, and their parts and accessories."
   },
-  "3": {
+  {
+    "id": 3,
+    "label": "Banking",
+    "description": "Banking involves financial institutions that provide services such as accepting deposits, lending funds, facilitating money transfers, and offering various financial products and investment opportunities."
+  },
+  {
+    "id": 4,
+    "label": "Construction",
+    "description": "Construction industry includes the building, installation, or assembly of physical structures such as houses, commercial buildings, infrastructure projects, and other civil engineering works."
+  },
+  {
+    "id": 5,
+    "label": "Education",
+    "description": "The education sector focuses on providing learning, knowledge acquisition, and skill development through formal institutions like schools, colleges, universities, vocational training centers, and online platforms."
+  },
+  {
+    "id": 6,
+    "label": "E-commerce",
+    "description": "E-commerce refers to buying and selling products or services over the internet, utilizing online platforms, electronic payment systems, and digital marketing strategies."
+  },
+  {
+    "id": 7,
     "label": "Energy",
-    "value": "engy",
-    "description" : "The energy industry is a sector that encompasses the production, distribution, and consumption of various forms of energy. It involves the extraction, transformation, and utilization of energy resources to power different sectors of society, including residential, commercial, industrial, and transportation."
+    "description": "Energy industry involves the extraction, production, refining, distribution, and utilization of various sources of energy such as fossil fuels, renewable energy, nuclear power, and electricity."
   },
-  "4" : {
-    "label" : "Entertainment",
-    "value" : "entm",
-    "description" : "The entertainment industry refers to a broad range of businesses involved in the creation, production, distribution, and marketing of various forms of entertainment. This includes industries such as film and television, music, theater, gaming, publishing, sports, and more. "
+  {
+    "id": 8,
+    "label": "Finance",
+    "description": "Finance industry deals with the management, investment, and allocation of funds, as well as providing financial advice, insurance services, and wealth management solutions."
   },
-  "5" : {
-    "label" : "IT services",
-    "value" : "itsv",
-    "description": "The IT service industry, also known as the information technology service industry, refers to businesses that provide various types of IT-related services to other organizations. These services can include software development, system implementation and integration, IT consulting, network administration, cybersecurity, cloud computing services, technical support, and more."
+  {
+    "id": 9,
+    "label": "Healthcare",
+    "description": "Healthcare sector encompasses a wide range of services, including medical facilities, hospitals, clinics, pharmaceuticals, health insurance, telemedicine, and healthcare technology."
   },
-  "6" : {
-    "label" : "Jobs and Careers",
-    "value" : "jobs",
-    "description" : "The job industry refers to the specific field or sector in which various organizations and individuals are engaged in employment activities. It encompasses all the different types of jobs and careers available in the market. The job industry can be classified into various sectors such as healthcare, technology, finance, education, manufacturing, hospitality, and many more. Each industry has its own unique characteristics, job roles, and employment opportunities. "
+  {
+    "id": 10,
+    "label": "Information Technology (IT)",
+    "description": "IT industry involves the development, implementation, and management of computer-based technologies, software applications, hardware devices, IT services, and data management systems."
   },
-  "7" : {
-    "label" : "Health Care, Medical",
-    "value" : "medi",
-    "description" : "The healthcare industry refers to the sector that provides medical services, products, and healthcare-related support. It encompasses a wide range of organizations, including hospitals, clinics, nursing homes, pharmaceutical companies, biotechnology firms, medical device manufacturers, health insurance providers, and more."
+  {
+    "id": 11,
+    "label": "Manufacturing",
+    "description": "Manufacturing sector involves the production, processing, and fabrication of goods using raw materials, machines, labor, and industrial processes on a large scale."
   },
-  "8" : {
-    "label" : "E-commerce and online shopping",
-    "value" : "oret",
-    "description" : "The online shopping industry refers to the sector of the economy that involves the buying and selling of goods and services through the internet. It has grown tremendously in recent years due to the increasing access to smartphones, internet connectivity, and the convenience it offers to consumers."
+  {
+    "id": 12,
+    "label": "Marketing and Advertising",
+    "description": "Marketing and advertising industry focuses on promoting products, services, or brands through strategic campaigns, market research, public relations, creative design, and media platforms."
   },
-  "9" : {
-    "label" : "Property and Real Estate",
-    "value" : "prop",
-    "description" : "The property industry refers to the sector involved in the development, management, buying, selling, and renting of real estate properties. This includes residential properties (such as houses and apartments), commercial properties (such as offices and retail spaces), industrial properties (such as warehouses and factories), and land."
+  {
+    "id": 13,
+    "label": "Pharmaceuticals",
+    "description": "Pharmaceutical industry specializes in the research, development, production, and distribution of pharmaceutical drugs for medical treatment and prevention of diseases."
   },
-  "10" : {
-    "label" : "Media, News and Publishing",
-    "value" : "news",
-    "description" : "The media industry encompasses various sectors involved in the creation, production, distribution, and consumption of media content. This includes traditional forms of media such as television, radio, newspapers, magazines, and books, as well as digital media platforms such as websites, social media, streaming services, podcasts, and mobile applications."
+  {
+    "id": 14,
+    "label": "Retail",
+    "description": "Retail sector involves the sale of consumer goods or services directly to individuals through offline stores, e-commerce platforms, catalogues, or mobile applications."
   },
-  "11" : {
-    "label" : "Social Media and Networking",
-    "value": "social",
-    "description" : "The social networking industry refers to the sector that includes various platforms and services that enable individuals to connect, communicate, and interact with each other online. Social networking platforms allow users to create personal profiles, share content such as text, photos, and videos, and engage in interactions and discussions with others within their network."
+  {
+    "id": 15,
+    "label": "Telecommunications",
+    "description": "Telecommunications industry deals with the transmission of voice, video, data, and information over long distances using various technologies such as wired networks, wireless communication, and internet protocols."
   },
-  "12" : {
-    "label" : "Telecommunication",
-    "value" : "tele",
-    "description": "The telecommunication industry refers to the sector that encompasses various technologies, services, and equipment used for communication over long distances. It involves transmitting data, voice, or video signals through wired or wireless means."
+  {
+    "id": 16,
+    "label": "Aerospace",
+    "description": "Involves the design, development, manufacturing, and operation of aircraft, spacecraft, satellites, and related systems."
   },
-  "13" : {
-    "label" : "Event ticketing",
-    "value" : "tikt",
-    "description" : "The ticketing industry refers to the business of selling tickets for various events, such as concerts, sporting events, theater performances, and other live entertainment. It involves the process of managing and distributing tickets to customers through various channels, including online platforms, box offices, and third-party vendors."
+  {
+    "id": 17,
+    "label": "Biotechnology",
+    "description": "Focuses on utilizing biological processes, organisms, or systems to develop products or technologies that improve human health, agriculture, and environmental sustainability."
   },
-  "14": {
-    "label" : "Travel, Flights and Hotel",
-    "value" : "trav",
-    "description" : "The travel industry refers to the sector that encompasses all activities related to travel, tourism, and hospitality. It involves various businesses and organizations that provide services and facilities to facilitate travel experiences for individuals or groups."
+  {
+    "id": 18,
+    "label": "Chemical",
+    "description": "Deals with the production, refinement, and distribution of chemicals used in various sectors such as pharmaceuticals, agriculture, manufacturing, and consumer goods."
   },
-  "15" : {
-    "label" : "Others, not sure",
-    "value" : "Oth"
+  {
+    "id": 19,
+    "label": "Defense",
+    "description": "Specializes in the development, production, and maintenance of military equipment, weapons, and technology for national security and defense purposes."
+  },
+  {
+    "id": 20,
+    "label": "Environmental",
+    "description": "Focuses on addressing and mitigating environmental issues such as pollution, climate change, resource conservation, and sustainable practices."
+  },
+  {
+    "id": 21,
+    "label": "Hospitality",
+    "description": "Involves services and accommodations provided to individuals or groups during travel, tourism, events, or dining experiences, typically within hotels, restaurants, or resorts."
+  },
+  {
+    "id": 22,
+    "label": "Insurance",
+    "description": "Provides financial protection against potential risks and losses, offering coverage for individuals or organizations against property damage, liability claims, and other unforeseen circumstances."
+  },
+  {
+    "id": 23,
+    "label": "Legal",
+    "description": "Involves the provision of legal advice, representation, and advocacy for individuals or organizations in matters related to law, regulations, contracts, and disputes."
+  },
+  {
+    "id": 24,
+    "label": "Media",
+    "description": "Engages in the creation, production, and distribution of content through various channels like television, radio, newspapers, magazines, online platforms, and social media."
+  },
+  {
+    "id": 25,
+    "label": "Nonprofit",
+    "description": "Operates for charitable, humanitarian, or social causes, aiming to make a positive impact on society without generating profits for its members or shareholders."
+  },
+  {
+    "id": 26,
+    "label": "Pharmaceuticals",
+    "description": "Focuses on the research, development, production, and distribution of pharmaceutical drugs for medical treatment and prevention of diseases."
+  },
+  {
+    "id": 27,
+    "label": "Real Estate",
+    "description": "Involves the purchase, sale, rental, management, and development of properties such as land, residential buildings, commercial spaces, and industrial facilities."
+  },
+  {
+    "id": 28,
+    "label": "Research and Development (R&D)",
+    "description": "Focuses on scientific investigation, innovation, and technological advancements to improve existing products, develop new products, or solve complex problems."
+  },
+  {
+    "id": 29,
+    "label": "Transportation and Logistics",
+    "description": "Deals with the movement, storage, and management of goods, materials, and people through various modes such as air, land, sea, or rail."
+  },
+  {
+    "id": 30,
+    "label": "Utilities",
+    "description": "Involves the generation, distribution, and supply of essential services like electricity, water, gas, and telecommunications infrastructure necessary for daily life and business operations."
   }
-}
+]

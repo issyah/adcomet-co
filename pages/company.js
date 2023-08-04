@@ -38,7 +38,7 @@ export default function Company(props) {
     name: "",
     description: "",
     companySize: "",
-    industryType: "itsv",
+    industryType: "",
     photo: {},
   });
 
@@ -135,6 +135,23 @@ export default function Company(props) {
             value: "more than 100",
           },
         ],
+      },
+    },
+    {
+      id: "industryType",
+      type: "select",
+      Controller: {
+        name: "industryType",
+        rules: {
+          required: "Please select your industry type",
+        },
+      },
+      Field: {
+        label: "Company type",
+        options: IndustryJson.map((item) => ({
+          label: item?.label,
+          value: item?.id,
+        })),
       },
     },
   ];

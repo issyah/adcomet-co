@@ -6,87 +6,107 @@ import AuthLayout from "@/src/layout/AuthLayout";
 import { Box, Grid, InputAdornment, MenuItem, Tooltip } from "@mui/material";
 import CreateCampaignProgress from "@/src/CreateCampaignProgress";
 import CampaignLocation from "@/src/CampaignLocation";
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm } from "react-hook-form";
 import { regexFullDomainPath } from "@/src/common";
 import { HelpOutlineOutlined } from "@mui/icons-material";
-import Industry from '@/src/json/industry.json';
+import Industry from "@/src/json/industry.json";
 export default function CampaignCreator(props) {
   const [tab, setTab] = useState("campaign-information");
   const handleSwitchTab = (id) => {
     if (tab === id) return;
     setTab(id);
   };
-  const [formData, setFormData] = useState({
-    name: "",
-    industry: "",
-  });
 
-  const { handleSubmit, control, formState: { errors }, setValue, getValues, watch } = useForm({
+  const {
+    handleSubmit,
+    control,
+    formState: { errors, isValid },
+    setValue,
+    getValues,
+    watch,
+  } = useForm({
     defaultValues: {
       name: "",
-      campaignLink: "",
+      link: "",
       industry: "",
-      campaignTags: [],
-    }
+      useCompanyIndustry: true,
+      tags: [],
+    },
   });
 
   const formCampaignInformation = [
     {
-      id: 'name',
+      id: "name",
       Controller: {
-        name: 'name',
+        name: "name",
         rules: {
-          required: 'Please fill in a campaign name',
-        }
+          required: "Please fill in a campaign name",
+        },
       },
       Field: {
-        label: 'Campaign name'
-      }
+        label: "Campaign name",
+      },
     },
     {
-      id: 'campaignLink',
+      id: "link",
       Controller: {
-        name: 'campaignLink',
+        name: "link",
         rules: {
           required: "Please add in the campaign link.",
           pattern: {
             value: regexFullDomainPath(),
-            message: 'Please add in a valid domain link'
-          }
-        }
+            message: "Please add in a valid domain link",
+          },
+        },
       },
       Field: {
         label: "Campaign link",
         InputProps: {
           endAdornment: (
-            <InputAdornment position='end'>
+            <InputAdornment position="end">
               <Tooltip title="This will be the url/link user visits when clicking on your campaign">
                 <HelpOutlineOutlined />
               </Tooltip>
             </InputAdornment>
-          )
-        }
-      }
+          ),
+        },
+      },
     },
     {
-      id: 'industry',
+      id: "industry",
       Controller: {
-        name: 'industry',
+        name: "industry",
         rules: {
-          required: 'Please select one option',
-        }
+          required: "Please select one option",
+        },
       },
       Field: {
-        label: 'Campaign industry'
+        label: "Campaign industry",
       },
-      type: 'select',
-      options: () => Object.keys(Industry).map((key) => (
-        <MenuItem key={key} value={key}>{Industry[key]?.label}</MenuItem>
-      ))
-    }
-  ]
-
-
+      // top heirachy formControl
+      FormControl: {
+        disabled: watch("useCompanyIndustry"),
+      },
+      type: "select",
+      options: () =>
+        Industry.map((item) => (
+          <MenuItem value={item.id} key={item.id}>
+            {item.label}
+          </MenuItem>
+        )),
+    },
+    {
+      id: "useCompanyIndustry",
+      Controller: {
+        name: "useCompanyIndustry",
+        defaultValue: true,
+      },
+      Field: {
+        label: "Use my company's industry",
+      },
+      type: "checkbox",
+    },
+  ];
 
   return (
     <Box>

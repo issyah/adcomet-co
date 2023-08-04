@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "label": "Parents",
+    "description": "Individuals who have children and make purchasing decisions on behalf of their family."
+  },
+  {
+    "id": 2,
+    "label": "Teenagers",
+    "description": "Adolescents typically between the ages of 13 and 19, who have distinct preferences and interests."
+  },
+  {
+    "id": 3,
+    "label": "Tech Enthusiasts",
+    "description": "People who are passionate about technology and always eager to explore new gadgets and innovations."
+  },
+  {
+    "id": 4,
+    "label": "Fitness Fanatics",
+    "description": "Individuals who prioritize physical fitness and often engage in regular exercise or follow a specific workout regimen."
+  },
+  {
+    "id": 5,
+    "label": "Travelers",
+    "description": "People who enjoy exploring new places, whether it be for leisure or business purposes."
+  },
+  {
+    "id": 6,
+    "label": "Gamers",
+    "description": "Individuals who are avid video game players and spend a significant amount of time playing games."
+  },
+  {
+    "id": 7,
+    "label": "Music Lovers",
+    "description": "People who have a deep appreciation for music, listen to various genres, and attend concerts or music festivals."
+  },
+  {
+    "id": 8,
+    "label": "Foodies",
+    "description": "Individuals who are passionate about food, enjoy trying out new dishes, and appreciate culinary experiences."
+  },
+  {
+    "id": 9,
+    "label": "Pet Owners",
+    "description": "People who own and care for pets such as dogs, cats, birds, or reptiles."
+  },
+  {
+    "id": 10,
+    "label": "Fashion Enthusiasts",
+    "description": "Individuals who have a keen interest in fashion, follow the latest trends, and take pride in their personal style."
+  },
+  {
+    "id": 11,
+    "label": "Bookworms",
+    "description": "People who love reading books, whether it be fiction, non-fiction, or any other genre."
+  },
+  {
+    "id": 12,
+    "label": "Sports Fans",
+    "description": "Individuals who are passionate about sports, follow specific teams or athletes, and enjoy watching games."
+  },
+  {
+    "id": 13,
+    "label": "Artists",
+    "description": "People who are creatively inclined and engage in artistic pursuits such as painting, drawing, or sculpting."
+  },
+  {
+    "id": 14,
+    "label": "Entrepreneurs",
+    "description": "Individuals who start their own businesses or ventures and take risks to achieve their professional goals."
+  },
+  {
+    "id": 15,
+    "label": "Movie Buffs",
+    "description": "People who love watching movies, whether it be in theaters or at home, and appreciate cinematic experiences."
+  },
+  {
+    "id": 16,
+    "label": "Outdoor Enthusiasts",
+    "description": "Individuals who enjoy outdoor activities and spend time hiking, camping, or participating in adventure sports."
+  },
+  {
+    "id": 17,
+    "label": "Gardening Enthusiasts",
+    "description": "People who have a passion for gardening, whether it be cultivating plants indoors or maintaining a backyard garden."
+  },
+  {
+    "id": 18,
+    "label": "Students",
+    "description": "Individuals who are pursuing education at various levels, such as school, college, or university."
+  },
+  {
+    "id": 19,
+    "label": "Photography Enthusiasts",
+    "description": "People who have a passion for photography and enjoy capturing moments through the lens of a camera."
+  },
+  {
+    "id": 20,
+    "label": "Environmentalists",
+    "description": "Individuals who advocate for environmental conservation, sustainability, and protection of natural resources."
+  }
+]

@@ -19,44 +19,41 @@ import {
   FormHelperText,
   Chip,
   Grid,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import Industry from "./json/industry.json";
 import CreateCampaignProgress from "./CreateCampaignProgress";
 import { KeyboardArrowRightOutlined } from "@mui/icons-material";
-import { useEffect } from "react";
-import { Controller } from 'react-hook-form';
-export default function CampaignInformation({ control, formFields, handleSubmit, errors, setValue, getValues, watch }) {
-  const renderTags = () => {
-    const tags = getValues('campaignTags');
-    if (tags?.length) {
-      return (
-        <Grid container spacing={1}>
-          {tags?.map((item, index) => (
-            <Grid item md={'auto'} xs={'auto'} key={index}>
-              <Chip size="small" color='secondary' label={item} onDelete={() => handleRemoveTags(item)} />
-            </Grid>
-          ))}
-        </Grid>
-      )
-    }
-  }
+import { useEffect, useState } from "react";
+import { Controller } from "react-hook-form";
+import TargetAudience from "@/src/json/target-audience.json";
+export default function CampaignInformation({
+  control,
+  formFields,
+  handleSubmit,
+  errors,
+  setValue,
+}) {
+  const [tags, setTags] = useState([]);
   const handleAddTags = (e, newValue) => {
-    const tags = watch('campaignTags');
     if (newValue) {
-      setValue('campaignTags', [...tags, newValue]);
+      setTags([
+        ...tags,
+        ...newValue.filter((option) => tags?.indexOf(option) === -1),
+      ]);
     }
-  }
-
-  const handleRemoveTags = (item) => {
-    const tags = getValues('campaignTags');
-    setValue('campaignTags', tags?.filter((i) => i !== item));
-  }
-
+  };
   const onSubmit = (data) => {
     console.log(data);
-  }
+  };
+  const handleDeleteTag = (ind) => {
+    setTags(tags?.filter((i) => i.id !== ind));
+  };
 
-
+  useEffect(() => {
+    setValue("tags", tags);
+  }, [tags]);
   useEffect(() => {
     return () => {
       console.log("Are you sure?");
@@ -80,14 +77,29 @@ export default function CampaignInformation({ control, formFields, handleSubmit,
                       {...item?.Controller}
                       control={control}
                       render={({ field }) =>
-                        item?.type == 'select' ?
-                          <FormControl error={errors[item?.id]}>
+                        item?.type == "select" ? (
+                          <FormControl
+                            error={errors[item?.id]}
+                            {...item?.FormControl}
+                          >
                             <InputLabel>{item?.Field?.label}</InputLabel>
                             <Select {...field} {...item?.Field}>
                               {item?.options()}
                             </Select>
-                            {errors[item?.id]?.message && <FormHelperText>{errors[item?.id]?.message}</FormHelperText>}
-                          </FormControl> :
+                            {errors[item?.id]?.message && (
+                              <FormHelperText>
+                                {errors[item?.id]?.message}
+                              </FormHelperText>
+                            )}
+                          </FormControl>
+                        ) : item?.type == "checkbox" ? (
+                          <FormControlLabel
+                            control={<Checkbox {...field} />}
+                            {...field}
+                            {...item?.Field}
+                            checked={field.value}
+                          />
+                        ) : (
                           <TextField
                             {...field}
                             {...item?.Field}
@@ -95,81 +107,50 @@ export default function CampaignInformation({ control, formFields, handleSubmit,
                             helperText={errors[item?.id]?.message}
                             fullWidth
                           />
+                        )
                       }
                     />
-                  ))
-                }
-                {/* {formField?.map((item, index) =>
-                  item.type == "select" ? (
-                    <FormControl key={index}>
-                      <InputLabel id={`${item?.id}-inputLabel`}>
-                        {item.label}
-                      </InputLabel>
-                      <Select
-                        {...item}
-                        value={formData[item.id]}
-                        onChange={(e) => handleFormData(e, item.id)}
-                        labelId={`${item?.id}-inputLabel`}
-                        label={item?.label}
-                        required
-                      >
-                        {item.options()}
-                      </Select>
-                    </FormControl>
-                  ) : (
-                    <TextField
-                      {...item}
-                      onChange={(e) => handleFormData(e, item.id)}
-                    />
-                  )
-                )} */}
+                  ))}
                 {/* autocomplete input with chips */}
                 <Autocomplete
                   label={"Campaign tags"}
+                  value={tags}
+                  onChange={handleAddTags}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       label={"Campaign tags"}
-                      variant="outlined"
+                      variant="standard"
+                      helperText={
+                        "Optional: Add campaign tags to allow us to recommend you the perfect spot!"
+                      }
                     />
                   )}
-                  options={[
-                    "Banking & Finance",
-                    "Beauty & Wellness",
-                    "Food & Dining",
-                    "Home & Garden",
-                    "Lifestyles & Hobbies",
-                    "Media & Entertainment",
-                    "News & Politics",
-                    "Sports",
-                    "Technology",
-                    "Travel",
-                    "Vehicles & Transportation",
-                    "Apparels & Accessories",
-                    "Business Services",
-                    "Computers & Peripherals",
-                    "Employment",
-                    "Event Tickets",
-                    "Financial Services",
-                    "Gifts & Occassions",
-                    "Political Cause",
-                    "Real Estate",
-                    "Software",
-                    "Education",
-                    "Arts & Entertainment",
-                    "Video games",
-                    "Industrial",
-                    "Pets & Animals",
-                    "Science",
-                    "Shopping",
-                  ]}
-                  onChange={handleAddTags}
-                  defaultValue={getValues('campaignTags')}
-                  // renderTags={renderTags()}
+                  getOptionLabel={(option) => option.label}
+                  options={TargetAudience}
+                  getOptionsDisabled={(option) =>
+                    tags.findIndex((i) => i.id == option.id)
+                  }
+                  renderTags={(value, getTagProps) =>
+                    value.map((option, index) => (
+                      <Chip
+                        color="secondary"
+                        variant="contained"
+                        label={option.label}
+                        {...getTagProps(index)}
+                        style={{
+                          marginBottom: 8,
+                          marginTop: 8,
+                        }}
+                        onDelete={() => handleDeleteTag(option.id)}
+                      />
+                    ))
+                  }
                   multiple
                 />
-                <Button size='large' variant='contained' type='submit'>Next</Button>
-
+                <Button size="large" variant="contained" type="submit">
+                  Next
+                </Button>
               </Stack>
             </Box>
           </CardContent>

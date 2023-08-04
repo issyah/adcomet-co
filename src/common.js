@@ -75,7 +75,7 @@ const generateVideoThumbnail = (file) => {
   });
 };
 
-const handlePermissionAuth = async (token, arr) => {
+const handlePermissionAuth = (token, arr) => {
   if (!token) {
     return;
   }
