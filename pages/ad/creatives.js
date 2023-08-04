@@ -33,6 +33,7 @@ import { bytesToMegaBytes, generateVideoThumbnail } from "@/src/common";
 import ViewCreativeDialog from "@/src/ViewCreativeDialog";
 import CreativeCard from "@/src/CreativeCard";
 import CreativeDeleteDialog from "@/src/CreativeDeleteDialog";
+import RenameDialog from "@/src/RenameDialog";
 export default function Creatives(props) {
   const { setLoading, company, setAlert, loading } = useContextProvider();
   const [creatives, setCreatives] = useState([]);
@@ -41,7 +42,7 @@ export default function Creatives(props) {
   const [selectedCreative, setSelectedCreative] = useState();
   const [openDeleteCreative, setOpenDeleteCreative] = useState(false);
   const [openViewDialog, setOpenViewDialog] = useState(false);
-
+  const [openRename, setOpenRename] = useState(false);
   const handleChangeLayout = (type) => {
     setLayout(type);
   };
@@ -149,6 +150,7 @@ export default function Creatives(props) {
   const handleFileUpload = async (e) => {
     setUploadLoading(true);
     const file = e.target.files[0];
+    if (!file) return;
     const type = file?.type;
     const acceptFileFormat = [
       "image/jpeg",
@@ -215,6 +217,13 @@ export default function Creatives(props) {
         open={openDeleteCreative}
         setOpen={setOpenDeleteCreative}
         selectedCreative={selectedCreative}
+        setCreatives={setCreatives}
+        creatives={creatives}
+      />
+      <RenameDialog 
+        open={openRename}
+        setOpen={setOpenRename}
+        item={selectedCreative}
         setCreatives={setCreatives}
         creatives={creatives}
       />
@@ -291,6 +300,7 @@ export default function Creatives(props) {
                     setOpenDeleteCreative={setOpenDeleteCreative}
                     setSelectedCreative={setSelectedCreative}
                     setOpenViewDialog={setOpenViewDialog}
+                    setOpenRenameDialog={setOpenRename}
                   />
                 </Grid>
               ))}
@@ -319,7 +329,7 @@ export default function Creatives(props) {
           )}
         </Box>
       )}
-      {(!loading && creatives.length == 0 && !uploadLoading) && (
+      {!loading && creatives.length == 0 && !uploadLoading && (
         <Box
           sx={{
             mt: 2,

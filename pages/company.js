@@ -29,8 +29,11 @@ import {
   updateData,
   uploadCompanyLogo,
 } from "../src/firebase-func";
+import { Controller, useForm } from "react-hook-form";
+import { bytesToMegaBytes } from "@/src/common";
 export default function Company(props) {
-  const { user, alert, setAlert, loading, setLoading } = useContextProvider();
+  const { company, user, alert, setAlert, loading, setLoading } =
+    useContextProvider();
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -38,7 +41,23 @@ export default function Company(props) {
     industryType: "itsv",
     photo: {},
   });
-  const company = user?.profile?.company;
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isDirty },
+    reset,
+    setValue,
+    getValues,
+  } = useForm({
+    defaultValues: {
+      name: "",
+      description: "",
+      companySize: "",
+      industryType: "",
+      photo: {},
+    },
+  });
 
   const handleFormData = (e, id) => {
     setFormData({
@@ -46,6 +65,79 @@ export default function Company(props) {
       [id]: e.target.value,
     });
   };
+
+  const formFields = [
+    {
+      id: "name",
+      Controller: {
+        name: "name",
+        rules: {
+          required: "Please fill in your company name.",
+        },
+      },
+      Field: {
+        label: "Company name",
+        required: true,
+      },
+    },
+    {
+      id: "description",
+      Controller: {
+        name: "description",
+        rules: {
+          required: "Please fill in a basic description about your company",
+        },
+      },
+      Field: {
+        label: "Company description",
+        multiline: true,
+        rows: 4,
+      },
+    },
+    {
+      id: "companySize",
+      type: "select",
+      Controller: {
+        name: "companySize",
+        rules: {
+          required: "Please select your company size",
+        },
+      },
+      Field: {
+        label: "Company size",
+        options: [
+          {
+            label: "1-2",
+            value: "1-2",
+          },
+          {
+            label: "3-5",
+            value: "3-5",
+          },
+          {
+            label: "6-10",
+            value: "6-10",
+          },
+          {
+            label: "11-20",
+            value: "11-20",
+          },
+          {
+            label: "21-50",
+            value: "21-50",
+          },
+          {
+            label: "51-100",
+            value: "51-100",
+          },
+          {
+            label: "more than 100",
+            value: "more than 100",
+          },
+        ],
+      },
+    },
+  ];
 
   const forms = [
     {
@@ -100,6 +192,7 @@ export default function Company(props) {
       }
       // success, update company formData
       if (result?.exists()) {
+        reset(result?.data());
         setFormData(result?.data());
       }
       setLoading(false);
@@ -110,6 +203,38 @@ export default function Company(props) {
     e.preventDefault();
     setLoading(true);
     const file = e.target.files[0];
+    if (!file) return;
+
+    const acceptFileFormat = [
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+      "image/gif",
+    ];
+    const type = file?.type;
+    const size = bytesToMegaBytes(file?.size);
+
+    // check if file size is more than 1mb
+    if (size > 1) {
+      setAlert({
+        open: true,
+        message: "File size is too big, please upload a smaller size logo",
+        status: "error",
+      });
+      setLoading(false);
+      return;
+    }
+
+    if (!acceptFileFormat.includes(type)) {
+      setAlert({
+        open: true,
+        message: `File format ${type} is not supported`,
+        status: "error",
+      });
+      setLoading(false);
+      return;
+    }
+
     const { result, error, downloadUrl } = await uploadCompanyLogo(
       company.id,
       file
@@ -129,21 +254,26 @@ export default function Company(props) {
         status: "success",
         message: "Company logo successfully updated!",
       });
-      setFormData({
-        ...formData,
-        photo: {
-          ...formData?.photo,
-          url: downloadUrl,
-        },
+      // get the current photo object values first
+      const photoObj = getValues("photo");
+      setValue("photo", {
+        ...photoObj,
+        url: downloadUrl,
       });
     }
 
     setLoading(false);
   };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const { name, description, industryType, companySize } = formData;
+  const getLogo = () => {
+    const photo = getValues("photo");
+    if (photo?.url) {
+      return photo?.url;
+    }
+    return undefined;
+  };
+  const onSubmit = async (data) => {
+    // e.preventDefault();
+    const { name, description, industryType, companySize } = data;
     if (!name || !description || !industryType || !companySize) {
       setAlert({
         status: "error",
@@ -154,11 +284,7 @@ export default function Company(props) {
     }
     // success
     setLoading(true);
-    const { result, error } = await updateData(
-      "companies",
-      company?.id,
-      formData
-    );
+    const { result, error } = await updateData("companies", company?.id, data);
     if (error) {
       setLoading(false);
       setAlert({
@@ -168,12 +294,13 @@ export default function Company(props) {
       });
       return;
     }
-    // success 
+    // success
     setAlert({
-      open:true,
-      status: 'success',
-      message: 'Company profile successfully updated!'
-    })
+      open: true,
+      status: "success",
+      message: "Company profile successfully updated!",
+    });
+    reset(data);
 
     setLoading(false);
   };
@@ -184,7 +311,7 @@ export default function Company(props) {
 
   useEffect(() => {
     fetchCompanyProfile();
-  }, [user]);
+  }, [company]);
 
   return (
     <Box>
@@ -213,60 +340,115 @@ export default function Company(props) {
           >
             <Stack spacing={4}>
               <Typography variant="h5">Company logo</Typography>
-              <Grid
-                container
-                spacing={1}
-                alignItems="center"
-                sx={{
-                  mx: 0,
-                }}
-              >
-                <Grid item md={6} xs={12}>
-                  <Card sx={{ width: "100%" }}>
-                    <CardContent>
-                      <Box
-                        sx={{
-                          position: "relative",
-                          width: "100%",
-                          height: "60px",
-                        }}
-                      >
-                        {formData?.photo?.url && (
-                          <img src={formData?.photo?.url} style={{
-                            width: '100%',
-                            height:'100%',
-                            objectFit:'contain'
-                          }} />
-                        )}
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
+              <Box>
                 <Grid
-                  item
-                  xs={12}
-                  md={6}
+                  container
+                  spacing={1}
+                  alignItems="center"
                   sx={{
-                    textAlign: "center",
+                    mx: 0,
                   }}
                 >
-                  {company?.userType == "admin" && (
-                    <Button variant="outlined" component={"label"}>
-                      Upload new logo
-                      <input
-                        type={"file"}
-                        id="upload-logo"
-                        style={{
-                          display: "none",
+                  <Grid item flexGrow={0} xs={"auto"}>
+                    <Card
+                      sx={{
+                        ".MuiCardContent-root:last-child": { pb: 0 },
+                      }}
+                    >
+                      <CardContent
+                        sx={{
+                          pb: 0,
                         }}
-                        onChange={handleUploadLogo}
-                      />
-                    </Button>
-                  )}
-                </Grid>
-              </Grid>{" "}
-              <Stack spacing={4} component={"form"} onSubmit={handleSubmit}>
-                {forms.map((item, index) =>
+                      >
+                        <Box
+                          sx={{
+                            position: "relative",
+                            // width: "100%",
+                            height: "60px",
+                            width: "60px",
+                          }}
+                        >
+                          {getLogo() && (
+                            <img
+                              src={getLogo()}
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "contain",
+                              }}
+                            />
+                          )}
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    {company?.userType == "admin" && (
+                      <>
+                        <Button
+                          variant="outlined"
+                          component={"label"}
+                          sx={{ mb: 1 }}
+                        >
+                          Upload new logo
+                          <input
+                            type={"file"}
+                            id="upload-logo"
+                            accept={".jpg,.jpeg,.png, .webp"}
+                            style={{
+                              display: "none",
+                            }}
+                            onChange={handleUploadLogo}
+                          />
+                        </Button>
+                        <Typography
+                          variant="caption"
+                          display="flex"
+                          flexWrap={"wrap"}
+                          flexGrow={0}
+                        >
+                          Recommended size : 1MB (60x60)
+                        </Typography>
+                      </>
+                    )}
+                  </Grid>
+                </Grid>{" "}
+              </Box>
+              <Stack
+                spacing={4}
+                component={"form"}
+                onSubmit={handleSubmit(onSubmit)}
+                noValidate
+              >
+                {formFields.map((item, index) => (
+                  <Controller
+                    key={index}
+                    control={control}
+                    {...item?.Controller}
+                    render={({ field }) =>
+                      item?.type != "select" ? (
+                        <TextField
+                          {...field}
+                          {...item?.Field}
+                          error={errors[item?.id]}
+                          helperText={errors[item?.id]?.message}
+                        />
+                      ) : (
+                        <FormControl>
+                          <InputLabel>{item?.Field?.label}</InputLabel>
+                          <Select {...field} {...item?.Field}>
+                            {item?.Field?.options?.map((i, k) => (
+                              <MenuItem key={k} value={i.value}>
+                                {i.label}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      )
+                    }
+                  />
+                ))}
+                {/* {forms.map((item, index) =>
                   item?.type == "select" ? (
                     <FormControl>
                       <InputLabel id={`${item.id}-select`}>
@@ -296,9 +478,14 @@ export default function Company(props) {
                       }}
                     />
                   )
-                )}
+                )} */}
                 {user?.profile?.company?.userType == "admin" ? (
-                  <Button type="submit" variant="contained" size="large">
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    size="large"
+                    disabled={!isDirty}
+                  >
                     Save
                   </Button>
                 ) : (
@@ -316,4 +503,4 @@ export default function Company(props) {
   );
 }
 
-Company.getLayout = (page) => <AuthLayout>{page}</AuthLayout>
+Company.getLayout = (page) => <AuthLayout>{page}</AuthLayout>;

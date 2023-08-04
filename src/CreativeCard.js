@@ -21,16 +21,19 @@ import {
   MoreVertOutlined,
 } from "@mui/icons-material";
 import { bytesToMegaBytes } from "./common";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { red } from "@mui/material/colors";
 export default function CreativeCard({
   item,
   setSelectedCreative,
   setOpenDeleteCreative,
   setOpenViewDialog,
+  setOpenRenameDialog
 }) {
   const [anchorEl, setAnchorEl] = useState();
   const open = Boolean(anchorEl);
+
+  const titleRef = useRef();
 
   const handleCloseMenu = () => {
     setAnchorEl();
@@ -70,7 +73,11 @@ export default function CreativeCard({
     setSelectedCreative(item);
     setOpenDeleteCreative(true);
   };
-
+  const handleRename = () => {
+    setAnchorEl();
+    setSelectedCreative(item);
+    setOpenRenameDialog(true);
+  };
   return (
     <Card
       sx={{
@@ -98,6 +105,7 @@ export default function CreativeCard({
         }}
         onClose={handleCloseMenu}
       >
+        <MenuItem onClick={() => handleRename()}>Rename</MenuItem>
         <MenuItem onClick={() => handleDownloadFile(item)}>
           Download file
         </MenuItem>
@@ -106,7 +114,18 @@ export default function CreativeCard({
         </MenuItem>
       </Menu>
       <CardHeader
-        title={item?.name}
+        title={
+          <Typography
+            ref={titleRef}
+            sx={{
+              textOverflow: "ellipsis",
+              display: "block",
+              overflow: "hidden",
+            }}
+          >
+            {item?.name}
+          </Typography>
+        }
         subheader={item?.uploadedBy}
         action={
           <IconButton onClick={handleClickMenu}>

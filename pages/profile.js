@@ -29,14 +29,24 @@ import {
 import VerifyCredentials from "../src/VerifyCredentials";
 import ChangePasswordDialog from "../src/ChangePasswordDialog";
 import { bytesToMegaBytes } from "../src/common";
+import { Controller, useForm } from "react-hook-form";
 export default function Profile(props) {
   const { setLoading, user, setAlert, setUser } = useContextProvider();
-  const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: user?.email || "",
-    address: "",
-    postal: "",
+
+  // update to use react-hook-form instead
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isDirty },
+    reset,
+  } = useForm({
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: user?.email || "",
+      address: "",
+      postal: "",
+    },
   });
 
   const [successCredential, setSuccessCredentials] = useState({
@@ -86,9 +96,9 @@ export default function Profile(props) {
     });
   };
 
-  const handleSubmitProfile = async (e) => {
-    e.preventDefault();
-    if (!form?.firstName || !form?.lastName || !form?.address) {
+  const onSubmit = async (data) => {
+    const { firstName, lastName, address } = data;
+    if (!firstName || !lastName || !address) {
       // update data
       setAlert({
         open: true,
@@ -99,7 +109,7 @@ export default function Profile(props) {
     }
     setLoading(true);
     // update profile
-    const { result, error } = await updateData("users", user?.uid, form);
+    const { result, error } = await updateData("users", user?.uid, data);
     if (error) {
       setAlert({
         open: true,
@@ -115,57 +125,57 @@ export default function Profile(props) {
       status: "success",
       message: "User profile has been updated!",
     });
-    // update current User profile 
+    // update current User profile
     setUser({
       ...user,
       profile: {
         ...user?.profile,
-        ...form
-      }
-    })
+        ...data,
+      },
+    });
     setLoading(false);
   };
 
-  // upload avatar 
+
+  // upload avatar
   const handleUploadAvatar = async (e) => {
     const file = e.target.files[0];
     const size = bytesToMegaBytes(file.size);
     if (size > 1) {
       setAlert({
         open: true,
-        message: 'File size is too big, please upload a smaller size avatar',
-        status: 'error',
-      })
+        message: "File size is too big, please upload a smaller size avatar",
+        status: "error",
+      });
       return;
-    };
+    }
     setLoading(true);
     const { result, error, downloadUrl } = await uploadAvatar(user?.uid, file);
     if (error) {
       setAlert({
         open: true,
         message: error.message,
-        status: 'error'
+        status: "error",
       });
       setLoading(false);
       return;
     }
 
     setLoading(false);
-    // success ! 
+    // success !
     setAlert({
       open: true,
-      status: 'success',
-      message: 'Avatar uploaded successfully!'
-    })
+      status: "success",
+      message: "Avatar uploaded successfully!",
+    });
     setUser({
       ...user,
       profile: {
         ...user?.profile,
-        avatar: downloadUrl
-      }
+        avatar: downloadUrl,
+      },
     });
-
-  }
+  };
 
   const handleChangeEmail = (e) => {
     e.preventDefault();
@@ -212,37 +222,63 @@ export default function Profile(props) {
     }, 3000);
   };
 
-  const formData = [
+  const formFields = [
     {
-      label: "First name",
       id: "firstName",
-      type: "text",
-      required: true,
+      Controller: {
+        name: "firstName",
+        rules: {
+          required: "Please fill in your first name.",
+        },
+      },
+      Field: {
+        label: "First name",
+        required: true,
+      },
     },
     {
-      label: "Last name",
       id: "lastName",
-      type: "text",
-      required: true,
+      Controller: {
+        name: "lastName",
+        rules: {
+          required: "Please fill in your last name.",
+        },
+      },
+      Field: {
+        label: "Last name",
+        required: true,
+      },
     },
     {
-      label: "Address",
       id: "address",
-      type: "text",
-      required: true,
+      Controller: {
+        name: "address",
+        rules: {
+          required: "Please fill in your address.",
+        },
+      },
+      Field: {
+        label: "Address",
+        multline: true,
+        rows: 3,
+        required: true,
+      },
     },
     {
-      label: "Postal Code",
       id: "postal",
-      type: "text",
+      Controller: {
+        name: "postal",
+      },
+      Field: {
+        label: "Postal code",
+      },
     },
   ];
 
   const updateFormData = () => {
     if (user?.profile) {
       const profile = user?.profile;
-      setForm({
-        ...form,
+      reset({
         firstName: profile?.firstName,
         lastName: profile?.lastName,
         address: profile?.address,
@@ -252,7 +288,7 @@ export default function Profile(props) {
   };
 
   useEffect(() => {
-    updateFormData()
+    updateFormData();
   }, []);
 
   useEffect(() => {
@@ -301,42 +337,75 @@ export default function Profile(props) {
             },
           }}
         >
-          <CardContent sx={{
-            p: {
-              md: 4
-            }
-          }}>
+          <CardContent
+            sx={{
+              p: {
+                md: 4,
+              },
+            }}
+          >
             <Typography variant="h4" gutterBottom>
               Profile
             </Typography>
-            <Box sx={{
-              mb: 4,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 2,
-              flexWrap: 'wrap'
-            }}>
-              <Avatar src={user?.profile?.avatar || undefined} size='large' sx={{
-                height: 120,
-                width: 120
-              }} />
+            <Box
+              sx={{
+                mb: 4,
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+                flexWrap: "wrap",
+              }}
+            >
+              <Avatar
+                src={user?.profile?.avatar || undefined}
+                size="large"
+                sx={{
+                  height: 120,
+                  width: 120,
+                }}
+              />
               <Box>
-                <Button component={'label'} variant='outlined'>
+                <Button component={"label"} variant="outlined">
                   Upload avatar
-                  <input type='file' accept=".jpg, .jpeg, .png" style={{ display: 'none' }} onChange={handleUploadAvatar} />
+                  <input
+                    type="file"
+                    accept=".jpg, .jpeg, .png"
+                    style={{ display: "none" }}
+                    onChange={handleUploadAvatar}
+                  />
                 </Button>
                 <FormHelperText>Max size: 1mb</FormHelperText>
               </Box>
             </Box>
-            <Box component={"form"} onSubmit={handleSubmitProfile}>
+            <Box
+              component={"form"}
+              onSubmit={handleSubmit(onSubmit)}
+              noValidate
+            >
               <Box>
-                <Stack spacing={4}>
-                  {formData?.map((item, index) => (
+                <Stack spacing={2}>
+                  {/* {formData?.map((item, index) => (
                     <TextField
                       key={index}
                       {...item}
                       value={form[item?.id]}
                       onChange={(e) => updateForm(item?.id, e.target.value)}
+                    />
+                  ))} */}
+                  {formFields.map((item, index) => (
+                    <Controller
+                      key={index}
+                      control={control}
+                      {...item.Controller}
+                      render={({ field }) => (
+                        <TextField
+                          fullWidth
+                          {...field}
+                          {...item.Field}
+                          error={errors[item?.id]}
+                          helperText={errors[item?.id]?.message}
+                        />
+                      )}
                     />
                   ))}
                 </Stack>
@@ -347,6 +416,7 @@ export default function Profile(props) {
                 sx={{ mt: 4 }}
                 size="large"
                 type="submit"
+                disabled={!isDirty}
               >
                 Update
               </Button>
@@ -364,11 +434,13 @@ export default function Profile(props) {
             },
           }}
         >
-          <CardContent sx={{
-            p: {
-              md: 4
-            }
-          }}>
+          <CardContent
+            sx={{
+              p: {
+                md: 4,
+              },
+            }}
+          >
             <Typography variant="h4" gutterBottom>
               Login settings
             </Typography>
@@ -419,4 +491,4 @@ export default function Profile(props) {
   );
 }
 
-Profile.getLayout = (page) => <AuthLayout>{page}</AuthLayout>
+Profile.getLayout = (page) => <AuthLayout>{page}</AuthLayout>;
