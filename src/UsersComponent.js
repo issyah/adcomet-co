@@ -1,7 +1,7 @@
 /**
  * On the users page, we can manage current users that are available that can access the page
  **/
-import AuthLayout from "../src/layout/AuthLayout";
+import AuthLayout from "./layout/AuthLayout";
 import {
   Typography,
   Box,
@@ -20,18 +20,18 @@ import {
   Avatar,
 } from "@mui/material";
 import { useContextProvider } from "../context/ContextProvider";
-import { getUsersInCompany } from "../src/firebase-func";
+import { getUsersInCompany } from "./firebase-func";
 import { useEffect, useState } from "react";
-import DataGrid from "../src/DataGrid";
+import DataGrid from "./DataGrid";
 import MenuIcon from "@mui/icons-material/Menu";
 import { DeleteOutline } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
 import moment from "moment";
 import { Timestamp } from "firebase/firestore";
-import UserDrawerEditDetail from "../src/UserDrawerEditDetail";
-import AddNewUserDialog from "../src/AddNewUserDialog";
-import DeleteUserDialog from "../src/DeleteUserDialog";
-export default function Users(props) {
+import UserDrawerEditDetail from "./UserDrawerEditDetail";
+import AddNewUserDialog from "./AddNewUserDialog";
+import DeleteUserDialog from "./DeleteUserDialog";
+export default function UsersComponent(props) {
   const [users, setUsers] = useState([]);
   const { loading, setLoading, company, setAlert } = useContextProvider();
   // menu dropdown
@@ -292,5 +292,3 @@ export default function Users(props) {
     </Box>
   );
 }
-
-Users.getLayout = (page) => <AuthLayout>{page}</AuthLayout>

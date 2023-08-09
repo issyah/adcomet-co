@@ -114,7 +114,7 @@ export default function AuthLayout(props) {
             },
             ml: {
               lg: `${width}px`,
-              md: "a",
+              md: "auto",
             },
             bgcolor: "#FFF",
           }}

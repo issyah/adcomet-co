@@ -17,7 +17,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import AuthLayout from "../src/layout/AuthLayout";
+import AuthLayout from "./layout/AuthLayout";
 import IndustryJson from "../src/json/industry.json";
 import Image from "next/image";
 import { useContextProvider } from "../context/ContextProvider";
@@ -28,10 +28,10 @@ import {
   getData,
   updateData,
   uploadCompanyLogo,
-} from "../src/firebase-func";
+} from "./firebase-func";
 import { Controller, useForm } from "react-hook-form";
 import { bytesToMegaBytes } from "@/src/common";
-export default function Company(props) {
+export default function CompanyComponent(props) {
   const { company, user, alert, setAlert, loading, setLoading } =
     useContextProvider();
   const [formData, setFormData] = useState({
@@ -369,13 +369,10 @@ export default function Company(props) {
                   <Grid item flexGrow={0} xs={"auto"}>
                     <Card
                       sx={{
-                        ".MuiCardContent-root:last-child": { pb: 0 },
+                        ".MuiCardContent-root:last-child": { pb: 1 },
                       }}
                     >
                       <CardContent
-                        sx={{
-                          pb: 0,
-                        }}
                       >
                         <Box
                           sx={{
@@ -520,4 +517,3 @@ export default function Company(props) {
   );
 }
 
-Company.getLayout = (page) => <AuthLayout>{page}</AuthLayout>;

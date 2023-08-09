@@ -9,6 +9,8 @@ import {
   Box,
   ListItemButton,
   ListItemIcon,
+  Chip,
+  Stack,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -17,7 +19,8 @@ import Logo from "../public/logo-white.png";
 import Link from "next/link";
 export default function MainDrawer(props) {
   const router = useRouter();
-  const { list, drawerWidth, mobileOpen, setMobileOpen, children } = props;
+  const { list, drawerWidth, mobileOpen, setMobileOpen, children, isOwner } =
+    props;
   const [variant, setVariant] = useState("permanent");
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -81,8 +84,22 @@ export default function MainDrawer(props) {
           }}
         >
           <ListItem sx={{ mb: 4 }}>
-            <Box position="relative" width={"100%"} height={45} px={3}>
-              <Image src={Logo} fill className="img-responsive" />
+            <Box
+              display="flex"
+              flexDirection="column"
+              gap={0.5}
+              sx={{ width: "100%" }}
+            >
+              <Box position="relative" width={"100%"} height={45} px={3}>
+                <Image src={Logo} fill className="img-responsive" />
+              </Box>
+              <Box textAlign={"center"}>
+                <Chip
+                  sx={{ color: "grey.100" }}
+                  label={isOwner ? "Owner platform" : "Advertiser platform"}
+                  variant="outlined"
+                />
+              </Box>
             </Box>
           </ListItem>
           {list.map((item, index) => (

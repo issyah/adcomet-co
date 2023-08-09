@@ -107,8 +107,8 @@ const handleRedirectAuth = (token) => {
   const { role } = result;
   if (role == "advertiser") {
     return "/ad/dashboard";
-  } else if (role == "owner") {
-    return "/owner/dashboard";
+  } else if (role == "adspace") {
+    return "/ad-space/dashboard";
   }
 };
 

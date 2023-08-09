@@ -19,7 +19,7 @@ import Link from "next/link";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import { BusinessCenterOutlined, Group } from "@mui/icons-material";
 export default function AvatarDropdown(props) {
-  const { list } = props;
+  const { list, isAdSpace } = props;
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const { user } = useContextProvider();
@@ -44,33 +44,37 @@ export default function AvatarDropdown(props) {
     }
   };
 
+  const urlPath = () => {
+    return isAdSpace ? "/ad-space/" : "/ad/";
+  };
+
   const menuList = [
     {
       label: "Profile",
       icon: <PermIdentityIcon />,
       attributes: {
-        href: "/profile",
+        href: urlPath() + "/profile",
         component: Link,
-        onClick: handleClose
+        onClick: handleClose,
       },
     },
     {
       label: "Company",
       icon: <BusinessCenterOutlined />,
       attributes: {
-        href: "/company",
+        href: urlPath() + "/company",
         component: Link,
-        onClick: handleClose
+        onClick: handleClose,
       },
     },
     {
-     label: 'Users',
-     icon: <Group />,
-     attributes: {
-      href: '/users',
-      component: Link,
-      onClick: handleClose
-     } 
+      label: "Users",
+      icon: <Group />,
+      attributes: {
+        href: urlPath() + "/users",
+        component: Link,
+        onClick: handleClose,
+      },
     },
     {
       label: "Sign out",
@@ -102,7 +106,7 @@ export default function AvatarDropdown(props) {
               }}
               src={user?.profile?.avatar || undefined}
             >
-              {(!user?.avatar && email) ? email[0] : "A"}
+              {!user?.avatar && email ? email[0] : "A"}
             </Avatar>
           </IconButton>
         </Tooltip>
@@ -133,7 +137,7 @@ export default function AvatarDropdown(props) {
         </Box>
         <Divider sx={{ my: 1 }} />
         {menuList.map((item, index) => (
-          <MenuItem key={index} {...item?.attributes} >
+          <MenuItem key={index} {...item?.attributes}>
             <Box display={"flex"} gap={1}>
               {item?.icon}
               <Typography>{item?.label}</Typography>

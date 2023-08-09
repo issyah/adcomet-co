@@ -16,21 +16,21 @@ import {
   Avatar,
   FormHelperText,
 } from "@mui/material";
-import AuthLayout from "../src/layout/AuthLayout";
+import AuthLayout from "@/src/layout/AuthLayout";
 import { useEffect, useState } from "react";
-import { useContextProvider } from "../context/ContextProvider";
+import { useContextProvider } from "@/context/ContextProvider";
 import {
   getProfile,
   updateData,
   handleConfirmChangeEmail,
   handleSignOut,
   uploadAvatar,
-} from "../src/firebase-func";
-import VerifyCredentials from "../src/VerifyCredentials";
-import ChangePasswordDialog from "../src/ChangePasswordDialog";
-import { bytesToMegaBytes } from "../src/common";
+} from "@/src/firebase-func";
+import VerifyCredentials from "@/src/VerifyCredentials";
+import ChangePasswordDialog from "@/src/ChangePasswordDialog";
+import { bytesToMegaBytes } from "@/src/common";
 import { Controller, useForm } from "react-hook-form";
-export default function Profile(props) {
+export default function ProfileComponent(props) {
   const { setLoading, user, setAlert, setUser } = useContextProvider();
 
   // update to use react-hook-form instead
@@ -135,7 +135,6 @@ export default function Profile(props) {
     });
     setLoading(false);
   };
-
 
   // upload avatar
   const handleUploadAvatar = async (e) => {
@@ -490,5 +489,3 @@ export default function Profile(props) {
     </Box>
   );
 }
-
-Profile.getLayout = (page) => <AuthLayout>{page}</AuthLayout>;
