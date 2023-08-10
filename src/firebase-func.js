@@ -499,3 +499,35 @@ export const handleSignOut = async () => {
     error,
   };
 };
+
+// export const getCreativesByCompany = async (id) => {
+//   const collectionCreatives = collection(db, "creatives");
+//   let result, error;
+//   try {
+//     const q = query(collectionCreatives, where("company", "==", id));
+//     result = await getDocs(q);
+//   } catch (e) {
+//     error = e;
+//   }
+//   return {
+//     result,
+//     error,
+//   };
+// };
+
+// get locations by company Id 
+export const getLocationsByCompany = async (id) => {
+  const collectionLocations = collection(db, 'locations');
+  let result, error = null;
+  try {
+    const q = query(collectionLocations, where("companyId", "==", id));
+    result = await getDocs(q);
+  } catch (error) {
+    error = e;
+  }
+
+  return {
+    result,
+    error
+  }
+}

@@ -9,7 +9,6 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  Menu,
   Stack,
   Snackbar,
   Alert,
@@ -23,7 +22,8 @@ import Head from "next/head";
 import moment from "moment";
 import AvatarDropdown from "../AvatarDropdown";
 import MainDrawer from "../MainDrawer";
-import { HomeOutlined } from "@mui/icons-material";
+import { HomeOutlined, MailOutlineOutlined, Tv } from "@mui/icons-material";
+import { Menu } from "@mui/icons-material";
 export default function AuthOwnerLayout({ children }) {
   const router = useRouter();
   const { accessToken, setLoading, loading, alert, setAlert } =
@@ -88,6 +88,7 @@ export default function AuthOwnerLayout({ children }) {
               {moment().format("dddd, Do MMM YY")}
             </Typography>
             <IconButton
+              onClick={() => setShowDrawer(!showDrawer)}
               sx={{
                 display: {
                   xs: "block",
@@ -113,6 +114,16 @@ export default function AuthOwnerLayout({ children }) {
               icon: <HomeOutlined />,
               href: "/ad-space/dashboard",
             },
+            {
+              label: "Campaigns",
+              icon: <MailOutlineOutlined/>,
+              href: '/ad-space/campaigns',
+            },
+            {
+              label: "Ads Space",
+              icon: <Tv />,
+              href: '/ad-space/locations'
+            }
           ]}
           mobileOpen={showDrawer}
           setMobileOpen={setShowDrawer}

@@ -25,7 +25,11 @@ import serviceAccount from '../adcommet-907a4-firebase-adminsdk-7mupt-9da5cb6a53
 if (!admin.apps.length) {
   try {
     admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
+      credential: admin.credential.cert({
+        ...serviceAccount,
+        private_key: process.env.FIREBASE_ADMIN_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        private_key_id: process.env.FIREBASE_ADMIN_PRIVATE_KEY_ID
+      }),
       projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
       storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
     });

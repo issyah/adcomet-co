@@ -22,17 +22,19 @@ export default async function handler(req, res) {
   const authorization = req.headers["authorization"];
   const { result: r, error } = handlePermission(authorization, "companyRole", [
     "admin",
+    "owner"
   ]);
   if (error) {
     return res.status(400).json({
       message: error,
     });
   }
-  const { role, companyId } = r;
+  const { role, companyId, companyRole } = r;
   const { firstName, lastName, email, password, designation } = JSON.parse(
     req.body
   );
 
+  console.log(role);
   if (!firstName || !lastName || !email || !password || !designation) {
     return res.status(400).json({
       message: "Missing required fields",
@@ -46,6 +48,7 @@ export default async function handler(req, res) {
       password,
       displayName: `${firstName} ${lastName}`,
       emailVerified: false,
+      role: role
     });
   } catch (e) {
     return res.status(400).json({
@@ -64,7 +67,7 @@ export default async function handler(req, res) {
       id: companyId,
       userType: "user",
     },
-    role: "advertiser",
+    role: role,
     uid: result.uid,
   };
   try {

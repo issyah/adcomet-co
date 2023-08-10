@@ -397,7 +397,7 @@ export default function CompanyComponent(props) {
                     </Card>
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    {company?.userType == "admin" && (
+                    {company?.userType != "user" && (
                       <>
                         <Button
                           variant="outlined"
@@ -493,7 +493,7 @@ export default function CompanyComponent(props) {
                     />
                   )
                 )} */}
-                {user?.profile?.company?.userType == "admin" ? (
+                {user?.profile?.company?.userType != "user" ? (
                   <Button
                     type="submit"
                     variant="contained"

@@ -18,7 +18,8 @@ import {
 import { useContext, useState } from "react";
 import { useContextProvider } from "../context/ContextProvider";
 import { createNewUser } from "./firebase-func";
-
+import { Controller, useForm } from "react-hook-form";
+import { regexEmail } from "./common";
 export default function AddNewUserDialog(props) {
   const { open, setOpen, setUsers, users } = props;
   const { user, setAlert, accessToken } = useContextProvider();
@@ -33,38 +34,131 @@ export default function AddNewUserDialog(props) {
     // postal: "",
   });
 
+  const { control, formState: { errors, isDirty }, handleSubmit, reset } = useForm({
+    defaultValues: {
+      email: "",
+      firstName: "",
+      lastName: "",
+      password: "",
+      designation: ""
+    }
+  });
+
   const handleUpdateFormData = (id, e) => {
     setFormData({
       ...formData,
       [id]: e.target.value,
     });
   };
+
   const formFields = [
     {
-      label: "Designation",
-      value: formData?.designation,
-      onChange: (e) => handleUpdateFormData('designation', e),
-      required: true,
+      md: 6,
+      xs: 12,
+      id: 'firstName',
+      Controller: {
+        name: 'firstName',
+        rules: {
+          required: "Please fill in the first name"
+        }
+      },
+      Field: {
+        label: "First name"
+      }
     },
     {
-      label: "Email address",
-      value: formData?.email,
-      onChange: (e) => handleUpdateFormData("email", e),
-      required: true,
-      type: "email",
+      md: 6,
+      xs: 12,
+      id: 'lastName',
+      Controller: {
+        name: 'lastName',
+        rules: {
+          required: "Please fill in the last name"
+        }
+      },
+      Field: {
+        label: 'Last name'
+      }
     },
     {
-      label: "Set password",
-      value: formData?.password,
-      onChange: (e) => handleUpdateFormData("password", e),
-      type: "password",
-      required: true,
+      md: 6,
+      xs: 12,
+      id: 'designation',
+      Controller: {
+        name: 'designation',
+        rules: {
+          required: "Please fill in the designation field",
+        }
+      },
+      Field: {
+        label: "Designation",
+      }
     },
-  ];
+    {
+      md: 6,
+      xs: 12,
+      id: 'email',
+      Controller: {
+        name: 'email',
+        rules: {
+          required: "Please fill in the email address",
+          pattern: {
+            value: regexEmail(),
+            message: "Please enter a valid email address"
+          }
+        }
+      },
+      Field: {
+        label: "Email address",
+      }
+    },
+    {
+      md: 12,
+      xs: 12,
+      id: 'password',
+      Controller: {
+        name: 'password',
+        rules: {
+          required: "Please fill in the password",
+          min: {
+            value: 8,
+            message: "The password must be at least 8 characters long"
+          }
+        }
+      },
+      Field: {
+        label: "Password",
+        type: 'password',
+        helperText: "Passwords should be at least 8 characters long"
+      }
+    }
+  ]
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const { firstName, lastName, password, email, designation } = formData;
+  // const formFields = [
+  //   {
+  //     label: "Designation",
+  //     value: formData?.designation,
+  //     onChange: (e) => handleUpdateFormData('designation', e),
+  //     required: true,
+  //   },
+  //   {
+  //     label: "Email address",
+  //     value: formData?.email,
+  //     onChange: (e) => handleUpdateFormData("email", e),
+  //     required: true,
+  //     type: "email",
+  //   },
+  //   {
+  //     label: "Set password",
+  //     value: formData?.password,
+  //     onChange: (e) => handleUpdateFormData("password", e),
+  //     type: "password",
+  //     required: true,
+  //   },
+  // ];
+
+  const onSubmit = async (data) => {
+    const { firstName, lastName, password, email, designation } = data;
     if (!firstName || !lastName || !password || !email || !designation) {
       setAlert({
         open: true,
@@ -77,17 +171,17 @@ export default function AddNewUserDialog(props) {
     // const { result, error, newUser } = await createNewUser(email, formData);
     const res = await fetch('/api/users/create-user', {
       method: "POST",
-      body: JSON.stringify(formData),
+      body: JSON.stringify(data),
       headers: {
         authorization: `Bearer ${accessToken}`
       }
     });
-    const result = await res.json(); 
+    const result = await res.json();
     if (!res.ok) {
       setAlert({
         message: result.message,
         status: 'error',
-        open:true
+        open: true
       });
       setLoading(false);
       return;
@@ -106,6 +200,7 @@ export default function AddNewUserDialog(props) {
     ]);
     setLoading(false);
     setOpen(false);
+    reset();
   };
 
 
@@ -113,6 +208,7 @@ export default function AddNewUserDialog(props) {
 
   const handleClose = () => {
     setOpen(false);
+    reset();
   };
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -134,8 +230,8 @@ export default function AddNewUserDialog(props) {
           Add a new user on the dashboard to allow them to create and manage
           campaigns.
         </Typography>
-        <Box component={"form"} onSubmit={handleSubmit}>
-          <Grid container sx={{ mt: 2 }} spacing={2}>
+        <Box component={"form"} onSubmit={handleSubmit(onSubmit)}>
+          {/* <Grid container sx={{ mt: 2 }} spacing={2}>
             <Grid item md={6}>
               <TextField
                 fullWidth
@@ -159,15 +255,23 @@ export default function AddNewUserDialog(props) {
                 required
               />
             </Grid>
-          </Grid>
-          <Stack spacing={2} sx={{ mt: 2 }}>
+          </Grid> */}
+          <Grid container spacing={2} sx={{ mt: 2 }}>
             {formFields.map((item, index) => (
-              <TextField key={index} {...item} />
+              <Grid item md={item?.md} xs={item?.xs} key={index}>
+                <Controller
+                  control={control}
+                  {...item?.Controller}
+                  render={({ field }) =>
+                    <TextField {...field} {...item?.Field} fullWidth error={errors[item?.id]} helperText={errors[item?.id]?.message} />
+                  }
+                />
+              </Grid>
             ))}
-            <Button variant="contained" size="large" type="submit" startIcon={loading && <CircularProgress color='inherit' size={16} />}>
-              Add user
-            </Button>
-          </Stack>
+            <Grid item xs={12}>
+              <Button fullWidth variant='contained' type="submit" size='large' disabled={!isDirty} startIcon={loading && <CircularProgress color='inherit' size={16} />}>Submit</Button>
+            </Grid>
+          </Grid>
         </Box>
       </DialogContent>
     </Dialog>

@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     });
   };
   const authorization = req.headers['authorization'];
-  const { error, result } = handlePermission(authorization, "companyRole", ['admin']);
+  const { error, result } = handlePermission(authorization, "companyRole", ['admin', "owner"]);
   if (error) {
     return res.status(400).json({
       message: error,
@@ -45,7 +45,12 @@ export default async function handler(req, res) {
 
   // delete avatar as well from storage to save space 
   try {
-    const avatarRef = await storage.bucket().file(`avatars/${id}`).delete();
+    storage.bucket().file(`avatars/${id}`).exists().then((exists) => {
+      if (exists[0]) {
+        storage.bucket().file(`avatars/${id}`).delete();
+      }
+    });
+    // const avatarRef = await storage.bucket().file(`avatars/${id}`).delete();
   } catch (error) {
     return res.status(400).json({
       message: error.message,

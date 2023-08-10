@@ -153,7 +153,7 @@ export default function UsersComponent(props) {
       render: (userType) => (
         <Chip
           label={userType}
-          color={userType == "admin" ? "primary" : "default"}
+          color={(userType != "user" )? "primary" : "default"}
           variant="contained"
           size="small"
           sx={{
@@ -167,7 +167,7 @@ export default function UsersComponent(props) {
       label: "",
       id: "id",
       render: (id) =>
-        company?.userType == "admin" && (
+        company?.userType != "user" && (
           <IconButton onClick={(e) => handleMenuAnchor(e, id)}>
             <MenuIcon />
           </IconButton>
@@ -237,13 +237,13 @@ export default function UsersComponent(props) {
           mt: 4,
         }}
       >
-        {company?.userType !== "admin" && (
+        {company?.userType == "user" && (
           <Alert severity="info">
             Only admin / user who registered <b>{company?.name}</b> can manage
             users and add new user.
           </Alert>
         )}
-        {company?.userType == "admin" && (
+        {company?.userType != "user" && (
           <Button
             variant="contained"
             onClick={() => handleMenuAction("add-user")}
@@ -264,7 +264,7 @@ export default function UsersComponent(props) {
           </Box>
         </Card>
         {/* menu options */}
-        {company?.userType == "admin" && (
+        {company?.userType !== "user" && (
           <Menu
             anchorEl={anchorEl}
             open={open}

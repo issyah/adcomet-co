@@ -105,7 +105,8 @@ export default function MainDrawer(props) {
           {list.map((item, index) => (
             <ListItem key={index} disablePadding>
               <ListItemButton
-                selected={router.pathname == item?.href}
+                selected={router.pathname.includes(item?.href)}
+                // selected={router.pathname == item?.href}
                 component={Link}
                 href={item?.href}
                 onClick={handleDrawerToggle}

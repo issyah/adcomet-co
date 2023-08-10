@@ -52,7 +52,7 @@ export default function Navbar() {
     //   color: 'inherit'
     // },
     {
-      ...(user !== null || user
+      ...(accessToken !== null || accessToken
         ? {
           label: "Back to account",
           href: accessToken
