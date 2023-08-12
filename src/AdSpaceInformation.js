@@ -24,12 +24,12 @@ export const AdSpaceInformation = ({
   errors,
   formState,
   handleSubmit,
+  setTab
 }) => {
   const { isValid, isDirty } = formState;
   const [loading, setLoading] = useState(false);
   const onSubmit = async (data) => {
-    setLoading(true);
-    console.log(data);
+    setTab('media')
   };
 
   return (
