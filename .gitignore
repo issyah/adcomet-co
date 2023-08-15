@@ -2,3 +2,5 @@
 .DS_Store
 /.next
 .env
+/.vscode
+.vscode

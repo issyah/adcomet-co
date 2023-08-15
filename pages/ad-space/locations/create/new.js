@@ -22,7 +22,7 @@ import AdSpaceMedia from "@/src/AdSpaceMedia";
 import AdSpacePricing from "@/src/AdSpacePricing";
 const Create = () => {
   const router = useRouter();
-  const [tab, setTab] = useState("information");
+  const [tab, setTab] = useState("map");
   const {
     control,
     handleSubmit,
@@ -352,7 +352,7 @@ const Create = () => {
                     </Grid>
                   ))}
                 </Grid>
-                {watchPrice[0] && 
+                {watchPrice[0]?.value && 
                   <Typography variant='h6'>
                     From: ${watchPrice[0].value} for {watchPrice[0].unit} {watchPrice[0].metric}
                   </Typography>
