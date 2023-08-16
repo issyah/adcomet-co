@@ -7,3 +7,22 @@ html {
   max-width:100%;
   object-fit: contain;
 }
+
+.pac-container{
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 5px 22px, rgba(0, 0, 0, 0.03) 0px 0px 0px 0.5px;
+  font-family: 'Roboto';
+  font-size: 1rem;
+}
+
+.pac-item {
+  padding: 4px 8px;
+}
+
+.pac-item > .pac-icon {
+  display: none;
+}
+
+.pac-logo:after{
+  padding: 2px 4px;
+}

@@ -91,5 +91,25 @@
             }
         ],
         "tests": []
+    },
+    {
+        "_id": "e26080cc-1445-485e-b934-d94aa34da662",
+        "colId": "history",
+        "containerId": "",
+        "name": "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Canberra ",
+        "url": "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Canberra ",
+        "method": "GET",
+        "sortNum": 0,
+        "created": "2023-08-15T14:45:17.938Z",
+        "modified": "2023-08-15T14:45:17.938Z",
+        "headers": [],
+        "params": [
+            {
+                "name": "input",
+                "value": "Canberra",
+                "isPath": false
+            }
+        ],
+        "tests": []
     }
 ]

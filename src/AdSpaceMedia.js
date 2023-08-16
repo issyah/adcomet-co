@@ -1,20 +1,21 @@
 /**
- * Upload media For ad space 
-**/
+ * Upload media For ad space
+ **/
 
 import { useContextProvider } from "@/context/ContextProvider";
 import { Photo } from "@mui/icons-material";
-import { Card, CardContent, Typography, Button, Box, Grid } from "@mui/material";
-import { useState } from 'react';
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Box,
+  Grid,
+} from "@mui/material";
+import { useState } from "react";
 import { bytesToMegaBytes } from "./common";
 
-const AdSpaceMedia = ({
-  files,
-  setFiles,
-  setTab
-}) => {
-
-
+const AdSpaceMedia = ({ files, setFiles, setTab }) => {
   const { setAlert } = useContextProvider();
   const [loading, setLoading] = useState(false);
   const handleFileUpload = async (e) => {
@@ -33,7 +34,7 @@ const AdSpaceMedia = ({
       setAlert({
         open: true,
         message: "Image size is too big. Please upload a smaller size image.",
-        status: 'error'
+        status: "error",
       });
       return;
     }
@@ -42,8 +43,8 @@ const AdSpaceMedia = ({
       setAlert({
         open: true,
         message: `File format ${type} is not supported.`,
-        status: "error"
-      })
+        status: "error",
+      });
       return;
     }
     const img = URL.createObjectURL(file);
@@ -52,55 +53,77 @@ const AdSpaceMedia = ({
       src: img,
     };
 
-    setFiles([
-      ...files,
-      obj
-    ]);
-
-
+    setFiles([...files, obj]);
   };
   return (
     <Card>
       <CardContent>
-        <Typography variant='h4'>Upload Media</Typography>
-        <Typography>Upload at least one image for the ad space for advertisers to view.</Typography>
+        <Typography variant="h4">Upload Media</Typography>
+        <Typography>
+          Upload at least one image for the ad space for advertisers to view.
+        </Typography>
         <Box mt={2}>
-          <Typography variant='body2'>{files.length} / 4</Typography>
+          <Typography variant="body2">{files.length} / 4</Typography>
           <Grid container spacing={2}>
             {!!files &&
               files.map((item, index) => (
                 <Grid item md={6} xs={12} key={index}>
-                  <Box sx={{
-                    'img': {
-                      width: '100%',
-                      height: '160px',
-                      objectFit: 'cover',
-                      borderRadius: 1,
-                    }
-                  }}>
+                  <Box
+                    sx={{
+                      img: {
+                        width: "100%",
+                        height: "160px",
+                        objectFit: "cover",
+                        borderRadius: 1,
+                      },
+                    }}
+                  >
                     <img src={item.src} alt={`Media-${index}`} />
                   </Box>
                 </Grid>
-              ))
-            }
-            {files.length < 4 &&
+              ))}
+            {files.length < 4 && (
               <Grid item md={6} xs={12}>
-                <Button fullWidth sx={{
-                  height: '160px'
-                }} variant='outlined' component='label'>
+                <Button
+                  fullWidth
+                  sx={{
+                    height: "160px",
+                  }}
+                  variant="outlined"
+                  component="label"
+                >
                   <Photo />
-                  <input name={`uploadMedia`} accept=".jpeg,.jpg,.png,.gif" onChange={handleFileUpload} type='file' style={{ display: 'none' }} />
+                  <input
+                    name={`uploadMedia`}
+                    accept=".jpeg,.jpg,.png,.gif"
+                    onChange={handleFileUpload}
+                    type="file"
+                    style={{ display: "none" }}
+                  />
                 </Button>
               </Grid>
-            }
+            )}
           </Grid>
         </Box>
-        <Typography variant='caption'>File size not more than 2MB.</Typography>
-        <Button onClick={() => setTab('pricing')} disabled={files.length == 0} variant='contained' fullWidth sx={{ mt: 2 }}>Continue</Button>
+        <Typography variant="caption">File size not more than 2MB.</Typography>
+        <Grid container spacing={2} sx={{ mt: 2 }}>
+          <Grid item xs="12" md={"2"}>
+            <Button onClick={() => setTab('information')}>Go back</Button>
+          </Grid>
+          <Grid item xs="12" md="10">
+            <Button
+              onClick={() => setTab("pricing")}
+              disabled={files.length == 0}
+              variant="contained"
+              fullWidth
+            >
+              Continue
+            </Button>
+          </Grid>
+        </Grid>
       </CardContent>
     </Card>
-  )
-}
-
+  );
+};
 
 export default AdSpaceMedia;

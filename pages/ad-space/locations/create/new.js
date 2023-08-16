@@ -9,46 +9,68 @@ import {
   CardContent,
   Chip,
   Grid,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
   Typography,
 } from "@mui/material";
 import Link from "@/src/Link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { AdSpaceInformation } from "@/src/AdSpaceInformation";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { ArrowBackIos } from "@mui/icons-material";
+import {
+  ArrowBackIos,
+  AttachMoneyOutlined,
+  PreviewOutlined,
+} from "@mui/icons-material";
 import { useRouter } from "next/router";
-import TargetAudience from "@/src/json/target-audience.json";
 import AdSpaceMedia from "@/src/AdSpaceMedia";
 import AdSpacePricing from "@/src/AdSpacePricing";
+import AdSpaceLocation from "@/src/AdSpaceLocation";
+import { Wrapper } from "@googlemaps/react-wrapper";
+import MapComponent from "@/src/MapComponent";
+import { formatNumber } from "@/src/common";
 const Create = () => {
   const router = useRouter();
-  const [tab, setTab] = useState("map");
+  const [tab, setTab] = useState("location");
+  const [marker, setMarker] = useState(null);
+  const [reRenderAutocomplete, setReRenderAutocomplete] = useState(0);
   const {
     control,
     handleSubmit,
     formState: { isDirty, isValid, errors },
     watch,
+    setValue,
   } = useForm({
     defaultValues: {
       name: "",
       description: "",
       orientation: "landscape",
-      demographic: [],
       width: "",
       height: "",
-      test: "",
-      price: [{
-        value: "",
-        metric: "",
-        unit: "",
-      }],
+      price: [
+        {
+          value: "",
+          metric: "",
+          unit: "",
+        },
+      ],
+      address: "",
+      location: {},
+      demographics: [],
+      landmarks: "",
+      impressions: "",
+      malePercentage: 50,
+      femalePercentage: 50,
     },
   });
+  const autoCompleteRef = useRef();
   const [files, setFiles] = useState([]);
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'price',
-  })
+    name: "price",
+  });
 
   const renderDescription = () => {
     const description = watch("description");
@@ -75,172 +97,36 @@ const Create = () => {
       id: "location",
     },
   ];
+  const watchPrice = watch("price");
 
-  const informationFormFields = [
-    {
-      id: "name",
-      Controller: {
-        name: "name",
-        rules: {
-          required: "Please fill in the name.",
-        },
-      },
-      Field: {
-        label: "Name",
-        placeholder: "Example: Block 2, level 2 beside Lift lobby A",
-      },
+  const defaultMapProps = {
+    center: {
+      lat: 1.3562738,
+      lng: 103.8156335,
     },
-    {
-      id: "description",
-      Controller: {
-        name: "description",
-        rules: {
-          required: "Please fill in the description of the location",
-        },
-      },
-      Field: {
-        label: "Description",
-        multiline: true,
-        rows: 4,
-      },
-    },
-    // {
-    //   id: "demographic",
-    //   type: "autocomplete",
-    //   Controller: {
-    //     name: "demographic",
-    //     rules: {
-    //       required: "Please select at least one demographic",
-    //     },
-    //   },
-    //   Field: {
-    //     label: "Target demographics",
-    //     options: TargetAudience.map((item) => ({
-    //       value: item.id,
-    //       label: item.label,
-    //     })),
-    //     getOptionLabel: (option) => option.label ?? option,
-    //   },
-    // },
-    {
-      md: 4,
-      xs: 12,
-      id: "orientation",
-      Controller: {
-        name: "orientation",
-        rules: {
-          required: "Please select one orientation",
-        },
-      },
-      type: "select",
-      Field: {
-        label: "Orientation",
-      },
-      options: [
-        {
-          label: "Landscape",
-          value: "landscape",
-        },
-        {
-          label: "Portrait",
-          value: "portrait",
-        },
-      ],
-    },
-    {
-      md: 4,
-      xs: 12,
-      id: "width",
-      Controller: {
-        name: "width",
-        rules: {
-          required: "Please fill in the width in px",
-          min: {
-            value: 2,
-            message: "The value of the width must be more than 1",
-          },
-        },
-      },
-      Field: {
-        label: "Width (px)",
-      },
-    },
-    {
-      md: 4,
-      xs: 12,
-      id: "height",
-      Controller: {
-        name: "height",
-        rules: {
-          required: "Please fill in the height in px",
-          min: {
-            value: 2,
-            message: "The value of the height must be more than 1",
-          },
-        },
-      },
-      Field: {
-        label: "Height (px)",
-      },
-    },
-  ];
+    zoom: 12,
+  };
 
-  // pricing fields 
-  // const pricingFields = [
-  //   {
-  //     md: 4,
-  //     xs: 12,
-  //     id: 'price.value',
-  //     Controller: {
-  //       name: 'price.value',
-  //       rules: {
-  //         required: "Please add a price",
-  //         min: {
-  //           value: 1,
-  //           required: "Please add more than 0 "
-  //         }
-  //       }
-  //     },
-  //     Field: {
-  //       label: 'Price',
-  //     }
-  //   },
-  //   {
-  //     md: 4,
-  //     xs: 12,
-  //     id: 'price.unit',
-  //     Controller: {
-  //       name: 'price.unit',
-  //       rules: {
-  //         required: 'Please add a unit',
-  //         min: {
-  //           value: 1,
-  //           required: "Please add a minimum of 1"
-  //         }
-  //       }
-  //     },
-  //     Field: {
-  //       label: 'Unit',
-  //     }
-  //   },
-  //   {
-  //     md: 4,
-  //     xs: 12,
-  //     id: 'price.metric',
-  //     Controller: {
-  //       name: 'price.metric',
-  //       rules: {
-  //         required: 'Please add a metric',
-  //       }
-  //     },
-  //     type: 'select',
-  //     Field: {
-  //       label: 'Metric',
-  //       options: ["sec", "hour", "day"]
-  //     }
-  //   }
-  // ]
-  const watchPrice = watch('price');
+  const handleAutoCompletePlace = (value) => {
+    if (value) {
+      // return the full address path;
+      setValue("address", value?.formatted_address);
+      if (value?.geometry) {
+        const location = {
+          lat: value?.geometry?.location?.lat(),
+          lng: value?.geometry?.location?.lng(),
+        };
+        setValue("location", location);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (tab == "location") {
+      setReRenderAutocomplete(reRenderAutocomplete + 1);
+    }
+  }, [tab]);
+
   return (
     <Box>
       <Button
@@ -263,6 +149,8 @@ const Create = () => {
               color={item.id == tab ? "primary.main" : undefined}
               key={index}
               fontWeight={item.id == tab ? "bold" : undefined}
+              sx={{ cursor: "pointer" }}
+              onClick={() => setTab(item.id)}
             >
               {item.label}
             </Typography>
@@ -271,10 +159,34 @@ const Create = () => {
       </Box>
       <Box mt={2}>
         <Grid spacing={2} container>
+          <Grid
+            item
+            md={12}
+            xs={12}
+            sx={{
+              display: tab == "location" ? "block" : "none",
+            }}
+          >
+            <Card>
+              <Wrapper
+                libraries={["places", "marker", "maps", "geometry"]}
+                apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API}
+              >
+                <MapComponent
+                  center={defaultMapProps.center}
+                  zoom={defaultMapProps.zoom}
+                  autoCompleteRef={autoCompleteRef}
+                  height={300}
+                  marker={marker}
+                  reRenderAutocomplete={reRenderAutocomplete}
+                  autoCompleteValue={handleAutoCompletePlace}
+                />
+              </Wrapper>
+            </Card>
+          </Grid>
           <Grid item md={6} xs={12}>
             {tab == "information" && (
               <AdSpaceInformation
-                formFields={informationFormFields}
                 control={control}
                 handleSubmit={handleSubmit}
                 errors={errors}
@@ -285,7 +197,7 @@ const Create = () => {
                 setTab={setTab}
               />
             )}
-            {tab == 'media' && (
+            {tab == "media" && (
               <AdSpaceMedia
                 control={control}
                 handleSubmit={handleSubmit}
@@ -294,7 +206,7 @@ const Create = () => {
                 setTab={setTab}
               />
             )}
-            {tab == 'pricing' && (
+            {tab == "pricing" && (
               <AdSpacePricing
                 fields={fields}
                 setTab={setTab}
@@ -305,29 +217,43 @@ const Create = () => {
                 remove={remove}
               />
             )}
+            {tab == "location" && (
+              <AdSpaceLocation
+                setTab={setTab}
+                control={control}
+                handleSubmit={handleSubmit}
+                errors={errors}
+                autoCompleteRef={autoCompleteRef}
+                isvalid={isValid}
+              />
+            )}
           </Grid>
           <Grid item md={6} xs={12}>
             <Card>
               <CardContent>
-                <Box height={200}>
-                  {!!files.length ?
-                    <Box sx={{
-                      'img': {
-                        height: '200px',
-                        width: '100%',
-                        objectFit: 'cover'
-                      }
-                    }}>
-                      <img src={files[0]?.src} alt={watch('name')} />
-                    </Box> : <img
+                <Box height={200} overflow="hidden" borderRadius={1}>
+                  {!!files.length ? (
+                    <Box
+                      sx={{
+                        img: {
+                          height: "200px",
+                          width: "100%",
+                          objectFit: "cover",
+                        },
+                      }}
+                    >
+                      <img src={files[0]?.src} alt={watch("name")} />
+                    </Box>
+                  ) : (
+                    <img
                       src={"https://placehold.co/600x200"}
                       style={{
                         height: 200,
-                        width: '100%',
-                        objectFit: 'cover'
+                        width: "100%",
+                        objectFit: "cover",
                       }}
                     />
-                  }
+                  )}
                 </Box>
                 <Typography
                   variant="h5"
@@ -340,9 +266,9 @@ const Create = () => {
                   {watch("name")}
                 </Typography>
                 <Typography>{renderDescription()}</Typography>
-            
+
                 <Grid container spacing={0.5} sx={{ mt: 1 }}>
-                  {watch("demographic")?.map((item) => (
+                  {watch("demographics")?.map((item) => (
                     <Grid key={item.label} xs="auto" item>
                       <Chip
                         variant="outlined"
@@ -352,15 +278,52 @@ const Create = () => {
                     </Grid>
                   ))}
                 </Grid>
-                {watchPrice[0]?.value && 
-                  <Typography variant='h6'>
-                    From: ${watchPrice[0].value} for {watchPrice[0].unit} {watchPrice[0].metric}
+                <List
+                  sx={{
+                    ".MuiListItemIcon-root": {
+                      minWidth: "32px",
+                    },
+                    ".MuiListItem-root": {
+                      px: 0,
+                      py: 0.5,
+                    },
+                  }}
+                >
+                  {watchPrice[0].value && (
+                    <ListItem>
+                      <ListItemIcon>
+                        <AttachMoneyOutlined color="primary" />
+                      </ListItemIcon>
+                      <ListItemText>
+                        From ${watchPrice[0].value} for {watchPrice[0].unit}{" "}
+                        {watchPrice[0].metric}
+                      </ListItemText>
+                    </ListItem>
+                  )}
+                  {watch("impressions") && (
+                    <ListItem>
+                      <ListItemIcon>
+                        <PreviewOutlined color="primary" />
+                      </ListItemIcon>
+                      <ListItemText>
+                        {formatNumber(watch("impressions"))} monthly views
+                      </ListItemText>
+                    </ListItem>
+                  )}
+                  
+                </List>
+                {/* {watchPrice[0]?.value && (
+                  <Typography variant={'body1'}>
+                    From: ${watchPrice[0].value} for {watchPrice[0].unit}{" "}
+                    {watchPrice[0].metric}
                   </Typography>
-                }
+                )} */}
               </CardContent>
             </Card>
-            <Box textAlign='center'>
-              <Typography variant="caption">Ad space listing preview</Typography>
+            <Box textAlign="center">
+              <Typography variant="caption">
+                Ad space listing preview
+              </Typography>
             </Box>
           </Grid>
         </Grid>

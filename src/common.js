@@ -42,8 +42,9 @@ const formatBytes = (a, b = 2) => {
   if (!+a) return "0 Bytes";
   const c = 0 > b ? 0 : b,
     d = Math.floor(Math.log(a) / Math.log(1024));
-  return `${parseFloat((a / Math.pow(1024, d)).toFixed(c))} ${["Bytes", "KB", "MB", "GB", "TB", "PiB", "EiB", "ZiB", "YiB"][d]
-    }`;
+  return `${parseFloat((a / Math.pow(1024, d)).toFixed(c))} ${
+    ["Bytes", "KB", "MB", "GB", "TB", "PiB", "EiB", "ZiB", "YiB"][d]
+  }`;
 };
 const bytesToMegaBytes = (bytes) => {
   if (bytes == 0) {
@@ -114,10 +115,20 @@ const handleRedirectAuth = (token) => {
 
 const regexEmail = () => {
   return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-}
+};
 const regexFullDomainPath = () => {
   return /^(https?:\/\/)?(www\.)?([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,})(:[0-9]+)?(\/[^?#]*)?(\?[^#]*)?(#.*)?$/;
-}
+};
+
+const debounce = (func, delay) => {
+  let timeoutId;
+  return (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+};
 
 export {
   formatNumber,
@@ -129,5 +140,6 @@ export {
   handlePermissionAuth,
   handleRedirectAuth,
   regexEmail,
-  regexFullDomainPath
+  regexFullDomainPath,
+  debounce,
 };
