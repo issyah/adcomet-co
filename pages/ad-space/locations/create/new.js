@@ -33,7 +33,7 @@ import MapComponent from "@/src/MapComponent";
 import { formatNumber } from "@/src/common";
 const Create = () => {
   const router = useRouter();
-  const [tab, setTab] = useState("location");
+  const [tab, setTab] = useState("information");
   const [marker, setMarker] = useState(null);
   const [reRenderAutocomplete, setReRenderAutocomplete] = useState(0);
   const {
