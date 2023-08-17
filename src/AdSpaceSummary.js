@@ -18,8 +18,13 @@ import {
   IconButton,
   CardActions,
   Button,
+  CircularProgress,
 } from "@mui/material";
 import { Edit } from "@mui/icons-material";
+import { useContextProvider } from "@/context/ContextProvider";
+import { useState } from "react";
+import { createAdSpaceLocation, UploadMediaForAdSpace } from "./firebase-func";
+import { useRouter } from "next/router";
 
 const AdSpaceSummary = ({
   data,
@@ -27,7 +32,15 @@ const AdSpaceSummary = ({
   handleSubmit,
   setViewImage,
   setTab,
+  readOnly,
 }) => {
+  const { company, setAlert, user } = useContextProvider();
+  const { email } = user;
+  const [loading, setLoading] = useState({
+    draft: false,
+    live: false,
+  });
+  const router = useRouter();
   const informationData = [
     {
       label: "Name",
@@ -112,11 +125,59 @@ const AdSpaceSummary = ({
     },
   ];
 
+  // handle the final upload. Add the companyId on the final upload
+  const onSubmit = async (type) => {
+    setLoading({
+      ...loading,
+      [type]: true,
+    });
+    // try to upload the doc first
+    const { result, error } = await createAdSpaceLocation({
+      ...data,
+      companyId: company.id,
+      status: type,
+      createdBy: email,
+    });
+
+    if (error) {
+      setAlert({
+        open: true,
+        status: "error",
+        message: error.message,
+      });
+      setLoading({
+        ...loading,
+        [type]: false,
+      });
+      return;
+    }
+    // success, get the id and save the images
+    UploadMediaForAdSpace(result.id, data?.name, files);
+    setAlert({
+      status: "success",
+      message:
+        type == "draft"
+          ? "Your Ad Space has been saved!"
+          : "Your Ad Space has been pushed live!",
+      open: true,
+    });
+    setLoading({
+      ...loading,
+      [type]: false,
+    });
+    // redirect to the page view id
+    router.push(`/adspace/locations/view?id=${result.id}`);
+  };
+
   return (
     <Card>
       <CardContent>
-        <Typography variant="h4">Ad Space Summary</Typography>
-        <Divider sx={{ my: 2 }} />
+        {!readOnly && (
+          <>
+            <Typography variant="h4">Ad Space Summary</Typography>
+            <Divider sx={{ my: 2 }} />
+          </>
+        )}
         <Box mt={1}>
           <Typography fontWeight="bold">Information</Typography>
           <Grid container spacing={2} sx={{ mt: 1 }}>
@@ -133,11 +194,13 @@ const AdSpaceSummary = ({
               </Grid>
             ))}
           </Grid>
-          <Box textAlign="right">
-            <IconButton onClick={() => setTab("information")}>
-              <Edit />
-            </IconButton>
-          </Box>
+          {!readOnly && (
+            <Box textAlign="right">
+              <IconButton onClick={() => setTab("information")}>
+                <Edit />
+              </IconButton>
+            </Box>
+          )}
         </Box>
         <Divider sx={{ my: 2 }} />
         <Box mt={2}>
@@ -168,11 +231,13 @@ const AdSpaceSummary = ({
               ))}
             </Grid>
           )}
-          <Box textAlign="right">
-            <IconButton onClick={() => setTab("media")}>
-              <Edit />
-            </IconButton>
-          </Box>
+          {!readOnly && (
+            <Box textAlign="right">
+              <IconButton onClick={() => setTab("media")}>
+                <Edit />
+              </IconButton>
+            </Box>
+          )}
         </Box>
         <Divider sx={{ my: 2 }} />
         <Box mt={2}>
@@ -191,11 +256,13 @@ const AdSpaceSummary = ({
               ))}
             </Box>
           )}
-          <Box textAlign="right">
-            <IconButton onClick={() => setTab("price")}>
-              <Edit />
-            </IconButton>
-          </Box>
+          {!readOnly && (
+            <Box textAlign="right">
+              <IconButton onClick={() => setTab("price")}>
+                <Edit />
+              </IconButton>
+            </Box>
+          )}
         </Box>
         <Divider sx={{ my: 2 }} />
         <Box mt={2}>
@@ -215,24 +282,48 @@ const AdSpaceSummary = ({
             ))}
           </Grid>
         </Box>
-        <Box textAlign="right">
-          <IconButton onClick={() => setTab("location")}>
-            <Edit />
-          </IconButton>
-        </Box>
-        <Divider sx={{ my: 2 }} />
-        <Grid container spacing={1} justifyContent="flex-end">
-          <Grid item md={"auto"} xs={6}>
-            <Button fullWidth variant="outlined">
-              Save as draft
-            </Button>
-          </Grid>
-          <Grid item md={"auto"} xs={6}>
-            <Button variant="contained" fullWidth>
-              Published live
-            </Button>
-          </Grid>
-        </Grid>
+        {!readOnly && (
+          <Box textAlign="right">
+            <IconButton onClick={() => setTab("location")}>
+              <Edit />
+            </IconButton>
+          </Box>
+        )}
+        {!readOnly && (
+          <>
+            <Divider sx={{ my: 2 }} />
+            <Grid container spacing={1} justifyContent="flex-end">
+              <Grid item md={"auto"} xs={6}>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  startIcon={
+                    loading.draft && (
+                      <CircularProgress color="inherit" size={16} />
+                    )
+                  }
+                  onClick={() => onSubmit("draft")}
+                >
+                  Save as draft
+                </Button>
+              </Grid>
+              <Grid item md={"auto"} xs={6}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={() => onSubmit("live")}
+                  startIcon={
+                    loading.live && (
+                      <CircularProgress color="inherit" size={16} />
+                    )
+                  }
+                >
+                  Published live
+                </Button>
+              </Grid>
+            </Grid>
+          </>
+        )}
       </CardContent>
     </Card>
   );

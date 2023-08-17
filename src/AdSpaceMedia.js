@@ -58,9 +58,7 @@ const AdSpaceMedia = ({ files, setFiles, setTab }) => {
   };
 
   const handleDeleteImage = (index) => {
-    console.log(index);
     let temp = files;
-    console.log(files);
     if (temp.length) {
       temp.splice(index, 1);
       setFiles([...temp]);

@@ -41,6 +41,7 @@ import {
   getStorage,
   ref,
   uploadBytes,
+  uploadBytesResumable,
   uploadString,
 } from "firebase/storage";
 import { bytesToMegaBytes } from "./common";
@@ -92,63 +93,6 @@ export const updateData = async (collection, id, data) => {
     error = e;
   }
   return {
-    result,
-    error,
-  };
-};
-
-export const createNewUser = async (email, data) => {
-  let result, error;
-  if (!email || !data) {
-    error = {
-      message: "Missing required fields.",
-    };
-    return { error };
-  }
-
-  const { password } = data;
-  // create the new user
-  try {
-    result = await auth.createUser({
-      email: email,
-      password: password,
-    });
-    // result = await createUserWithEmailAndPassword(auth, email, password);
-  } catch (e) {
-    error = e;
-    return {
-      error,
-    };
-  }
-  // successfully
-  const userCredential = result.user;
-  const uid = userCredential.uid;
-
-  // add to users collection
-  const userRef = collection(db, "users");
-  const userData = {
-    ...data,
-    id: uid,
-  };
-  try {
-    await addDoc(userRef, userData);
-  } catch (e) {
-    error = e;
-    return { error };
-  }
-
-  // send verification email to user
-  try {
-    await sendEmailVerification(userCredential);
-  } catch (e) {
-    error = e;
-    return {
-      error,
-    };
-  }
-  // return new user information
-  return {
-    newUser: userData,
     result,
     error,
   };
@@ -289,13 +233,14 @@ export const uploadCreatives = async (id, file, thumbnail) => {
   if (thumbnailUrl) {
     data["thumbUrl"] = thumbnailUrl;
     data["thumbPath"] = thumbnailPath;
-    data["size"] = data["size"] + bytesToMegaBytes(thumbnailResult?.metadata?.size)
+    data["size"] =
+      data["size"] + bytesToMegaBytes(thumbnailResult?.metadata?.size);
   }
   batch.set(creativeRef, data);
   // lastly add the storage size to the company page
   const companyRef = doc(db, "companies", id);
   batch.update(companyRef, {
-    "creativeStorage.currentSize": increment(data['size']),
+    "creativeStorage.currentSize": increment(data["size"]),
   });
   try {
     await batch.commit();
@@ -500,25 +445,11 @@ export const handleSignOut = async () => {
   };
 };
 
-// export const getCreativesByCompany = async (id) => {
-//   const collectionCreatives = collection(db, "creatives");
-//   let result, error;
-//   try {
-//     const q = query(collectionCreatives, where("company", "==", id));
-//     result = await getDocs(q);
-//   } catch (e) {
-//     error = e;
-//   }
-//   return {
-//     result,
-//     error,
-//   };
-// };
-
-// get locations by company Id 
+// get locations by company Id
 export const getLocationsByCompany = async (id) => {
-  const collectionLocations = collection(db, 'locations');
-  let result, error = null;
+  const collectionLocations = collection(db, "locations");
+  let result,
+    error = null;
   try {
     const q = query(collectionLocations, where("companyId", "==", id));
     result = await getDocs(q);
@@ -528,6 +459,89 @@ export const getLocationsByCompany = async (id) => {
 
   return {
     result,
-    error
+    error,
+  };
+};
+
+/**
+ * Store the adspace location details into adspace collections
+ * 1. We need to split the name into an array nameIndex
+ **/
+export const createAdSpaceLocation = async (data) => {
+  const { name, companyId } = data;
+  const nameArray = name.split(" ");
+  let docRef, error, companyRef, companyData;
+  try {
+    const cRef = doc(db, "companies", companyId);
+    companyRef = await getDoc(cRef);
+    companyData = companyRef.exists() ? companyRef.data() : {};
+  } catch (e) {
+    return {
+      error: e,
+    };
   }
-}
+  try {
+    docRef = await addDoc(collection(db, "adspaces"), {
+      ...data,
+      nameArray: nameArray,
+      created: Timestamp.fromDate(new Date()),
+    });
+  } catch (e) {
+    return {
+      error: e,
+    };
+  }
+  // success,
+  return {
+    result: docRef,
+    error,
+  };
+};
+
+/**
+ * Upload media for adspace */
+
+export const UploadMediaForAdSpace = async (id, name, files) => {
+  // use docRef ID to store media
+  // build the downloadUrl here
+  let media = [];
+  if (files.length) {
+    files.forEach((item, index) => {
+      const file = item.file;
+      const path = `adspaces/${id}/${name}-${index}`;
+      const storeRef = ref(storage, path);
+      const uploadTask = uploadBytesResumable(storeRef, file);
+      // let media = [];
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {},
+        (error) => {
+          return {
+            error,
+          };
+        },
+        () => {
+          // success, save to media array
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+            media.push({
+              path: path,
+              src: downloadUrl,
+              name: `${name}-${index}`,
+            });
+
+            // check if all media has been uploaded
+            if (media.length == files.length) {
+              // update the doc with media object
+              const batch = writeBatch(db);
+              const docRef = doc(db, "adspaces", id);
+              batch.update(docRef, {
+                media: media,
+              });
+              batch.commit();
+            }
+          });
+        }
+      );
+    });
+  }
+};

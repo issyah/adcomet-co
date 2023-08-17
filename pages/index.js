@@ -361,7 +361,7 @@ export default function Index() {
       </Box>
       <Box bgcolor={"secondary.main"} py={10}>
         <Container
-          maxWidgh="lg"
+          maxWidth="lg"
           sx={{
             color: "#FFF",
             textAlign: "center",

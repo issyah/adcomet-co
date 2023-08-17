@@ -17,7 +17,6 @@ import {
 } from "@mui/material";
 import { useContext, useState } from "react";
 import { useContextProvider } from "../context/ContextProvider";
-import { createNewUser } from "./firebase-func";
 import { Controller, useForm } from "react-hook-form";
 import { regexEmail } from "./common";
 export default function AddNewUserDialog(props) {

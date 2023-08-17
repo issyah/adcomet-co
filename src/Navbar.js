@@ -125,7 +125,7 @@ export default function Navbar() {
               }}
             >
               {navArr.map((item, index) => (
-                <Button component={Link} {...item}>
+                <Button component={Link} {...item} key={index}>
                   {item?.label}
                 </Button>
               ))}

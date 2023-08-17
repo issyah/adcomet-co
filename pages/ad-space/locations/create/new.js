@@ -108,7 +108,7 @@ const Create = () => {
     {
       label: "Summary",
       id: "summary",
-      disabled: !! Object.keys(errors).length,
+      disabled: !isValid,
     },
   ];
   const watchPrice = watch("price");
