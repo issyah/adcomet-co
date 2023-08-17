@@ -40,15 +40,6 @@ const AdSpaceLocation = ({
   isValid,
 }) => {
   const formFields = [
-    // {
-    //   xs: 12,
-    //   md: 12,
-    //   id: "address",
-    //   type: "autocomplete",
-    //   Controller: {
-    //     name: "address",
-    //   },
-    // },
     {
       xs: 12,
       md: 12,
@@ -91,28 +82,7 @@ const AdSpaceLocation = ({
         label: "Estimated gender ratio impressions",
       },
     },
-    // {
-    //   xs: 12,
-    //   md: 6,
-    //   id: "femalePercentage",
-    //   Controller: {
-    //     name: "femalePercentage",
-    //     rules: {
-    //       required: "Please set an average % of male impressions",
-    //       pattern: {
-    //         value: /^[0-9]*$/,
-    //         message: "Please enter a number",
-    //       },
-    //     },
-    //   },
-    //   Field: {
-    //     label: "Estimated Female impression rates",
-    //     type: "number",
-    //     InputProps: {
-    //       endAdornment: <InputAdornment position="end">%</InputAdornment>,
-    //     },
-    //   },
-    // },
+
     {
       xs: 12,
       md: 12,
@@ -151,8 +121,7 @@ const AdSpaceLocation = ({
   ];
 
   const onSubmit = async (data) => {
-    console.log(data);
-    console.log(errors);
+    setTab("summary");
   };
 
   return (
@@ -241,7 +210,7 @@ const AdSpaceLocation = ({
                           {item.Field.label}
                         </Typography>
                         <Stack spacing={1} direction="row">
-                          <Man2Outlined />
+                          <Man2Outlined color="primary" />
                           <Slider
                             {...field}
                             {...item.Field}
@@ -255,7 +224,7 @@ const AdSpaceLocation = ({
                               </Box>
                             )}
                           />
-                          <Woman2Outlined />
+                          <Woman2Outlined color="primary" />
                         </Stack>
                       </FormControl>
                     ) : (

@@ -160,8 +160,10 @@ export const AdSpaceInformation = ({
                       <FormControl fullWidth>
                         <InputLabel>{item.Field.label}</InputLabel>
                         <Select fullWidth {...field} {...item.Field}>
-                          {item.options?.map((item) => (
-                            <MenuItem value={item.value}>{item.label}</MenuItem>
+                          {item.options?.map((item, i) => (
+                            <MenuItem key={i} value={item.value}>
+                              {item.label}
+                            </MenuItem>
                           ))}
                         </Select>
                         {item.Field?.helperText && (

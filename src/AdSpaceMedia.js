@@ -3,7 +3,7 @@
  **/
 
 import { useContextProvider } from "@/context/ContextProvider";
-import { Photo } from "@mui/icons-material";
+import { Delete, Photo } from "@mui/icons-material";
 import {
   Card,
   CardContent,
@@ -11,6 +11,7 @@ import {
   Button,
   Box,
   Grid,
+  IconButton,
 } from "@mui/material";
 import { useState } from "react";
 import { bytesToMegaBytes } from "./common";
@@ -52,9 +53,20 @@ const AdSpaceMedia = ({ files, setFiles, setTab }) => {
       file: file,
       src: img,
     };
-
+    e.target.value = "";
     setFiles([...files, obj]);
   };
+
+  const handleDeleteImage = (index) => {
+    console.log(index);
+    let temp = files;
+    console.log(files);
+    if (temp.length) {
+      temp.splice(index, 1);
+      setFiles([...temp]);
+    }
+  };
+
   return (
     <Card>
       <CardContent>
@@ -70,6 +82,7 @@ const AdSpaceMedia = ({ files, setFiles, setTab }) => {
                 <Grid item md={6} xs={12} key={index}>
                   <Box
                     sx={{
+                      position: "relative",
                       img: {
                         width: "100%",
                         height: "160px",
@@ -79,6 +92,18 @@ const AdSpaceMedia = ({ files, setFiles, setTab }) => {
                     }}
                   >
                     <img src={item.src} alt={`Media-${index}`} />
+                    <IconButton
+                      size="small"
+                      sx={{
+                        position: "absolute",
+                        top: "4px",
+                        right: "4px",
+                      }}
+                      onClick={() => handleDeleteImage(index)}
+                      title="Delete immage"
+                    >
+                      <Delete />
+                    </IconButton>
                   </Box>
                 </Grid>
               ))}
@@ -108,7 +133,7 @@ const AdSpaceMedia = ({ files, setFiles, setTab }) => {
         <Typography variant="caption">File size not more than 2MB.</Typography>
         <Grid container spacing={2} sx={{ mt: 2 }}>
           <Grid item xs="12" md={"2"}>
-            <Button onClick={() => setTab('information')}>Go back</Button>
+            <Button onClick={() => setTab("information")}>Go back</Button>
           </Grid>
           <Grid item xs="12" md="10">
             <Button
