@@ -70,10 +70,10 @@ export default function Creatives(props) {
     {
       label: "Created on",
       id: "created",
-      render: (created) => {
+      render: (item) => {
         return (
           <Typography variant="body2">
-            {moment(created).format("MMM DD, YYYY")}
+            {moment(item.created).format("MMM DD, YYYY")}
           </Typography>
         );
       },
@@ -81,7 +81,7 @@ export default function Creatives(props) {
     {
       label: "Size",
       id: "size",
-      render: (size) => <Typography>{size}MB</Typography>,
+      render: (item) => <Typography>{item.size}MB</Typography>,
     },
     {
       label: "Content-type",
@@ -90,14 +90,14 @@ export default function Creatives(props) {
     {
       label: "",
       id: "id",
-      render: (id) => (
+      render: (item) => (
         <Box display="flex" alignItems="center" gap={1}>
-          <Button onClick={() => handleTableAction(id, "view-creative")}>
+          <Button onClick={() => handleTableAction(item.id, "view-creative")}>
             View
           </Button>
           <IconButton
             color="error"
-            onClick={() => handleTableAction(id, "delete-creative")}
+            onClick={() => handleTableAction(item.id, "delete-creative")}
           >
             <Delete />
           </IconButton>

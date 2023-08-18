@@ -19,10 +19,10 @@ export default function CampaignTable() {
     {
       label: "Status",
       id: "status",
-      render: (status) => (
+      render: (item) => (
         <Chip
-          label={status}
-          color={setStatusColor(status)}
+          label={item.status}
+          color={setStatusColor(item.status)}
           variant="contained"
           size="small"
           sx={{ textTransform: "Capitalize" }}
@@ -32,7 +32,7 @@ export default function CampaignTable() {
     {
       label: "Amount spent",
       id: "price",
-      render: (price) => (isNaN(price) ? price : `$${formatNumber(price)}`),
+      render: (item) => (isNaN(item.price) ? item.price : `$${formatNumber(item.price)}`),
     },
     {
       label: "Location",
@@ -41,8 +41,8 @@ export default function CampaignTable() {
     {
       label: "",
       id: "id",
-      render: (id) => (
-        <Button size="small" onClick={() => router.push(`/ad/campaigns/${id}`)}>
+      render: (item) => (
+        <Button size="small" onClick={() => router.push(`/ad/campaigns/${item.id}`)}>
           View
         </Button>
       ),
@@ -66,10 +66,10 @@ export default function CampaignTable() {
     },
   ];
   return (
-    <Box sx={{overflowX: 'auto',}}>
+    <Box sx={{ overflowX: 'auto', }}>
       <Box sx={{
-        width:'100%',
-        display:"table",
+        width: '100%',
+        display: "table",
         tableLayout: 'fixed'
       }}>
         <DataGrid data={tableData} header={header} />

@@ -166,7 +166,7 @@ const AdSpaceSummary = ({
       [type]: false,
     });
     // redirect to the page view id
-    router.push(`/adspace/locations/view?id=${result.id}`);
+    router.push(`/ad-space/locations/view?id=${result.id}`);
   };
 
   return (

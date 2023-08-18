@@ -23,10 +23,10 @@ export default function DataGrid(props) {
         </TableRow>
       </TableHead>
       <TableBody>
-        {loading && 
+        {loading &&
           <TableRow>
             <TableCell colSpan={header?.length}>
-              <Skeleton variant="line"  />
+              <Skeleton variant="line" />
             </TableCell>
           </TableRow>
         }
@@ -35,7 +35,7 @@ export default function DataGrid(props) {
             <TableRow key={index}>
               {header?.map((h, i) => (
                 <TableCell key={i}>
-                  {h?.render ? h?.render(item[h?.id]) : item[h?.id]}
+                  {h?.render ? h?.render(item) : item[h?.id]}
                 </TableCell>
               ))}
             </TableRow>

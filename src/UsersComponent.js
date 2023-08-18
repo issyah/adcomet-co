@@ -112,8 +112,8 @@ export default function UsersComponent(props) {
     {
       label: 'Avatar',
       id: 'avatar',
-      render: (avatar) => (
-        <Avatar src={avatar || undefined} alt={'Avatar'}></Avatar>
+      render: (item) => (
+        <Avatar src={item.avatar || undefined} alt={'Avatar'}></Avatar>
       )
     },
     {
@@ -143,17 +143,17 @@ export default function UsersComponent(props) {
     {
       label: "Last seen",
       id: "lastSeen",
-      render: (value) => (
-        <Typography variant="caption">{moment(value).fromNow()}</Typography>
+      render: (item) => (
+        <Typography variant="caption">{moment(item.lastSeen).fromNow()}</Typography>
       ),
     },
     {
       label: "User type",
       id: "userType",
-      render: (userType) => (
+      render: (item) => (
         <Chip
-          label={userType}
-          color={(userType != "user" )? "primary" : "default"}
+          label={item.userType}
+          color={(item.userType != "user") ? "primary" : "default"}
           variant="contained"
           size="small"
           sx={{
@@ -166,9 +166,9 @@ export default function UsersComponent(props) {
     {
       label: "",
       id: "id",
-      render: (id) =>
+      render: (item) =>
         company?.userType != "user" && (
-          <IconButton onClick={(e) => handleMenuAnchor(e, id)}>
+          <IconButton onClick={(e) => handleMenuAnchor(e, item.id)}>
             <MenuIcon />
           </IconButton>
         ),
