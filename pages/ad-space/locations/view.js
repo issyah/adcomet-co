@@ -6,13 +6,17 @@ import { getData } from "@/src/firebase-func";
 import AuthOwnerLayout from "@/src/layout/AuthOwnerLayout";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
+import ImageViewDialog from "@/src/ImageViewDialog";
+import { ArrowBack } from "@mui/icons-material";
+import Link from "@/src/Link";
 const View = () => {
   const router = useRouter();
   const { id } = router.query;
   const [data, setData] = useState({});
   const [images, setImages] = useState([]);
   const { setAlert, setLoading } = useContextProvider();
+  const [viewImage, setViewImage] = useState();
   const fetchData = async () => {
     setLoading(true);
     const { result, error } = await getData("adspaces", id);
@@ -43,8 +47,15 @@ const View = () => {
   }, [router.isReady]);
   return (
     <Box>
+      <Button variant="contained" startIcon={<ArrowBack />} component={Link} href={'/ad-space/locations'}>Go back</Button>
       <Typography variant='h3' gutterBottom>{data.name}</Typography>
-      {data.name && <AdSpaceSummary readOnly data={data} files={images} />}
+      {data.name && <AdSpaceSummary setViewImage={setViewImage} readOnly data={data} files={images} />}
+      <ImageViewDialog
+        open={!!viewImage}
+        setOpen={setViewImage}
+        src={viewImage}
+        alt={data.name}
+      />
     </Box>
   );
 };

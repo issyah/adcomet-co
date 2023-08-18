@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 const jwtKey = process.env.NEXT_PUBLIC_JWT_KEY;
+import industryJson from '@/src/json/industry.json';
 const formatNumber = (number) => {
   if (isNaN(number)) {
     return number;
@@ -15,6 +16,15 @@ const formatNumberCompact = (number) => {
 
   return new Intl.NumberFormat("en", { notation: "compact" }).format(number);
 };
+
+
+const getIndustrylabel = (id) => {
+  const industry = industryJson.find((i) => i.id === id);
+  if (industry.label) {
+    return industry.label;
+  }
+  return undefined;
+}
 
 /**
  * set the color for the status of the campaign*/
@@ -42,9 +52,8 @@ const formatBytes = (a, b = 2) => {
   if (!+a) return "0 Bytes";
   const c = 0 > b ? 0 : b,
     d = Math.floor(Math.log(a) / Math.log(1024));
-  return `${parseFloat((a / Math.pow(1024, d)).toFixed(c))} ${
-    ["Bytes", "KB", "MB", "GB", "TB", "PiB", "EiB", "ZiB", "YiB"][d]
-  }`;
+  return `${parseFloat((a / Math.pow(1024, d)).toFixed(c))} ${["Bytes", "KB", "MB", "GB", "TB", "PiB", "EiB", "ZiB", "YiB"][d]
+    }`;
 };
 const bytesToMegaBytes = (bytes) => {
   if (bytes == 0) {
@@ -142,4 +151,5 @@ export {
   regexEmail,
   regexFullDomainPath,
   debounce,
+  getIndustrylabel
 };

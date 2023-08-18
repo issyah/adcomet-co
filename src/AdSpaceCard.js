@@ -1,39 +1,76 @@
 /**
  * Generate Adspace card for viewing of listing*/
 
-import { Card, CardActionArea, CardContent, CardHeader, CardMedia, Typography } from "@mui/material";
-
-
+import { BusinessOutlined, Circle, PinDropOutlined } from "@mui/icons-material";
+import { Card, CardContent, Grid, CardMedia, Stack, Typography, Button, Chip } from "@mui/material";
+import { getIndustrylabel } from "./common";
+import Link from "./Link";
 const AdSpaceCard = ({
   item
 }) => {
+  const splitAddress = () => {
+    if (item.address) {
+      return item.address.split(",");
+    }
+  }
+
   return (
-    <CardActionArea href={`/ad-space/locations/view/?id=${item.id}`}>
-      <Card sx={{
-        borderWidth: 1,
-        borderColor: 'transparent',
-        borderStyle: 'solid',
-        transition: '250ms ease-in border',
-        ':hover': {
-          borderColor: 'primary.main',
+    <Card sx={{
+      borderWidth: 1,
+      borderColor: 'transparent',
+      borderStyle: 'solid',
+      transition: '250ms ease-in border',
+    }}>
+      <CardContent>
+        {!!item.media?.length &&
+          <CardMedia
+            image={item.media[0].src}
+            alt={item.name}
+            sx={{
+              height: 140,
+              borderRadius: 1,
+            }}
+          />
         }
-      }}>
-        <CardContent>
-          {!!item.media?.length &&
-            <CardMedia
-              image={item.media[0].src}
-              alt={item.name}
-              sx={{
-                height: 140,
-                borderRadius: 0.5,
-              }}
-            />
+        <Chip
+          sx={{ my: 1, textTransform: 'capitalize', px: 1 }}
+          label={<Typography variant='caption'>&#9679; {item.status}</Typography>}
+          size="small"
+          color={item.status == 'live' ? 'success' : 'default'}
+        />
+        <Typography
+          fontWeight={'bold'}
+          sx={{
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden'
+          }}
+        >{item.name}</Typography>
+        <Typography sx={{ my: 1 }} variant='body2'>
+          {item.description}
+        </Typography>
+        <Stack spacing={0.5} direction={'row'} alignItems={'center'} sx={{
+          '.MuiSvgIcon-root': {
+            typography: 'body2'
+          },
+          '.MuiTypography-root': {
+            typography: 'body2'
           }
-          <Typography variant="h6" sx={{ mt: 1 }}>{item.name}</Typography>
-          
-        </CardContent>
-      </Card>
-    </CardActionArea>
+        }}>
+          <PinDropOutlined />
+          <Typography>{splitAddress()[0]}</Typography>
+        </Stack>
+        {/* <Grid container spacing={0.5}>
+          <Grid item xs='auto'>
+            <BusinessOutlined />
+          </Grid>
+          <Grid item xs={'auto'}>
+            {getIndustrylabel(item.company?.industryType)}
+          </Grid>
+        </Grid> */}
+        <Button component={Link} href={`/ad-space/locations/view/?id=${item.id}`} variant='outlined' fullWidth sx={{ mt: 2 }}>View detail</Button>
+      </CardContent>
+    </Card>
   )
 };
 

@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useContextProvider } from "@/context/ContextProvider";
 import DataGrid from "@/src/DataGrid";
 import Link from "@/src/Link";
-import { Man2Outlined, PinDropOutlined, Woman2Outlined } from "@mui/icons-material";
+import { Add, FolderOpenOutlined, Man2Outlined, PinDropOutlined, Woman2Outlined } from "@mui/icons-material";
 import { formatNumber } from "@/src/common";
 import AdSpaceCard from "@/src/AdSpaceCard";
 
@@ -134,13 +134,20 @@ export default function Location() {
 
   return (
     <Box>
-      <Typography variant='h3' fontWeight={900}>Ad Space Locations</Typography>
-      <Typography gutterBottom>Manage and add new ad location.</Typography>
-      <Button variant='contained' component={Link} href='/ad-space/locations/create'>Add Ad Space</Button>
-      <Grid container spacing={2} sx={{mt:2}}>
+      <Grid container spacing={2} justifyContent={'space-between'} alignItems={'center'}>
+        <Grid item md={'auto'} xs={12}>
+          <Typography variant='h3' fontWeight={900}>Ad Space Locations</Typography>
+          <Typography gutterBottom>Manage and add new ad location.</Typography>
+        </Grid>
+        <Grid item md={'auto'} xs={12}>
+          <Button startIcon={<Add />} variant='contained' component={Link} href='/ad-space/locations/create'>Add Ad Space</Button>
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={2} sx={{ mt: 2 }}>
         {!!loading &&
           [...new Array(3)].map((index) => (
-            <Grid item md={4} key={index}>
+            <Grid item lg={4} md={6} sm={6} xs={12} key={index}>
               <Card>
                 <CardContent>
                   <Skeleton variant="rectangular" height={180} />
@@ -151,7 +158,7 @@ export default function Location() {
         }
         {!!locations.length &&
           locations.map((item, index) => (
-            <Grid item md={4} key={index}>
+            <Grid item lg={4} md={6} sm={6} xs={12} key={index}>
               <AdSpaceCard
                 item={item}
               />
@@ -159,6 +166,15 @@ export default function Location() {
           ))
         }
       </Grid>
+      {!!!loading && !!!locations.length &&
+        <Card>
+          <CardContent>
+            <FolderOpenOutlined sx={{ fontSize: 32 }} />
+            <Typography variant='h6' gutterBottom>No ad space locations added.</Typography>
+            <Button component={Link} variant='outlined' href='/ad-space/locations/create' startIcon={<Add />}>Add Ad Space</Button>
+          </CardContent>
+        </Card>
+      }
       {/* <Card sx={{ mt: 2 }}>
         {loading ?
           <Box textAlign={'center'} p={2}>

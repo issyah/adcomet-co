@@ -93,6 +93,10 @@ const ContextProvider = ({ children }) => {
         setAccessToken(null);
         setUser(null);
         setCompany(null);
+        setStorage({
+          currentSize: 0,
+          maxSize: 0
+        })
       }
     });
 
@@ -105,6 +109,10 @@ const ContextProvider = ({ children }) => {
         doc(db, "companies", company?.id),
         (doc) => {
           if (doc.exists()) {
+            if (!doc.data().creativeStorage) {
+              unsubscribe();
+              return;
+            }
             setStorage(doc.data().creativeStorage);
           }
         }

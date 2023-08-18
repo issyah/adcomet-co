@@ -507,6 +507,7 @@ export const UploadMediaForAdSpace = async (id, name, files) => {
   // use docRef ID to store media
   // build the downloadUrl here
   let media = [];
+  
   if (files.length) {
     files.forEach((item, index) => {
       const file = item.file;
@@ -553,13 +554,29 @@ export const getAdSpacesByCompany = async (id) => {
   const collectionRef = collection(db, 'adspaces');
   let result, error;
   try {
-    console.log(id);
     const q = query(collectionRef, where("companyId", "==", id), orderBy('created', 'desc'), limit(25));
     result = await getDocs(q);
   } catch (e) {
     error = e;
   };
 
+  return {
+    result,
+    error
+  }
+}
+
+
+// get list of adspace that is live 
+export const getLiveAdSpaces = async (order) => {
+  const collectionRef = collection(db, "adspaces");
+  let result, error;
+  try {
+    const q = query(collectionRef, where("status", "==", "live"), orderBy(order, 'desc'), limit(25));
+    result = await getDocs(q);
+  } catch (e) {
+    error = e;
+  };
   return {
     result,
     error
