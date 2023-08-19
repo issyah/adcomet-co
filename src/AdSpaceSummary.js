@@ -152,21 +152,23 @@ const AdSpaceSummary = ({
       return;
     }
     // success, get the id and save the images
-    UploadMediaForAdSpace(result.id, data?.name, files);
-    setAlert({
-      status: "success",
-      message:
-        type == "draft"
-          ? "Your Ad Space has been saved!"
-          : "Your Ad Space has been pushed live!",
-      open: true,
-    });
-    setLoading({
-      ...loading,
-      [type]: false,
-    });
-    // redirect to the page view id
-    router.push(`/ad-space/locations/view?id=${result.id}`);
+    UploadMediaForAdSpace(result.id, data?.name, files).then(() => {
+      setAlert({
+        status: "success",
+        message:
+          type == "draft"
+            ? "Your Ad Space has been saved!"
+            : "Your Ad Space has been pushed live!",
+        open: true,
+      });
+      setLoading({
+        ...loading,
+        [type]: false,
+      });
+      // redirect to the page view id
+      router.push(`/ad-space/locations/`);
+    }).catch((err) => console.log(err));
+
   };
 
   return (

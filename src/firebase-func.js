@@ -506,9 +506,15 @@ export const createAdSpaceLocation = async (data) => {
 export const UploadMediaForAdSpace = async (id, name, files) => {
   // use docRef ID to store media
   // build the downloadUrl here
+  if (!files.length) {
+    return {
+      error: {
+        message: "No files added"
+      }
+    }
+  };
   let media = [];
-  
-  if (files.length) {
+  const promise = new Promise((resolve, reject) => {
     files.forEach((item, index) => {
       const file = item.file;
       const path = `adspaces/${id}/${name}-${index}`;
@@ -519,9 +525,7 @@ export const UploadMediaForAdSpace = async (id, name, files) => {
         "state_changed",
         (snapshot) => { },
         (error) => {
-          return {
-            error,
-          };
+          reject(error.message);
         },
         () => {
           // success, save to media array
@@ -540,13 +544,14 @@ export const UploadMediaForAdSpace = async (id, name, files) => {
               batch.update(docRef, {
                 media: media,
               });
-              batch.commit();
+              resolve(batch.commit());
             }
           });
         }
       );
     });
-  }
+  })
+  return promise;
 };
 
 // get list of adspaces by id 
