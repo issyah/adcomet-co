@@ -269,6 +269,21 @@ const AdSpaceSummary = ({
         <Divider sx={{ my: 2 }} />
         <Box mt={2}>
           <Typography fontWeight="bold">Location</Typography>
+          {readOnly &&
+            <Box sx={{
+              height: 400,
+              width: 400,
+
+              'img': {
+                width: '100%',
+                height: 'auto',
+                borderRadius: 1,
+                boxShadow: 1,
+              }
+            }}>
+              <img src={`/api/static-map?lat=${data.location?.lat}&lng=${data.location?.lng}`} />
+            </Box>
+          }
           <Grid container spacing={2} sx={{ mt: 1 }}>
             {locationData.map((item, index) => (
               <Grid item md={item.md} xs={12}>

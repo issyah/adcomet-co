@@ -6,9 +6,10 @@ import { getData } from "@/src/firebase-func";
 import AuthOwnerLayout from "@/src/layout/AuthOwnerLayout";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, Typography } from "@mui/material";
 import ImageViewDialog from "@/src/ImageViewDialog";
 import { ArrowBack } from "@mui/icons-material";
+import { useForm } from 'react-hook-form';
 import Link from "@/src/Link";
 const View = () => {
   const router = useRouter();
@@ -17,6 +18,10 @@ const View = () => {
   const [images, setImages] = useState([]);
   const { setAlert, setLoading } = useContextProvider();
   const [viewImage, setViewImage] = useState();
+
+  // set up the form 
+  const {control, reset, setValue} = useForm()
+
   const fetchData = async () => {
     setLoading(true);
     const { result, error } = await getData("adspaces", id);
@@ -29,6 +34,9 @@ const View = () => {
       });
       return;
     }
+    if (!result.exists()) {
+      router.push('/404');
+    };
     // pull data ;
     if (result.exists()) {
       setData({
@@ -49,6 +57,17 @@ const View = () => {
     <Box>
       <Button variant="contained" startIcon={<ArrowBack />} component={Link} href={'/ad-space/locations'}>Go back</Button>
       <Typography variant='h3' gutterBottom>{data.name}</Typography>
+      <Box sx={{
+        borderRadius: 1,
+        p: 2,
+        bgcolor: '#FFF',
+        mb: 1,
+      }}>
+        <Breadcrumbs>
+          <Link href='/ad-space/locations'>Ad-Spaces</Link>
+          <Typography>{data.name}</Typography>
+        </Breadcrumbs>
+      </Box>
       {data.name && <AdSpaceSummary setViewImage={setViewImage} readOnly data={data} files={images} />}
       <ImageViewDialog
         open={!!viewImage}

@@ -59,24 +59,6 @@ export const AdSpaceInformation = ({
         rows: 4,
       },
     },
-    // {
-    //   id: "demographic",
-    //   type: "autocomplete",
-    //   Controller: {
-    //     name: "demographic",
-    //     rules: {
-    //       required: "Please select at least one demographic",
-    //     },
-    //   },
-    //   Field: {
-    //     label: "Target demographics",
-    //     options: TargetAudience.map((item) => ({
-    //       value: item.id,
-    //       label: item.label,
-    //     })),
-    //     getOptionLabel: (option) => option.label ?? option,
-    //   },
-    // },
     {
       md: 4,
       xs: 12,

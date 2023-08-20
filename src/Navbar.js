@@ -52,19 +52,17 @@ export default function Navbar() {
     //   color: 'inherit'
     // },
     {
-      ...(accessToken !== null || accessToken
+      ...(user !== null || user)
         ? {
           label: "Back to account",
-          href: accessToken
-            ? handleRedirectAuth(accessToken)
-            : "/ad/dashboard",
+          href: '/redirect/dashboard'
         }
         : {
           label: "Log in",
           href: "/login",
           color: "primary",
           variant: "contained",
-        }),
+        },
     },
   ];
   return (
