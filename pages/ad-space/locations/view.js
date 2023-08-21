@@ -6,10 +6,18 @@ import { getData } from "@/src/firebase-func";
 import AuthOwnerLayout from "@/src/layout/AuthOwnerLayout";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Box, Breadcrumbs, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Breadcrumbs,
+  Button,
+  Chip,
+  Grid,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import ImageViewDialog from "@/src/ImageViewDialog";
-import { ArrowBack } from "@mui/icons-material";
-import { useForm } from 'react-hook-form';
+import { ArrowBack, EditOutlined, TvOutlined } from "@mui/icons-material";
+import { useForm } from "react-hook-form";
 import Link from "@/src/Link";
 const View = () => {
   const router = useRouter();
@@ -18,9 +26,15 @@ const View = () => {
   const [images, setImages] = useState([]);
   const { setAlert, setLoading } = useContextProvider();
   const [viewImage, setViewImage] = useState();
+  const [showEditPrompt, setShowEditPrompt] = useState(false);
+  // set up the form
+  const { control, reset, setValue } = useForm();
 
-  // set up the form 
-  const {control, reset, setValue} = useForm()
+  const handleEditButton = () => {
+    if (data.status == "live") {
+      setShowEditPrompt(true);
+    }
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -35,13 +49,16 @@ const View = () => {
       return;
     }
     if (!result.exists()) {
-      router.push('/404');
-    };
+      router.push("/404");
+    }
     // pull data ;
     if (result.exists()) {
       setData({
         ...result.data(),
         id: result.id,
+      });
+      reset({
+        ...result.data(),
       });
       setImages([...result.data().media]);
     }
@@ -55,20 +72,82 @@ const View = () => {
   }, [router.isReady]);
   return (
     <Box>
-      <Button variant="contained" startIcon={<ArrowBack />} component={Link} href={'/ad-space/locations'}>Go back</Button>
-      <Typography variant='h3' gutterBottom>{data.name}</Typography>
-      <Box sx={{
-        borderRadius: 1,
-        p: 2,
-        bgcolor: '#FFF',
-        mb: 1,
-      }}>
+      <Grid
+        container
+        spacing={2}
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Grid item md={"auto"}>
+          <Button
+            startIcon={<ArrowBack />}
+            component={Link}
+            href={"/ad-space/locations"}
+          >
+            Go back
+          </Button>
+        </Grid>
+        <Grid item md="auto">
+          <Grid container spacing={1}>
+            <Grid item xs="auto">
+              <Button variant="outlined" startIcon={<EditOutlined />}>
+                Edit
+              </Button>
+            </Grid>
+            <Grid item xs="auto">
+              <Tooltip
+                title={
+                  "Generate a link to display approved campaigns on your digital board."
+                }
+                arrow
+              >
+                <Button
+                  component={Link}
+                  href={`/display/offline/?id=${id}&width=${data?.width}&height=${data?.height}`}
+                  variant="contained"
+                  startIcon={<TvOutlined />}
+                  target={"_blank"}
+                >
+                  Get display link
+                </Button>
+              </Tooltip>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid
+        container
+        spacing={2}
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Grid item xs="auto">
+          <Typography variant="h3" gutterBottom fontWeight="bold">
+            {data.name}
+          </Typography>
+        </Grid>
+      </Grid>
+      <Box
+        sx={{
+          borderRadius: 1,
+          p: 2,
+          bgcolor: "#FFF",
+          mb: 1,
+        }}
+      >
         <Breadcrumbs>
-          <Link href='/ad-space/locations'>Ad-Spaces</Link>
+          <Link href="/ad-space/locations">Ad-Spaces</Link>
           <Typography>{data.name}</Typography>
         </Breadcrumbs>
       </Box>
-      {data.name && <AdSpaceSummary setViewImage={setViewImage} readOnly data={data} files={images} />}
+      {data.name && (
+        <AdSpaceSummary
+          setViewImage={setViewImage}
+          readOnly
+          data={data}
+          files={images}
+        />
+      )}
       <ImageViewDialog
         open={!!viewImage}
         setOpen={setViewImage}

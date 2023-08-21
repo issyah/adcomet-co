@@ -43,6 +43,19 @@ const AdSpaceSummary = ({
   const router = useRouter();
   const informationData = [
     {
+      md: 12,
+      label: "Status",
+      id: "status",
+      render: (item) => (
+        <Chip
+          size="small"
+          label={item.status}
+          sx={{ px: 2, textTransform: "capitalize" }}
+          color={item.status == "live" ? "error" : "default"}
+        />
+      ),
+    },
+    {
       label: "Name",
       id: "name",
       md: 4,
@@ -152,23 +165,24 @@ const AdSpaceSummary = ({
       return;
     }
     // success, get the id and save the images
-    UploadMediaForAdSpace(result.id, data?.name, files).then(() => {
-      setAlert({
-        status: "success",
-        message:
-          type == "draft"
-            ? "Your Ad Space has been saved!"
-            : "Your Ad Space has been pushed live!",
-        open: true,
-      });
-      setLoading({
-        ...loading,
-        [type]: false,
-      });
-      // redirect to the page view id
-      router.push(`/ad-space/locations/`);
-    }).catch((err) => console.log(err));
-
+    UploadMediaForAdSpace(result.id, data?.name, files)
+      .then(() => {
+        setAlert({
+          status: "success",
+          message:
+            type == "draft"
+              ? "Your Ad Space has been saved!"
+              : "Your Ad Space has been pushed live!",
+          open: true,
+        });
+        setLoading({
+          ...loading,
+          [type]: false,
+        });
+        // redirect to the page view id
+        router.push(`/ad-space/locations/`);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -269,21 +283,25 @@ const AdSpaceSummary = ({
         <Divider sx={{ my: 2 }} />
         <Box mt={2}>
           <Typography fontWeight="bold">Location</Typography>
-          {readOnly &&
-            <Box sx={{
-              height: 400,
-              width: 400,
+          {readOnly && (
+            <Box
+              sx={{
+                height: 400,
+                width: 400,
 
-              'img': {
-                width: '100%',
-                height: 'auto',
-                borderRadius: 1,
-                boxShadow: 1,
-              }
-            }}>
-              <img src={`/api/static-map?lat=${data.location?.lat}&lng=${data.location?.lng}`} />
+                img: {
+                  width: "100%",
+                  height: "auto",
+                  borderRadius: 1,
+                  boxShadow: 1,
+                },
+              }}
+            >
+              <img
+                src={`/api/static-map?lat=${data.location?.lat}&lng=${data.location?.lng}`}
+              />
             </Box>
-          }
+          )}
           <Grid container spacing={2} sx={{ mt: 1 }}>
             {locationData.map((item, index) => (
               <Grid item md={item.md} xs={12}>

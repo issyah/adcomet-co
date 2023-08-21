@@ -27,7 +27,8 @@
     "prop-types": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-hook-form": "^7.45.2"
+    "react-hook-form": "^7.45.2",
+    "swiper": "^10.2.0"
   },
   "devDependencies": {
     "eslint": "latest",
