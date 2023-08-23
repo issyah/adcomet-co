@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 
   const params = {
     center: `${lat},${lng}`,
-    zoom: 13,
+    zoom: 20,
     size: '600x600',
     markers: `color:purple|${lat},${lng}`,
     scale: 2,

@@ -555,12 +555,21 @@ export const UploadMediaForAdSpace = async (id, name, files) => {
 };
 
 // get list of adspaces by id 
-export const getAdSpacesByCompany = async (id) => {
+export const getAdSpacesByCompany = async ({ id, status, search, order }) => {
   const collectionRef = collection(db, 'adspaces');
   let result, error;
+  const ord = order || 'created';
   try {
-    const q = query(collectionRef, where("companyId", "==", id), orderBy('created', 'desc'), limit(25));
-    result = await getDocs(q);
+    let baseQuery = query(collectionRef, where('companyId', '==', id));
+    if (status !== 'all') {
+      baseQuery = query(baseQuery, where('status', '==', status));
+    }
+    if (search && search.length) {
+      baseQuery = query(baseQuery, where('nameArray', 'array-contains', search))
+    };
+    // sorting 
+    baseQuery = query(baseQuery, orderBy(ord, 'desc'), limit(25));
+    result = await getDocs(baseQuery);
   } catch (e) {
     error = e;
   };

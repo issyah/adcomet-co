@@ -2,13 +2,13 @@
  * The main page to manage ad locations for ad space owners 
 **/
 import AuthOwnerLayout from "@/src/layout/AuthOwnerLayout";
-import { Box, Button, Card, CardContent, Chip, CircularProgress, Grid, Skeleton, Stack, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Chip, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select, Skeleton, Stack, TextField, Typography } from "@mui/material";
 import { getAdSpacesByCompany, getLocationsByCompany } from "@/src/firebase-func";
 import { useEffect, useState } from "react";
 import { useContextProvider } from "@/context/ContextProvider";
 import DataGrid from "@/src/DataGrid";
 import Link from "@/src/Link";
-import { Add, FolderOpenOutlined, Man2Outlined, PinDropOutlined, Woman2Outlined } from "@mui/icons-material";
+import { Add, FolderOpenOutlined, Man2Outlined, PinDropOutlined, Search, Woman2Outlined } from "@mui/icons-material";
 import { formatNumber } from "@/src/common";
 import AdSpaceCard from "@/src/AdSpaceCard";
 
@@ -17,9 +17,17 @@ export default function Location() {
   const [locations, setLocations] = useState([]);
   const { company, setAlert } = useContextProvider();
   const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState();
+  const [status, setStatus] = useState('all');
   const fetchData = async () => {
     setLoading(true);
-    const { result, error } = await getAdSpacesByCompany(company.id);
+    // clear current data set 
+    setLocations([]);
+    const { result, error } = await getAdSpacesByCompany({
+      id: company.id,
+      status,
+      search,
+    });
     if (error) {
       setLoading(false);
       setAlert({
@@ -31,9 +39,9 @@ export default function Location() {
     }
     //  success 
     if (result) {
+      console.log(result);
       const newData = result?.docs.map((doc) => {
         const data = doc.data();
-        console.log(data);
         return {
           ...data,
           id: doc.id,
@@ -45,7 +53,12 @@ export default function Location() {
     }
   }
   // define the headers for the tables
-
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const search = form.search.value;
+    setSearch(search);
+  }
   const headers = [
     {
       label: 'Name',
@@ -129,7 +142,8 @@ export default function Location() {
       fetchData();
 
     }
-  }, [company])
+  }, [company, status, search])
+
 
 
   return (
@@ -141,6 +155,50 @@ export default function Location() {
         </Grid>
         <Grid item md={'auto'} xs={12}>
           <Button startIcon={<Add />} variant='contained' component={Link} href='/ad-space/locations/create'>Add Ad Space</Button>
+        </Grid>
+      </Grid>
+      <Grid container spacing={2} sx={{ mt: 1 }}>
+        <Grid item md={4} component={'form'} onSubmit={handleSearch}>
+          <TextField
+            name={'search'}
+            fullWidth
+            variant="outlined"
+            InputProps={{
+              placeholder: "Search for location",
+              sx: {
+                bgcolor: '#FFF'
+              },
+              startAdornment: (
+                <InputAdornment position="start"><Search /></InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position='end'>
+                  {search && search.length &&
+                    <Button onClick={() => setSearch()}>Clear</Button>
+                  }
+                </InputAdornment>
+              )
+            }}
+          />
+        </Grid>
+        <Grid item md={2}>
+          <FormControl fullWidth>
+            <InputLabel>Status</InputLabel>
+            <Select
+              value={status}
+              label={'Status'}
+              inputProps={{
+                sx: {
+                  bgcolor: '#FFF'
+                }
+              }}
+              onChange={(e) => setStatus(e.target.value)}
+            >
+              <MenuItem value={'all'}>All</MenuItem>
+              <MenuItem value={'live'}>Live</MenuItem>
+              <MenuItem value={'draft'}>Draft</MenuItem>
+            </Select>
+          </FormControl>
         </Grid>
       </Grid>
 
@@ -170,8 +228,15 @@ export default function Location() {
         <Card>
           <CardContent>
             <FolderOpenOutlined sx={{ fontSize: 32 }} />
-            <Typography variant='h6' gutterBottom>No ad space locations added.</Typography>
-            <Button component={Link} variant='outlined' href='/ad-space/locations/create' startIcon={<Add />}>Add Ad Space</Button>
+            {status !== 'all' || !!!search ?
+              <Box>
+                <Typography variant='h6' gutterBottom>No ad space locations found.</Typography>
+              </Box> :
+              <Box>
+                <Typography variant='h6' gutterBottom>No ad space locations added.</Typography>
+                <Button component={Link} variant='outlined' href='/ad-space/locations/create' startIcon={<Add />}>Add Ad Space</Button>
+              </Box>
+            }
           </CardContent>
         </Card>
       }
