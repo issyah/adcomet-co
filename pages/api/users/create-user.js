@@ -67,6 +67,8 @@ export default async function handler(req, res) {
       id: companyId,
       userType: "user",
     },
+    created: new Date(),
+    lastSeen: new Date(),
     role: role,
     uid: result.uid,
   };
@@ -80,8 +82,6 @@ export default async function handler(req, res) {
   return res.status(200).json({
     ...userData,
     id: result.uid,
-    created: new Date(),
-    lastSeen: new Date(),
     userType: "user",
   });
 }

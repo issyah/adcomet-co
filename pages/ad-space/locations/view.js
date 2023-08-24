@@ -19,6 +19,7 @@ import ImageViewDialog from "@/src/ImageViewDialog";
 import { ArrowBack, EditOutlined, TvOutlined } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import Link from "@/src/Link";
+import AdSpaceDetail from "@/src/AdSpaceDetail";
 const View = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -115,24 +116,12 @@ const View = () => {
           </Grid>
         </Grid>
       </Grid>
-      <Grid
-        container
-        spacing={2}
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <Grid item xs="auto">
-          <Typography variant="h3" gutterBottom fontWeight="bold">
-            {data.name}
-          </Typography>
-        </Grid>
-      </Grid>
       <Box
         sx={{
           borderRadius: 1,
           p: 2,
           bgcolor: "#FFF",
-          mb: 1,
+          my: 2,
         }}
       >
         <Breadcrumbs>
@@ -141,11 +130,11 @@ const View = () => {
         </Breadcrumbs>
       </Box>
       {data.name && (
-        <AdSpaceSummary
-          setViewImage={setViewImage}
-          readOnly
+        <AdSpaceDetail
           data={data}
-          files={images}
+          showCreatedBy
+          setViewImage={setViewImage}
+          showStaticMap
         />
       )}
       <ImageViewDialog

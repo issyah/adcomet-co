@@ -471,7 +471,7 @@ export const getLocationsByCompany = async (id) => {
  **/
 export const createAdSpaceLocation = async (data) => {
   const { name, companyId } = data;
-  const nameArray = name.split(" ");
+  const nameArray = name.toLowerCase().split(" ");
   let docRef, error, companyRef, companyData;
   try {
     const cRef = doc(db, "companies", companyId);
@@ -565,7 +565,8 @@ export const getAdSpacesByCompany = async ({ id, status, search, order }) => {
       baseQuery = query(baseQuery, where('status', '==', status));
     }
     if (search && search.length) {
-      baseQuery = query(baseQuery, where('nameArray', 'array-contains', search))
+      let lowerCasedSearch = search.toLowerCase();
+      baseQuery = query(baseQuery, where('nameArray', 'array-contains', lowerCasedSearch))
     };
     // sorting 
     baseQuery = query(baseQuery, orderBy(ord, 'desc'), limit(25));

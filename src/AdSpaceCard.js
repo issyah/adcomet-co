@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { getIndustrylabel } from "./common";
 import Link from "./Link";
-const AdSpaceCard = ({ item }) => {
+const AdSpaceCard = ({ item, pathname }) => {
   const splitAddress = () => {
     if (item.address) {
       return item.address.split(",");
@@ -88,7 +88,7 @@ const AdSpaceCard = ({ item }) => {
         </Grid> */}
         <Button
           component={Link}
-          href={`/ad-space/locations/view/?id=${item.id}`}
+          href={`/${pathname}/?id=${item.id}`}
           variant="outlined"
           fullWidth
           sx={{ mt: 2 }}

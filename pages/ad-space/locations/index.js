@@ -4,7 +4,7 @@
 import AuthOwnerLayout from "@/src/layout/AuthOwnerLayout";
 import { Box, Button, Card, CardContent, Chip, CircularProgress, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select, Skeleton, Stack, TextField, Typography } from "@mui/material";
 import { getAdSpacesByCompany, getLocationsByCompany } from "@/src/firebase-func";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useContextProvider } from "@/context/ContextProvider";
 import DataGrid from "@/src/DataGrid";
 import Link from "@/src/Link";
@@ -19,6 +19,7 @@ export default function Location() {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState();
   const [status, setStatus] = useState('all');
+  const form = useRef();
   const fetchData = async () => {
     setLoading(true);
     // clear current data set 
@@ -55,10 +56,17 @@ export default function Location() {
   // define the headers for the tables
   const handleSearch = async (e) => {
     e.preventDefault();
-    const form = e.target;
-    const search = form.search.value;
+    const search = form.current.search.value;
     setSearch(search);
   }
+
+  const handleClearSearch = () => {
+    // clear search query and value in form 
+    setSearch();
+    form.current.search.value = "";
+
+  }
+
   const headers = [
     {
       label: 'Name',
@@ -158,7 +166,7 @@ export default function Location() {
         </Grid>
       </Grid>
       <Grid container spacing={2} sx={{ mt: 1 }}>
-        <Grid item md={4} component={'form'} onSubmit={handleSearch}>
+        <Grid item md={4} component={'form'} onSubmit={handleSearch} ref={form}>
           <TextField
             name={'search'}
             fullWidth
@@ -174,7 +182,7 @@ export default function Location() {
               endAdornment: (
                 <InputAdornment position='end'>
                   {search && search.length &&
-                    <Button onClick={() => setSearch()}>Clear</Button>
+                    <Button onClick={handleClearSearch}>Clear</Button>
                   }
                 </InputAdornment>
               )
@@ -219,6 +227,7 @@ export default function Location() {
             <Grid item lg={4} md={6} sm={6} xs={12} key={index}>
               <AdSpaceCard
                 item={item}
+                pathname={'/ad-space/locations/view'}
               />
             </Grid>
           ))

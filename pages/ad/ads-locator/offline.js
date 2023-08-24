@@ -59,7 +59,7 @@ const Offline = () => {
         {!!locations.length &&
           locations.map((item, index) => (
             <Grid item key={index} lg={4} md={6} xs={12}>
-              <AdSpaceCard item={item} />
+              <AdSpaceCard item={item} pathname={'/ad/ads-locator/view'}/>
             </Grid>
           ))
         }
