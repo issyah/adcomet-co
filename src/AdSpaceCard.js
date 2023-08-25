@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { getIndustrylabel } from "./common";
 import Link from "./Link";
-const AdSpaceCard = ({ item, pathname }) => {
+const AdSpaceCard = ({ item, pathname, showStatus }) => {
   const splitAddress = () => {
     if (item.address) {
       return item.address.split(",");
@@ -41,17 +41,18 @@ const AdSpaceCard = ({ item, pathname }) => {
             }}
           />
         )}
-        <Chip
+        {showStatus && <Chip
           sx={{ my: 1, textTransform: "capitalize", px: 1 }}
           label={
             <Typography variant="caption">&#9679; {item.status}</Typography>
           }
           size="small"
           color={item.status == "live" ? "error" : "default"}
-        />
+        />}
         <Typography
           fontWeight={"bold"}
           sx={{
+            mt:1,
             whiteSpace: "nowrap",
             textOverflow: "ellipsis",
             overflow: "hidden",

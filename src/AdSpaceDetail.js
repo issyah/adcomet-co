@@ -11,6 +11,7 @@ const AdSpaceDetail = ({
   setViewImage,
   showCreatedBy,
   showStaticMap,
+  children
 }) => {
   const getAddressOnly = () => {
     if (data?.address) {
@@ -174,6 +175,7 @@ const AdSpaceDetail = ({
                   />
                 </Box>
               }
+              {children}
             </Grid>
           </Grid>
         </Box>
