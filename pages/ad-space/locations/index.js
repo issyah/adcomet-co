@@ -226,8 +226,9 @@ export default function Location() {
           locations.map((item, index) => (
             <Grid item lg={4} md={6} sm={6} xs={12} key={index}>
               <AdSpaceCard
+                showStatus
                 item={item}
-                pathname={'/ad-space/locations/view'}
+                pathname={'ad-space/locations/view'}
               />
             </Grid>
           ))

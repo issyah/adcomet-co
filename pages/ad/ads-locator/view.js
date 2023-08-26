@@ -2,7 +2,7 @@
  * Get more information about the ads*/
 
 import { useContextProvider } from "@/context/ContextProvider";
-import AdSpacePricingCard from "@/src/AdSPacePricingCard";
+import AdSpacePricingCard from "@/src/AdSpacePricingCard";
 import AdSpaceDetail from "@/src/AdSpaceDetail";
 import Link from "@/src/Link";
 import { getData } from "@/src/firebase-func";
@@ -46,7 +46,7 @@ const View = ({ }) => {
 
   return (
     <Box>
-      <Button startIcon={<ArrowBack />} component={Link} href={'/ad/ads-locator'} sx={{
+      <Button startIcon={<ArrowBack />} onClick={() => router.back()} sx={{
         mb: 1
       }}>
         Go back

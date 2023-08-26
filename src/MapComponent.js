@@ -65,25 +65,45 @@ const MapComponent = ({
   }, []);
 
   useEffect(() => {
-    renderAutoComplete();
+    if (autoCompleteRef) {
+      renderAutoComplete();
+    }
   }, [map]);
 
   useEffect(() => {
     if (markers) {
       markers.forEach((item, index) => {
-        const m = new googleMaps.Marker({
-          position: new google.maps.LatLng(item.center),
-          title: item.title || "Created marker",
+        const pinStyling = new googleMaps.marker.PinElement({
+          background: "#3a36db",
+          borderColor: "#211D42",
+          glyphColor: "#FFF",
         });
-        m.setMap(map);
+        const priceTag = document.createElement("div");
+        priceTag.className = "price-tag-map";
+        if (item.price.length) {
+          priceTag.textContent = `$${item.price[0].value}`;
+        }
+        const marker = new googleMaps.marker.AdvancedMarkerElement({
+          map,
+          position: item.location,
+          content: priceTag,
+        });
       });
+      // markers.forEach((item, index) => {
+      //   const m = new googleMaps.Marker({
+      //     position: new google.maps.LatLng(item.center),
+      //     title: item.title || "Created marker",
+      //   });
+      //   m.setMap(map);
+      // });
     }
-  }, [markers]);
+  }, [map, markers]);
 
   // rerender autocomplete field
   useEffect(() => {
-    console.log(reRenderAutocomplete);
-    renderAutoComplete();
+    if (reRenderAutocomplete) {
+      renderAutoComplete();
+    }
   }, [reRenderAutocomplete]);
 
   return (

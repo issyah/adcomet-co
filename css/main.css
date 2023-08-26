@@ -26,3 +26,12 @@ html {
 .pac-logo:after{
   padding: 2px 4px;
 }
+
+.price-tag-map{
+  padding: 4px 8px;
+  background: #3a36db;
+  color: #FFF;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+}

@@ -20,7 +20,7 @@ const formatNumberCompact = (number) => {
 
 const getIndustrylabel = (id) => {
   const industry = industryJson.find((i) => i.id === id);
-  if (industry.label) {
+  if (industry && industry.label) {
     return industry.label;
   }
   return undefined;
