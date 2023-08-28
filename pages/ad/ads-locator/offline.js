@@ -7,6 +7,7 @@ import { Wrapper } from "@googlemaps/react-wrapper";
 import { Search } from "@mui/icons-material";
 import {
   Box,
+  Button,
   Card,
   CardContent,
   FormControl,
@@ -20,16 +21,18 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const Offline = () => {
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sort, setSort] = useState("created");
+  const [search, setSearch] = useState();
   const { setAlert } = useContextProvider();
+  const form = useRef();
   const fetchData = async () => {
     setLoading(true);
-    const { result, error } = await getLiveAdSpaces(sort);
+    const { result, error } = await getLiveAdSpaces({ sort, search });
     if (error) {
       setLoading(false);
       setAlert({
@@ -51,6 +54,19 @@ const Offline = () => {
     setLocations(newData);
     setLoading(false);
   };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const value = form.search.value;
+    setSearch(value);
+  };
+
+  const handleClearSearch = () => {
+    setSearch();
+    form.current.search.value = "";
+  };
+
   const defaultMapProps = {
     center: {
       lat: 1.3562738,
@@ -58,9 +74,10 @@ const Offline = () => {
     },
     zoom: 12,
   };
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [sort, search]);
 
   return (
     <Box>
@@ -87,10 +104,11 @@ const Offline = () => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item md={3}>
+        <Grid item md={3} component={"form"} onSubmit={handleSearch} ref={form}>
           <TextField
             fullWidth
             size="small"
+            name="search"
             InputProps={{
               sx: {
                 bgcolor: "#FFF",
@@ -102,8 +120,14 @@ const Offline = () => {
                   <Search />
                 </InputAdornment>
               ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  {search && search.length && (
+                    <Button onClick={handleClearSearch}>Clear</Button>
+                  )}
+                </InputAdornment>
+              ),
             }}
-            name="search"
           />
         </Grid>
       </Grid>

@@ -15,7 +15,7 @@ const MapComponent = ({
   const ref = useRef();
   const [map, setMap] = useState(null);
   const googleMaps = window.google.maps || undefined;
-
+  const [markersArray, setMarkersArray] = useState([]);
   const renderAutoComplete = () => {
     const autocomplete = new googleMaps.places.Autocomplete(
       autoCompleteRef.current,
@@ -54,7 +54,56 @@ const MapComponent = ({
       });
     });
   };
+  const renderMarkers = () => {
+    if (markers) {
 
+      // clear the current markers 
+      if(markersArray.length){
+        markersArray.forEach((item) => {
+          item.map = null;
+        });
+      }
+      let markerArr = [];
+      markers.forEach((item, index) => {
+        const infoWindow = new googleMaps.InfoWindow();
+        const priceTag = document.createElement("div");
+        priceTag.className = "price-tag-map";
+        if (item.price.length) {
+          priceTag.textContent = `$${item.price[0].value}`;
+        }
+        const marker = new googleMaps.marker.AdvancedMarkerElement({
+          map,
+          position: item.location,
+          content: priceTag,
+        });
+
+        const infoWindowDom = document.createElement("div");
+        infoWindowDom.className = "card-map";
+        const imgDom = document.createElement("img");
+        const titleDom = document.createElement("p");
+        const link = document.createElement("a");
+        const addressDom = document.createElement("span");
+        titleDom.innerHTML = item.name;
+        imgDom.src = item?.media[0]?.src;
+        imgDom.className = "card-map-image";
+        addressDom.innerHTML = item?.address?.split(",")[0];
+        link.href = `/ad/ads-locator/view/?id=${item.id}`;
+        link.append(imgDom);
+        infoWindowDom.append(link, titleDom, addressDom);
+
+        marker.addListener("click", ({ domEvent, latLng }) => {
+          const { target } = domEvent;
+          infoWindow.close();
+          infoWindow.setContent(infoWindowDom);
+          infoWindow.open(marker.map, marker);
+        });
+        markerArr.push(marker);
+      });
+      if (markerArr.length) {
+        setMarkersArray(markerArr);
+      }
+    }
+  };
   useEffect(() => {
     const m = new googleMaps.Map(ref.current, {
       center,
@@ -71,32 +120,7 @@ const MapComponent = ({
   }, [map]);
 
   useEffect(() => {
-    if (markers) {
-      markers.forEach((item, index) => {
-        const pinStyling = new googleMaps.marker.PinElement({
-          background: "#3a36db",
-          borderColor: "#211D42",
-          glyphColor: "#FFF",
-        });
-        const priceTag = document.createElement("div");
-        priceTag.className = "price-tag-map";
-        if (item.price.length) {
-          priceTag.textContent = `$${item.price[0].value}`;
-        }
-        const marker = new googleMaps.marker.AdvancedMarkerElement({
-          map,
-          position: item.location,
-          content: priceTag,
-        });
-      });
-      // markers.forEach((item, index) => {
-      //   const m = new googleMaps.Marker({
-      //     position: new google.maps.LatLng(item.center),
-      //     title: item.title || "Created marker",
-      //   });
-      //   m.setMap(map);
-      // });
-    }
+    renderMarkers();
   }, [map, markers]);
 
   // rerender autocomplete field

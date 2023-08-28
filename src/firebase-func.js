@@ -509,10 +509,10 @@ export const UploadMediaForAdSpace = async (id, name, files) => {
   if (!files.length) {
     return {
       error: {
-        message: "No files added"
-      }
-    }
-  };
+        message: "No files added",
+      },
+    };
+  }
   let media = [];
   const promise = new Promise((resolve, reject) => {
     files.forEach((item, index) => {
@@ -523,7 +523,7 @@ export const UploadMediaForAdSpace = async (id, name, files) => {
       // let media = [];
       uploadTask.on(
         "state_changed",
-        (snapshot) => { },
+        (snapshot) => {},
         (error) => {
           reject(error.message);
         },
@@ -550,50 +550,61 @@ export const UploadMediaForAdSpace = async (id, name, files) => {
         }
       );
     });
-  })
+  });
   return promise;
 };
 
-// get list of adspaces by id 
+// get list of adspaces by id
 export const getAdSpacesByCompany = async ({ id, status, search, order }) => {
-  const collectionRef = collection(db, 'adspaces');
+  const collectionRef = collection(db, "adspaces");
   let result, error;
-  const ord = order || 'created';
+  const ord = order || "created";
   try {
-    let baseQuery = query(collectionRef, where('companyId', '==', id));
-    if (status !== 'all') {
-      baseQuery = query(baseQuery, where('status', '==', status));
+    let baseQuery = query(collectionRef, where("companyId", "==", id));
+    if (status !== "all") {
+      baseQuery = query(baseQuery, where("status", "==", status));
     }
     if (search && search.length) {
       let lowerCasedSearch = search.toLowerCase();
-      baseQuery = query(baseQuery, where('nameArray', 'array-contains', lowerCasedSearch))
-    };
-    // sorting 
-    baseQuery = query(baseQuery, orderBy(ord, 'desc'), limit(25));
+      baseQuery = query(
+        baseQuery,
+        where("nameArray", "array-contains", lowerCasedSearch)
+      );
+    }
+    // sorting
+    baseQuery = query(baseQuery, orderBy(ord, "desc"), limit(25));
     result = await getDocs(baseQuery);
   } catch (e) {
     error = e;
-  };
+  }
 
   return {
     result,
-    error
-  }
-}
+    error,
+  };
+};
 
-
-// get list of adspace that is live 
-export const getLiveAdSpaces = async (order) => {
+// get list of adspace that is live
+export const getLiveAdSpaces = async ({ sort, search }) => {
   const collectionRef = collection(db, "adspaces");
   let result, error;
   try {
-    const q = query(collectionRef, where("status", "==", "live"), orderBy(order, 'desc'), limit(25));
-    result = await getDocs(q);
+    let baseQuery = query(collectionRef, where("status", "==", "live"));
+    if (search && search.length) {
+      const lowerCasedSearch = search.toLowerCase();
+      baseQuery = query(
+        baseQuery,
+        where("nameArray", "array-contains", lowerCasedSearch)
+      );
+    }
+    // sorting
+    baseQuery = query(baseQuery, orderBy(sort, "desc"), limit(25));
+    result = await getDocs(baseQuery);
   } catch (e) {
     error = e;
-  };
+  }
   return {
     result,
-    error
-  }
-}
+    error,
+  };
+};
