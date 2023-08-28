@@ -228,7 +228,7 @@ export default function Location() {
               <AdSpaceCard
                 showStatus
                 item={item}
-                pathname={'ad-space/locations/view'}
+                pathname={'/ad-space/locations/view'}
               />
             </Grid>
           ))
