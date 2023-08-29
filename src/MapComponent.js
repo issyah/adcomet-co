@@ -11,6 +11,7 @@ const MapComponent = ({
   autoCompleteRef,
   reRenderAutocomplete,
   autoCompleteValue,
+  role,
 }) => {
   const ref = useRef();
   const [map, setMap] = useState(null);
@@ -56,9 +57,8 @@ const MapComponent = ({
   };
   const renderMarkers = () => {
     if (markers) {
-
-      // clear the current markers 
-      if(markersArray.length){
+      // clear the current markers
+      if (markersArray.length) {
         markersArray.forEach((item) => {
           item.map = null;
         });
@@ -87,7 +87,8 @@ const MapComponent = ({
         imgDom.src = item?.media[0]?.src;
         imgDom.className = "card-map-image";
         addressDom.innerHTML = item?.address?.split(",")[0];
-        link.href = `/ad/ads-locator/view/?id=${item.id}`;
+        const prefixHref = role == 'advertiser' ? '/ad/ads-locator' : '/ad-space/locations';
+        link.href = `${prefixHref}/view/?id=${item.id}`;
         link.append(imgDom);
         infoWindowDom.append(link, titleDom, addressDom);
 

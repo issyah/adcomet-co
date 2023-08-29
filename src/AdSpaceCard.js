@@ -1,7 +1,7 @@
 /**
  * Generate Adspace card for viewing of listing*/
 
-import { BusinessOutlined, Circle, PinDropOutlined } from "@mui/icons-material";
+import { AspectRatio, BusinessOutlined, Circle, PinDropOutlined } from "@mui/icons-material";
 import {
   Card,
   CardContent,
@@ -97,7 +97,15 @@ const AdSpaceCard = ({
           >
             {item.name}
           </Typography>
-          <Typography sx={{ my: 1 }} variant="body2">
+          <Typography
+            sx={{
+              my: 1,
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+            }}
+            variant="body2"
+          >
             {item.description}
           </Typography>
           <Stack
@@ -115,6 +123,23 @@ const AdSpaceCard = ({
           >
             <PinDropOutlined />
             <Typography>{splitAddress()[0]}</Typography>
+          </Stack>
+          <Stack
+            spacing={0.5}
+            direction="row"
+            alignItems="center"
+            sx={{
+              ".MuiSvgIcon-root": {
+                typography: "body2",
+              },
+              ".MuiTypography-root": {
+                typography: "body2",
+              },
+              mt:0.5
+            }}
+          >
+            <AspectRatio />
+            <Typography>{item.width} x {item.height}</Typography>
           </Stack>
           {/* <Grid container spacing={0.5}>
             <Grid item xs="auto">

@@ -43,19 +43,6 @@ const AdSpaceSummary = ({
   const router = useRouter();
   const informationData = [
     {
-      md: 12,
-      label: "Status",
-      id: "status",
-      render: (item) => (
-        <Chip
-          size="small"
-          label={item.status}
-          sx={{ px: 2, textTransform: "capitalize" }}
-          color={item.status == "live" ? "error" : "default"}
-        />
-      ),
-    },
-    {
       label: "Name",
       id: "name",
       md: 4,
@@ -107,10 +94,11 @@ const AdSpaceSummary = ({
     {
       label: "Target demographics",
       render: (item) => (
-        <Stack spacing={1} direction="row" flexWrap={"wrap"} sx={{ mt: 0.5 }}>
+        <Box>
           {item.demographics.length &&
             item.demographics.map((item, index) => (
               <Chip
+                sx={{ml:1, mt:1}}
                 key={index}
                 size="small"
                 variant="outlined"
@@ -118,7 +106,7 @@ const AdSpaceSummary = ({
                 color="primary"
               />
             ))}
-        </Stack>
+        </Box>
       ),
     },
     {

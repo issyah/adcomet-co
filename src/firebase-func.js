@@ -566,9 +566,10 @@ export const getAdSpacesByCompany = async ({ id, status, search, order }) => {
     }
     if (search && search.length) {
       let lowerCasedSearch = search.toLowerCase();
+      const searchArr = lowerCasedSearch.split(" ");
       baseQuery = query(
         baseQuery,
-        where("nameArray", "array-contains", lowerCasedSearch)
+        where("nameArray", "array-contains-any", searchArr)
       );
     }
     // sorting
@@ -592,9 +593,10 @@ export const getLiveAdSpaces = async ({ sort, search }) => {
     let baseQuery = query(collectionRef, where("status", "==", "live"));
     if (search && search.length) {
       const lowerCasedSearch = search.toLowerCase();
+      const searchArr = lowerCasedSearch.split(" ");
       baseQuery = query(
         baseQuery,
-        where("nameArray", "array-contains", lowerCasedSearch)
+        where("nameArray", "array-contains-any", lowerCasedSearch)
       );
     }
     // sorting
@@ -608,3 +610,8 @@ export const getLiveAdSpaces = async ({ sort, search }) => {
     error,
   };
 };
+
+// count total live ad spaces 
+export const getCountLiveAdSpaces = async() => {
+
+}

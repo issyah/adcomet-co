@@ -156,7 +156,7 @@ const Offline = () => {
           </Grid>
           <Grid item lg={5} md={4}>
             <Wrapper
-              libraries={["marker", "maps", "geometry"]}
+              libraries={["places", "marker", "maps", "geometry"]}
               apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API}
             >
               <MapComponent
@@ -164,6 +164,7 @@ const Offline = () => {
                 zoom={defaultMapProps.zoom}
                 height={800}
                 markers={locations}
+                role={"advertiser"}
               />
             </Wrapper>
           </Grid>

@@ -1,79 +1,111 @@
 /**
- * Detail information about the ad space 
-**/
+ * Detail information about the ad space
+ **/
 
-import { AccountCircleOutlined, LabelOutlined, PersonOutlineOutlined, PinDropOutlined, SquareOutlined, VisibilityOutlined } from "@mui/icons-material";
-import { Box, Card, CardContent, Chip, Divider, Grid, List, ListItemIcon, Stack, Typography, ListItem, ListItemText } from "@mui/material";
+import {
+  AccountCircleOutlined,
+  LabelOutlined,
+  PersonOutlineOutlined,
+  PinDropOutlined,
+  SquareOutlined,
+  VisibilityOutlined,
+} from "@mui/icons-material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Chip,
+  Divider,
+  Grid,
+  List,
+  ListItemIcon,
+  Stack,
+  Typography,
+  ListItem,
+  ListItemText,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import { formatNumber } from "./common";
-
+import { red } from "@mui/material/colors";
 const AdSpaceDetail = ({
   data,
   setViewImage,
   showCreatedBy,
   showStaticMap,
-  children
+  children,
 }) => {
   const getAddressOnly = () => {
     if (data?.address) {
       const split = data?.address?.split(",");
-      return split[0]
+      return split[0];
     }
-  }
+  };
   return (
     <Card>
       <CardContent>
-        <Grid container spacing={2} alignItems='center' justifyContent={'space-between'}>
-          <Grid item md={'auto'}>
-            <Typography variant="h4" component={'h1'}>
+        <Grid
+          container
+          spacing={2}
+          alignItems="center"
+          justifyContent={"space-between"}
+        >
+          <Grid item md={"auto"}>
+            <Typography variant="h4" component={"h1"}>
               {data.name}
             </Typography>
           </Grid>
-          <Grid item md={'auto'}>
-            <Chip
-              label={data?.status}
-              sx={{
-                px: 2,
-                textTransform: 'capitalize'
-              }}
-              color={data?.status == 'live' ? 'error' : 'default'}
-            />
+          <Grid item md={"auto"}>
+            <Stack spacing={1} direction="row" alignItems="center">
+              <Typography>Ad-space Status:</Typography>
+              <Select value={data?.status} size="small">
+                <MenuItem value={"live"}>Live</MenuItem>
+                <MenuItem value={"draft"}>Draft</MenuItem>
+              </Select>
+            </Stack>
           </Grid>
         </Grid>
-        <Stack spacing={1} direction='row' flexWrap='wrap' sx={{
-          '.MuiSvgIcon-root, .MuiTypography-root': {
-            typography: 'body1'
-          },
-          mt: 1
-        }}>
-          <Box display={'flex'} gap={.5} alignItems={'center'}>
+        <Stack
+          spacing={1}
+          direction="row"
+          flexWrap="wrap"
+          sx={{
+            ".MuiSvgIcon-root, .MuiTypography-root": {
+              typography: "body1",
+            },
+            mt: 1,
+          }}
+        >
+          <Box display={"flex"} gap={0.5} alignItems={"center"}>
             <PinDropOutlined />
             <Typography>{getAddressOnly()}</Typography>
           </Box>
-          {showCreatedBy &&
-            <Box display={'flex'} gap={.5} alignItems={'center'}>
+          {showCreatedBy && (
+            <Box display={"flex"} gap={0.5} alignItems={"center"}>
               <AccountCircleOutlined />
               <Typography>{data?.createdBy}</Typography>
             </Box>
-          }
+          )}
         </Stack>
         <Box sx={{ my: 2 }}>
           {/* if there is only 1 image */}
-          {!!data?.media?.length &&
+          {!!data?.media?.length && (
             <Grid container spacing={0.5}>
               {data?.media?.map((item, index) => (
-                <Grid item md={data?.media?.length == 1 ? 12 : 4} key={index}>
-                  <Box sx={{
-                    width: '100%',
-                    height: '250px',
-                    'img': {
-                      borderRadius: 1,
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      objectPosition: 'center',
-                      cursor: 'pointer',
-                    }
-                  }}
+                <Grid item md={data?.media?.length == 1 ? 12 : 'auto'} key={index}>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      height: "250px",
+                      img: {
+                        borderRadius: 1,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        objectPosition: "center",
+                        cursor: "pointer",
+                      },
+                    }}
                     onClick={() => setViewImage(item?.src)}
                   >
                     <img src={item?.src} alt={item?.name} />
@@ -81,13 +113,15 @@ const AdSpaceDetail = ({
                 </Grid>
               ))}
             </Grid>
-          }
+          )}
         </Box>
         <Box sx={{ mt: 4 }}>
           <Grid container spacing={4}>
             <Grid item md={7} xs={12}>
-              <Typography gutterBottom variant='h4'>Location Details</Typography>
-              <Typography variant='body2'>{data?.description}</Typography>
+              <Typography gutterBottom variant="h4">
+                Location Details
+              </Typography>
+              <Typography variant="body2">{data?.description}</Typography>
               <Divider sx={{ my: 2 }} />
               <List>
                 <ListItem>
@@ -95,12 +129,8 @@ const AdSpaceDetail = ({
                     <PersonOutlineOutlined />
                   </ListItemIcon>
                   <ListItemText
-                    primary={
-                      <Typography fontWeight='bold'>Gender</Typography>
-                    }
-                    secondary={
-                      `${data?.malePercentage}% Male - ${data?.femalePercentage}% Female`
-                    }
+                    primary={<Typography fontWeight="bold">Gender</Typography>}
+                    secondary={`${data?.malePercentage}% Male - ${data?.femalePercentage}% Female`}
                   />
                 </ListItem>
                 <ListItem>
@@ -109,17 +139,18 @@ const AdSpaceDetail = ({
                   </ListItemIcon>
                   <ListItemText
                     primary={
-                      <Typography fontWeight={'bold'}>Audience Tag</Typography>
+                      <Typography fontWeight={"bold"}>Audience Tag</Typography>
                     }
                     secondary={
-                      <Stack spacing={.5} direction={'row'} flexWrap={'wrap'} sx={{ mt: 1 }}>
+                      <Stack spacing={1} direction={"row"} flexWrap={"wrap"}>
                         {data?.demographics?.map((item, index) => (
                           <Chip
-                            size='small'
+                            size="small"
                             key={index}
                             label={item.label}
-                            variant='outlined'
-                            color='primary'
+                            variant="outlined"
+                            color="primary"
+                            sx={{ mb: 1 }}
                           />
                         ))}
                       </Stack>
@@ -131,8 +162,14 @@ const AdSpaceDetail = ({
                     <VisibilityOutlined />
                   </ListItemIcon>
                   <ListItemText
-                    primary={<Typography fontWeight='bold'>Total Estimated Impressions</Typography>}
-                    secondary={`${formatNumber(data?.impressions)} impressions per month`}
+                    primary={
+                      <Typography fontWeight="bold">
+                        Total Estimated Impressions
+                      </Typography>
+                    }
+                    secondary={`${formatNumber(
+                      data?.impressions
+                    )} impressions per month`}
                   />
                 </ListItem>
                 <ListItem>
@@ -140,7 +177,9 @@ const AdSpaceDetail = ({
                     <SquareOutlined />
                   </ListItemIcon>
                   <ListItemText
-                    primary={<Typography fontWeight='bold'>Dimensions</Typography>}
+                    primary={
+                      <Typography fontWeight="bold">Dimensions</Typography>
+                    }
                     secondary={`${data?.width}px (width) by ${data?.height}px (height)`}
                   />
                 </ListItem>
@@ -149,14 +188,16 @@ const AdSpaceDetail = ({
                     <PinDropOutlined />
                   </ListItemIcon>
                   <ListItemText
-                    primary={<Typography fontWeight={'bold'}>Location</Typography>}
+                    primary={
+                      <Typography fontWeight={"bold"}>Location</Typography>
+                    }
                     secondary={`${data?.address}`}
                   />
                 </ListItem>
               </List>
             </Grid>
             <Grid item md={5} xs={12}>
-              {showStaticMap &&
+              {showStaticMap && (
                 <Box
                   sx={{
                     height: 400,
@@ -174,14 +215,14 @@ const AdSpaceDetail = ({
                     src={`/api/static-map?lat=${data.location?.lat}&lng=${data.location?.lng}`}
                   />
                 </Box>
-              }
+              )}
               {children}
             </Grid>
           </Grid>
         </Box>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
 export default AdSpaceDetail;
