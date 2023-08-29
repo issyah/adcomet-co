@@ -1,7 +1,7 @@
 import { useContextProvider } from "@/context/ContextProvider";
 import AdSpaceCard from "@/src/AdSpaceCard";
 import MapComponent from "@/src/MapComponent";
-import { getLiveAdSpaces } from "@/src/firebase-func";
+import { getCountLiveAdSpaces, getLiveAdSpaces } from "@/src/firebase-func";
 import AuthLayout from "@/src/layout/AuthLayout";
 import { Wrapper } from "@googlemaps/react-wrapper";
 import { Search } from "@mui/icons-material";
@@ -29,9 +29,18 @@ const Offline = () => {
   const [sort, setSort] = useState("created");
   const [search, setSearch] = useState();
   const { setAlert } = useContextProvider();
+  const [count, setCount] = useState(0)
   const form = useRef();
   const fetchData = async () => {
     setLoading(true);
+    setLocations([]);
+    setCount(0);
+    // get count 
+    const { result: count, error: countError } = await getCountLiveAdSpaces({ sort, search });
+    if (count?.data()?.count) {
+      setCount(count.data()?.count);
+    }
+
     const { result, error } = await getLiveAdSpaces({ sort, search });
     if (error) {
       setLoading(false);
@@ -131,30 +140,46 @@ const Offline = () => {
           />
         </Grid>
       </Grid>
-      <Card sx={{ mt: 2 }}>
-        <Grid container spacing={2}>
-          <Grid item lg={7} md={8} xs={12}>
+      <Grid container spacing={2} sx={{ my: 2 }}>
+        <Grid item lg={7} md={8} xs={12}>
+          {!loading &&
+            <Typography gutterBottom>
+              Showing <b>{count}</b> results
+            </Typography>
+          }
+          <Grid container spacing={2}>
             {!!loading &&
               [...new Array(3)].map((index) => (
-                <Card key={index}>
-                  <CardContent>
-                    <Skeleton variant="rectangular" height={180} />
-                  </CardContent>
-                </Card>
+                <Grid item lg={6} md={12} key={index}>
+                  <Card key={index}>
+                    <CardContent>
+                      <Skeleton variant="rectangular" height={180} />
+                    </CardContent>
+                  </Card>
+                </Grid>
               ))}
             {!!locations.length &&
               locations.map((item, index) => (
-                <AdSpaceCard
-                  key={index}
-                  item={item}
-                  pathname={"/ad/ads-locator/view"}
-                  horizontal
-                  showPricing
-                  showCompany
-                />
-              ))}
+                <Grid item lg={6} md={12} key={index}>
+                  <AdSpaceCard
+                    key={index}
+                    item={item}
+                    pathname={"/ad/ads-locator/view"}
+                    showPricing
+                    showCompany
+                  />
+                </Grid>
+              ))
+            }
           </Grid>
-          <Grid item lg={5} md={4}>
+        </Grid>
+        <Grid item lg={5} md={4}>
+          <Card sx={{
+            position: 'sticky',
+            top: 64,
+            width: '100%',
+            height: 'calc(100vh'
+          }}>
             <Wrapper
               libraries={["places", "marker", "maps", "geometry"]}
               apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API}
@@ -167,9 +192,9 @@ const Offline = () => {
                 role={"advertiser"}
               />
             </Wrapper>
-          </Grid>
+          </Card>
         </Grid>
-      </Card>
+      </Grid>
     </Box>
   );
 };

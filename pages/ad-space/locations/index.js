@@ -272,7 +272,7 @@ export default function Location() {
           </FormControl>
         </Grid>
       </Grid>
-      <Card sx={{ my: 2 }}>
+      {/* <Card sx={{ my: 2 }}>
         <Wrapper
           apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API}
           libraries={["places", "marker", "maps", "geometry"]}
@@ -284,8 +284,8 @@ export default function Location() {
             markers={locations}
           />
         </Wrapper>
-      </Card>
-      <Grid container spacing={2}>
+      </Card> */}
+      <Grid container spacing={2} sx={{mt:2}}>
         {!!loading &&
           [...new Array(3)].map((index) => (
             <Grid item lg={4} md={6} sm={6} xs={12} key={index}>

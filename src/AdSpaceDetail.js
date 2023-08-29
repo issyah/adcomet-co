@@ -28,19 +28,49 @@ import {
 } from "@mui/material";
 import { formatNumber } from "./common";
 import { red } from "@mui/material/colors";
+import { updateData } from "./firebase-func";
+import { useContextProvider } from "@/context/ContextProvider";
+import { useEffect, useState } from "react";
 const AdSpaceDetail = ({
   data,
+  setData,
   setViewImage,
   showCreatedBy,
   showStaticMap,
   children,
+  allowEdit
 }) => {
+  const { setAlert } = useContextProvider();
   const getAddressOnly = () => {
     if (data?.address) {
       const split = data?.address?.split(",");
       return split[0];
     }
   };
+
+  // update location status 
+  const handleChangeStatus = async (e) => {
+    const value = e.target.value;
+    setData({
+      ...data,
+      status: value
+    });
+    // update the status on the location document 
+    const { result, error } = await updateData('adspaces', data?.id, {
+      'status': value
+    });
+    const successMessage = value == 'draft' ? "Your location status has been updated. Your location won't be listed in advertiser's platform." : "Your location status has been updated. Your location will be listed in advertiser's platform";
+    const status = error ? 'error' : 'success';
+    const message = error ? error.message : successMessage;
+    setAlert({
+      open: true,
+      message,
+      status
+    });
+  }
+
+
+
   return (
     <Card>
       <CardContent>
@@ -55,15 +85,17 @@ const AdSpaceDetail = ({
               {data.name}
             </Typography>
           </Grid>
-          <Grid item md={"auto"}>
-            <Stack spacing={1} direction="row" alignItems="center">
-              <Typography>Ad-space Status:</Typography>
-              <Select value={data?.status} size="small">
-                <MenuItem value={"live"}>Live</MenuItem>
-                <MenuItem value={"draft"}>Draft</MenuItem>
-              </Select>
-            </Stack>
-          </Grid>
+          {allowEdit &&
+            <Grid item md={"auto"}>
+              <Stack spacing={1} direction="row" alignItems="center">
+                <Typography>Ad-space Status:</Typography>
+                <Select value={data?.status} size="small" onChange={handleChangeStatus}>
+                  <MenuItem value={"live"}>Live</MenuItem>
+                  <MenuItem value={"draft"}>Draft</MenuItem>
+                </Select>
+              </Stack>
+            </Grid>
+          }
         </Grid>
         <Stack
           spacing={1}
@@ -90,9 +122,9 @@ const AdSpaceDetail = ({
         <Box sx={{ my: 2 }}>
           {/* if there is only 1 image */}
           {!!data?.media?.length && (
-            <Grid container spacing={0.5}>
+            <Grid container spacing={2}>
               {data?.media?.map((item, index) => (
-                <Grid item md={data?.media?.length == 1 ? 12 : 'auto'} key={index}>
+                <Grid item md={12 / data?.media?.length || 12} key={index}>
                   <Box
                     sx={{
                       width: "100%",

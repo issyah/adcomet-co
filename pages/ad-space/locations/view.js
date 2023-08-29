@@ -134,7 +134,8 @@ const View = () => {
           data={data}
           showCreatedBy
           setViewImage={setViewImage}
-          showStaticMap
+          allowEdit
+          setData={setData}
         />
       )}
       <ImageViewDialog

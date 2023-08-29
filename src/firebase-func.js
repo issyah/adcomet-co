@@ -35,6 +35,7 @@ import {
   writeBatch,
   orderBy,
   limit,
+  getCountFromServer,
 } from "firebase/firestore";
 
 import {
@@ -523,7 +524,7 @@ export const UploadMediaForAdSpace = async (id, name, files) => {
       // let media = [];
       uploadTask.on(
         "state_changed",
-        (snapshot) => {},
+        (snapshot) => { },
         (error) => {
           reject(error.message);
         },
@@ -596,7 +597,7 @@ export const getLiveAdSpaces = async ({ sort, search }) => {
       const searchArr = lowerCasedSearch.split(" ");
       baseQuery = query(
         baseQuery,
-        where("nameArray", "array-contains-any", lowerCasedSearch)
+        where("nameArray", "array-contains-any", searchArr)
       );
     }
     // sorting
@@ -612,6 +613,26 @@ export const getLiveAdSpaces = async ({ sort, search }) => {
 };
 
 // count total live ad spaces 
-export const getCountLiveAdSpaces = async() => {
+export const getCountLiveAdSpaces = async ({ sort, search }) => {
+  const collectionRef = collection(db, 'adspaces');
+  let result, error;
+  try {
+    let baseQuery = query(collectionRef, where("status", "==", "live"));
+    if (search && search.length) {
+      const lowerCasedSearch = search.toLowerCase();
+      const searchArr = lowerCasedSearch.split(" ");
+      baseQuery = query(
+        baseQuery,
+        where("nameArray", "array-contains-any", searchArr)
+      );
+    }
+    result = await getCountFromServer(baseQuery);
 
+  } catch (e) {
+    error = e;
+  }
+  return {
+    result,
+    error
+  };
 }

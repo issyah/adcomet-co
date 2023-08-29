@@ -24,6 +24,7 @@ const AdSpaceCard = ({
   horizontal,
   showPricing,
   showCompany,
+  CardProps,
 }) => {
   const splitAddress = () => {
     if (item.address) {
@@ -39,7 +40,7 @@ const AdSpaceCard = ({
         borderStyle: "solid",
         transition: "250ms ease-in border",
       }}
-      elevation={horizontal ? 0 : 1}
+      {...CardProps}
     >
       <CardContent
         sx={
@@ -135,10 +136,12 @@ const AdSpaceCard = ({
               ".MuiTypography-root": {
                 typography: "body2",
               },
-              mt:0.5
+              mt: 0.5
             }}
           >
-            <AspectRatio />
+            <AspectRatio sx={item?.orientation == 'portrait' ? {
+              transform: 'rotate(90deg)'
+            } : undefined} />
             <Typography>{item.width} x {item.height}</Typography>
           </Stack>
           {/* <Grid container spacing={0.5}>
@@ -149,7 +152,23 @@ const AdSpaceCard = ({
               {getIndustrylabel(item.company?.industryType)}
             </Grid>
           </Grid> */}
-          <Box display="flex" gap={2} mt={2} alignItems="center">
+          {showPricing && (
+            <Box>
+              <Divider sx={{ my: 2 }} />
+              {!!item.price?.length && (
+                <Box display={"flex"} gap={0.5} alignItems="center">
+                  <Typography variant={"caption"}>From:</Typography>
+                  <Typography variant="h6">
+                    ${item.price[0]?.value}
+                  </Typography>
+                  <Typography variant="caption">
+                    / {item.price[0]?.unit} {item.price[0]?.metric}
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          )}
+          <Box display="flex" gap={2} mt={2} alignItems="center" flexDirection={'column'}>
             <Button
               component={Link}
               href={`${pathname}/?id=${item.id}`}
@@ -157,24 +176,10 @@ const AdSpaceCard = ({
               sx={{
                 width: horizontal ? "50%" : "100%",
               }}
+              fullWidth
             >
               View detail
             </Button>
-            {showPricing && (
-              <Box flexGrow={1}>
-                <Typography variant={"caption"}>From:</Typography>
-                {!!item.price?.length && (
-                  <Box display={"flex"} gap={0.5} alignItems="center">
-                    <Typography variant="h6">
-                      ${item.price[0]?.value}
-                    </Typography>
-                    <Typography variant="caption">
-                      / {item.price[0]?.unit} {item.price[0]?.metric}
-                    </Typography>
-                  </Box>
-                )}
-              </Box>
-            )}
           </Box>
         </Box>
       </CardContent>
